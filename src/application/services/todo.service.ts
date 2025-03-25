@@ -1,6 +1,6 @@
-import { HTTPClient } from "../lib/http.client"
-import type { CreateTodoDTO, Todo } from "../types/todo"
-import type { ID } from "../types/general"
+import { HTTPClient } from "../../lib/http.client"
+import type { CreateTodoDTO, Todo } from "../../types/todo"
+import type { ID } from "../../types/general"
 
 function buildRequestUrl(baseUrl: string, params: Record<string, unknown>): string {
   const searchParams = new URLSearchParams(
