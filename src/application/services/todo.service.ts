@@ -3,15 +3,6 @@ import type { CreateTodoDTO, Todo, ReplaceTodoDTO, UpdateTodoDTO } from '../../t
 import { AppError } from '../../types/app-errors';
 import type { ID } from '../../types/general';
 
-function buildRequestUrl(baseUrl: string, params: Record<string, unknown>): string {
-  const searchParams = new URLSearchParams(
-    Object.entries(params)
-      .filter(([, value]) => value !== undefined)
-      .map(([key, value]) => [key, String(value)]),
-  );
-
-  return `${baseUrl}?${searchParams.toString()}`;
-}
 
 function errorMsg(error: unknown): string {
   return (
@@ -29,13 +20,16 @@ export class TodoService {
   }
 
   async create(dto: CreateTodoDTO): Promise<ID | AppError> {
-    const url = '/todos';
+    const url = '/api/todos';
+    const body = JSON.stringify(dto)
     try {
       const result = await this.httpClient.jsonDo<Todo>(url, {
         method: 'POST',
-        body: dto,
+        body,
+        resource: url,
+        url
       });
-      const id = Number(result.body.id);
+      const id = Number(result.id);
 
       return id;
     } catch (error) {
@@ -44,46 +38,57 @@ export class TodoService {
   }
 
   async getAll(params: any): Promise<Array<Todo>> {
-    const url = '/todos';
-    const result = await this.httpClient.jsonDo<Array<Todo>>(buildRequestUrl(url, params));
-    return result.body;
+    const url = '/api/todos';
+    const result = await this.httpClient.jsonDo<Array<Todo>>(url, params);
+    return result;
   }
 
   async getOne(id: ID): Promise<Todo | AppError> {
-    const url = `/todos/${id}`;
+    const url = `/api/todos/${id}`;
     try {
       const result = await this.httpClient.jsonDo<Todo>(url);
-      return result.body;
+      return result;
     } catch (error) {
       return new AppError(errorMsg(error));
     }
   }
 
   async replace(id: ID, dto: ReplaceTodoDTO): Promise<Todo | AppError> {
-    const url = `/todos/${id}`;
+    const url = `/api/todos/${id}`;
+    const body = JSON.stringify(dto)
     try {
-      const result = await this.httpClient.jsonDo<Todo>(url, { method: 'PUT', body: dto });
-      return result.body;
+      const result = await this.httpClient.jsonDo<Todo>(url, {
+        method: 'PUT', body, resource: url,
+        url
+      });
+      return result;
     } catch (error) {
       return new AppError(errorMsg(error));
     }
   }
 
   async update(id: ID, dto: UpdateTodoDTO): Promise<Todo | AppError> {
-    const url = `/todos/${id}`;
+    const url = `/api/todos/${id}`;
+    const body = JSON.stringify(dto)
     try {
-      const result = await this.httpClient.jsonDo<Todo>(url, { method: 'PATCH', body: dto });
-      return result.body;
+      const result = await this.httpClient.jsonDo<Todo>(url, {
+        method: 'PATCH', body, resource: url,
+        url
+      });
+      return result;
     } catch (error) {
       return new AppError(errorMsg(error));
     }
   }
 
   async delete(id: ID): Promise<Todo | AppError> {
-    const url = `/todos/${id}`;
+    const url = `/api/todos/${id}`;
     try {
-      const result = await this.httpClient.jsonDo<Todo>(url, { method: 'DELETE' });
-      return result.body;
+      const result = await this.httpClient.jsonDo<Todo>(url, {
+        method: 'DELETE', resource: url,
+        url
+      });
+      return result;
     } catch (error) {
       return new AppError(errorMsg(error));
     }
