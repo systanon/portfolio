@@ -38,7 +38,7 @@ export class Application<
   }
 
 
-  public async getAllTodos(params: any): Promise<Array<Todo | AppError>> {
+  public async getAllTodos(params: any): Promise<Todo[] | AppError> {
     const res = await this.#todoService.getAll(params)
     return res
   }
