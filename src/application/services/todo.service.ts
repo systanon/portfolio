@@ -2,15 +2,7 @@ import { HTTPClient } from '../../lib/http.client';
 import type { CreateTodoDTO, Todo, ReplaceTodoDTO, UpdateTodoDTO } from '../../types/todo';
 import { AppError } from '../../types/app-errors';
 import type { ID } from '../../types/general';
-
-
-function errorMsg(error: unknown): string {
-  return (
-    (error as { data?: { msg?: string } })?.data?.msg ||
-    (error as { message?: string })?.message ||
-    'Unknown error'
-  );
-}
+import { errorMsg } from '@/helpers/formatErrorMsg';
 
 export class TodoService {
   private readonly httpClient: HTTPClient;
