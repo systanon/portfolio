@@ -3,6 +3,8 @@ import type { CreateTodoDTO, ReplaceTodoDTO, Todo, UpdateTodoDTO } from '../type
 import type { TodoService } from './services/todo.service'
 import type { ID } from '../types/general'
 import type { AppError } from '../types/app-errors'
+import type { AuthService } from './services/auth.service'
+import type { SignUpDto } from '@/types/auth'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
@@ -10,9 +12,11 @@ export class Application<
 > {
   #ee: EventEmitter = new EventEmitter()
   #todoService: TodoService
+  #authService: AuthService
 
-  constructor(todoService: TodoService) {
+  constructor(todoService: TodoService, authService: AuthService) {
     this.#todoService = todoService
+    this.#authService = authService
   }
 
   public on<T extends EventEmitter.EventNames<EventTypes>>(
@@ -31,6 +35,12 @@ export class Application<
     once?: boolean): EventEmitter {
     return this.#ee.off(event, fn, context, once)
   }
+
+  public async signUp(dto: SignUpDto): Promise<void | AppError> {
+    const res = await this.#authService.registration(dto)
+    return res
+  }
+
 
   public async createTodo(dto: CreateTodoDTO): Promise<ID | AppError> {
     const res = await this.#todoService.create(dto)
