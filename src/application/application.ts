@@ -4,7 +4,7 @@ import type { TodoService } from './services/todo.service'
 import type { ID } from '../types/general'
 import type { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
-import type { SignUpDto } from '@/types/auth'
+import type { SignInDto, SignUpDto, UserProfile } from '@/types/auth'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
@@ -41,6 +41,16 @@ export class Application<
     return res
   }
 
+  public async signIn(dto: SignInDto): Promise<void | AppError> {
+    const res = await this.#authService.authorization(dto)
+    return res
+  }
+
+  public async getProfile(): Promise<UserProfile | AppError> {
+    const access_token = localStorage.getItem('access_token') ?? ""
+    const res = await this.#authService.getProfile({ access_token })
+    return res
+  }
 
   public async createTodo(dto: CreateTodoDTO): Promise<ID | AppError> {
     const res = await this.#todoService.create(dto)
