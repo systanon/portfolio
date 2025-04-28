@@ -61,4 +61,19 @@ export class AuthService {
       return new AppError(errorMsg(error))
     }
   }
+  async refresh (): Promise<void | AppError> {
+    const url = '/api/auth/refresh'
+    try {
+      const result = await this.httpClient.jsonDo(url, {
+        method: 'POST',
+        credentials: 'include',
+        resource: url,
+        url
+      })
+      localStorage.setItem('access_token', result.access_token);
+
+    } catch (error) {
+      return new AppError(errorMsg(error))
+    }
+  }
 }

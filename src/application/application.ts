@@ -52,6 +52,11 @@ export class Application<
     return res
   }
 
+  public async refreshToken(): Promise<void | AppError> {
+    const res = await this.#authService.refresh()
+    return res
+  }
+
   public async createTodo(dto: CreateTodoDTO): Promise<ID | AppError> {
     const res = await this.#todoService.create(dto)
     return res
