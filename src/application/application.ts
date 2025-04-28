@@ -2,7 +2,7 @@ import EventEmitter from 'eventemitter3'
 import type { CreateTodoDTO, ReplaceTodoDTO, Todo, UpdateTodoDTO } from '../types/todo'
 import type { TodoService } from './services/todo.service'
 import type { ID } from '../types/general'
-import type { AppError } from '../types/app-errors'
+import { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type { SignInDto, SignUpDto, UserProfile } from '@/types/auth'
 
@@ -13,10 +13,20 @@ export class Application<
   #ee: EventEmitter = new EventEmitter()
   #todoService: TodoService
   #authService: AuthService
+  #profile: UserProfile | null = null
+  #isLodged: boolean = false
 
   constructor(todoService: TodoService, authService: AuthService) {
     this.#todoService = todoService
     this.#authService = authService
+  }
+
+  public get userProfile () {
+    return this.#profile
+  }
+
+  public get isLodged(): boolean {
+    return this.#isLodged
   }
 
   public on<T extends EventEmitter.EventNames<EventTypes>>(
@@ -89,4 +99,11 @@ export class Application<
     return res
   }
 
+  public async run (): Promise<void> {
+    const res = await this.getProfile()
+    if (!(res instanceof AppError)) {
+      this.#profile = res
+      this.#isLodged = true
+    }
+  }
 }
