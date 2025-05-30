@@ -1,3 +1,4 @@
+import { ref, type Ref } from 'vue'
 import EventEmitter from 'eventemitter3'
 import type { CreateTodoDTO, ReplaceTodoDTO, Todo, UpdateTodoDTO } from '../types/todo'
 import type { TodoService } from './services/todo.service'
@@ -15,18 +16,23 @@ export class Application<
   #authService: AuthService
   #profile: UserProfile | null = null
   #isLodged: boolean = false
+  #isInitApplication: Ref<boolean> = ref(false)
 
   constructor(todoService: TodoService, authService: AuthService) {
     this.#todoService = todoService
     this.#authService = authService
   }
 
-  public get userProfile () {
+  public get userProfile() {
     return this.#profile
   }
 
   public get isLodged(): boolean {
     return this.#isLodged
+  }
+
+  public get isInitApplication(): boolean {
+    return this.#isInitApplication.value
   }
 
   public on<T extends EventEmitter.EventNames<EventTypes>>(
@@ -99,8 +105,9 @@ export class Application<
     return res
   }
 
-  public async run (): Promise<void> {
+  public async run(): Promise<void> {
     const res = await this.getProfile()
+    this.#isInitApplication.value = true
     if (!(res instanceof AppError)) {
       this.#profile = res
       this.#isLodged = true
