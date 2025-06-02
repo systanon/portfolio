@@ -1,0 +1,17 @@
+.cache
+.git
+.vscode
+cypress
+dist
+node_modules
+scripts
+**/__test__/**
+
+*.md
+*.cy.ts
+*.spec.ts
+*.test.ts
+.nvmrc
+cypress*
+.eslint*
+.prettier*
