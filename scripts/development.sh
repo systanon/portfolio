@@ -1,1 +1,1 @@
-docker run --rm -it -p 5173:5173 --mount type=bind,src="$(pwd)",dst=/usr/app --workdir /usr/app --name 'portfolio_development' --entrypoint bash node:24.1.0 -c 'npm install && npm run dev -- --host'
+docker run --rm -it -p 5173:5173 --mount type=bind,src="$(pwd)",dst=/usr/app --workdir /usr/app   --env DOCKER_DEV=true --name 'portfolio_development' --entrypoint bash node:24.1.0 -c 'npm install && npm run dev -- --host'

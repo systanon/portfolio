@@ -4,12 +4,16 @@ import { fileURLToPath, URL } from 'node:url'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+  const isDocker = process.env.DOCKER_DEV === 'true'
+  const target = isDocker
+    ? env.VITE_APP_HOST_URL_DEV
+    : env.VITE_APP_HOST_URL
   return {
     plugins: [vue()],
     server: {
       proxy: {
         '/api': {
-          target: env.VITE_APP_HOST_URL,
+          target,
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
         },
