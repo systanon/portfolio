@@ -8,6 +8,7 @@
       :todo="todo"
       @editHandler="editHandler"
       @deleteHandler="deleteHandler"
+      @completeHandler="completeHandler"
     />
     <p v-if="!todos.length">Epmty todos</p>
   </section>
@@ -104,6 +105,10 @@ const fillInputs = (_todo: UpdateTodoDTO) => {
   todo.description = _todo.description ?? "";
   todo.completed = _todo.completed ?? false;
 };
+
+const completeHandler = (_todo: UpdateTodoDTO) => {
+  console.log(_todo)
+}
 
 onMounted(init);
 </script>
