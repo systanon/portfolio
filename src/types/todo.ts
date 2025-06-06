@@ -1,5 +1,5 @@
 export type DBEntity = {
-  id: string;
+  id: number;
   createdAt: string;
   updatedAt: string;
 };

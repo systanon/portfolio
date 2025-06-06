@@ -6,7 +6,7 @@
         :checked="todo.completed"
         @input="
           $emit('completeHandler', {
-            id: todo._id,
+            id: todo.id,
             payload: { completed: !todo.completed },
           })
         "
@@ -24,17 +24,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-export default defineComponent({
-  name: "TodoItem",
-  props: {
-    todo: {
-      type: Object,
-      required: true,
-    },
-  },
-});
+<script lang="ts" setup>
+import type { Todo } from "@/types/todo";
+import { defineProps } from "vue";
+defineProps<{
+  todo: Todo;
+}>();
 </script>
 
 <style scoped lang="scss">
