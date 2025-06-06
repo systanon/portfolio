@@ -2,14 +2,10 @@
   <h2>This is Todos page</h2>
   <button @click="createHandler">Create Todo</button>
   <section class="page-todo__todos">
-    <TodoItem
-      v-for="todo in todos"
-      :key="todo.id"
-      :todo="todo"
-      @editHandler="editHandler"
-      @deleteHandler="deleteHandler"
-      @completeHandler="completeHandler"
-    />
+    <TodoItem v-for="[id, todo] of [...todosMap.entries()]" :key="id" :todo="todo" @editHandler="editHandler"
+      @deleteHandler="deleteHandler" @completeHandler="completeHandler" />
+    <!-- <TodoItem v-for="todo of todos" :key="todo.id" :todo="todo" @editHandler="editHandler"
+      @deleteHandler="deleteHandler" @completeHandler="completeHandler" /> -->
     <p v-if="!todos.length">Epmty todos</p>
   </section>
 
@@ -29,7 +25,7 @@
       </div>
     </template>
   </UIModal>
-    <UIModal ref="createModalRef" title="Create Todo" class="page-todo__modal">
+  <UIModal ref="createModalRef" title="Create Todo" class="page-todo__modal">
     <template #default>
       <div class="page-todo__modal-form update-todo-form">
         <h3>Create todo</h3>
@@ -64,14 +60,14 @@ const editModalRef = ref<IModalOpen | null>(null);
 const createModalRef = ref<IModalOpen | null>(null);
 
 const todoStore = useTodoStore();
-const { todos } = storeToRefs(todoStore);
-const { init } = todoStore;
+const { todos, todosMap } = storeToRefs(todoStore);
+const { init, update, create, remove } = todoStore;
 
 const deleteHandler = async (todo: Todo) => {
   const { id } = todo;
   const modal = deleteModalRef.value;
   const res = await modal?.open();
-  if (res) console.log(id);
+  if (res) remove(id);
 };
 
 const editHandler = async (_todo: Todo) => {
@@ -80,7 +76,7 @@ const editHandler = async (_todo: Todo) => {
   const modal = editModalRef.value;
   const res = await modal?.open();
   if (res) {
-   console.log(todo)
+    update(id, todo)
   }
   clearInputs();
 };
@@ -89,10 +85,14 @@ const createHandler = async () => {
   const modal = createModalRef.value;
   const res = await modal?.open();
   if (res) {
-   console.log(todo)
+    create(todo)
   }
   clearInputs();
 };
+
+const completeHandler = ({ id, payload }: { id: number, payload: UpdateTodoDTO }) => {
+  update(id, payload)
+}
 
 const clearInputs = () => {
   todo.title = "";
@@ -106,9 +106,6 @@ const fillInputs = (_todo: UpdateTodoDTO) => {
   todo.completed = _todo.completed ?? false;
 };
 
-const completeHandler = (_todo: UpdateTodoDTO) => {
-  console.log(_todo)
-}
 
 onMounted(init);
 </script>
