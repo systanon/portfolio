@@ -15,8 +15,10 @@ export class Application<
   #todoService: TodoService
   #authService: AuthService
   #profile: UserProfile | null = null
-  #isLodged: boolean = false
+  #isLodged: Ref<boolean> = ref(false)
   #isInitApplication: Ref<boolean> = ref(false)
+  resolveProfileLoading: (() => void) | null = null;
+  profileLoading: Promise<void> = Promise.resolve()
 
   constructor(todoService: TodoService, authService: AuthService) {
     this.#todoService = todoService
@@ -28,7 +30,7 @@ export class Application<
   }
 
   public get isLodged(): boolean {
-    return this.#isLodged
+    return this.#isLodged.value
   }
 
   public get isInitApplication(): boolean {
@@ -54,17 +56,38 @@ export class Application<
 
   public async signUp(dto: SignUpDto): Promise<void | AppError> {
     const res = await this.#authService.registration(dto)
-    return res
+    if (res instanceof AppError) {
+      return res
+    }
+    await this.getProfile()
   }
 
   public async signIn(dto: SignInDto): Promise<void | AppError> {
     const res = await this.#authService.authorization(dto)
-    return res
+    if (res instanceof AppError) {
+      return res
+    }
+    await this.getProfile()
   }
 
   public async getProfile(): Promise<UserProfile | AppError> {
+    this.profileLoading = new Promise<void>(
+      (resolve) => (this.resolveProfileLoading = resolve)
+    );
     const access_token = localStorage.getItem('access_token') ?? ""
     const res = await this.#authService.getProfile({ access_token })
+    if (res instanceof AppError) {
+      this.#profile = null
+      this.#isLodged.value = false
+      this.resolveProfileLoading?.()
+      this.#ee.emit('unlogged');
+    } else {
+      this.#profile = res
+      this.#isLodged.value = true
+      this.resolveProfileLoading?.()
+      this.#ee.emit('logged');
+    }
+
     return res
   }
 
@@ -106,11 +129,7 @@ export class Application<
   }
 
   public async run(): Promise<void> {
-    const res = await this.getProfile()
+    await this.getProfile()
     this.#isInitApplication.value = true
-    if (!(res instanceof AppError)) {
-      this.#profile = res
-      this.#isLodged = true
-    }
   }
 }
