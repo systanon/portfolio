@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: use vue router link -->
   <ul class="navigation-menu">
     <li v-for="{ path, text } in navigationList" :key="path"
       :class="['navigation-menu__item', { _active: $route.path === path }]" @click="$router.push(path)">

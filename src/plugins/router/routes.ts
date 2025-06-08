@@ -4,15 +4,32 @@ import HomeView from '@/views/HomeView.vue'
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'home',
+    name: 'Home',
+    meta: { accessMode: "public" },
     component: HomeView,
   },
   {
     path: '/todos',
     name: 'TodoList',
-    // route level code-splitting
-    // this generates a separate chunk (About.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
+    meta: { accessMode: "public" },
     component: () => import('@/views/TodosView.vue'),
+  },
+  {
+    path: '/sign-in',
+    name: 'SignIn',
+    meta: { accessMode: "only-for-unauthorized" },
+    component: () => import('@/views/SignInView.vue'),
+  },
+  {
+    path: '/sign-up',
+    name: 'SignUp',
+    meta: { accessMode: "only-for-unauthorized" },
+    component: () => import('@/views/SignUpView.vue'),
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    meta: { accessMode: "private" },
+    component: () => import('@/views/ProfileView.vue'),
   },
 ]

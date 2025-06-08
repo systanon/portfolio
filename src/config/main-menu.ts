@@ -14,7 +14,7 @@ export const mainMenu: NavigationMenu = [
     path: "/",
     text: "Home",
     i18n_key: "home",
-    routeName: "PageHome",
+    routeName: "Home",
     icon: "",
     showMode: "all",
   },
