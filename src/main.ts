@@ -8,7 +8,13 @@ import { application } from './application'
 const app = createApp(App)
 
 app.use(createStore(application))
+
 app.use(router)
 
 application.run()
+
+application.on("unlogged",router.checkAccessCurrentRoute)
+
+application.on("logged", router.checkAccessCurrentRoute)
+
 app.mount('#app')
