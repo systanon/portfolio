@@ -1,11 +1,9 @@
 <template>
-  <!-- TODO: use vue router link -->
-  <ul class="navigation-menu">
-    <li v-for="{ path, text } in navigationList" :key="path"
-      :class="['navigation-menu__item', { _active: $route.path === path }]" @click="$router.push(path)">
-      <h2>{{ text }}</h2>
-    </li>
-  </ul>
+  <nav class="navigation-menu">
+    <RouterLink v-for="{ path, text } in navigationList" :key="path" :to="path">
+      {{ text }}
+    </RouterLink>
+  </nav>
 </template>
 
 <script lang="ts">
@@ -36,20 +34,9 @@ export default defineComponent({
   margin: 0;
   padding: 0;
 
-  &__item {
-    cursor: pointer;
-
-    &._active {
-      color: orange;
-    }
+  :deep(.router-link-active ) {
+    color: orange;
   }
 
-  &__item-select-option {
-    display: block;
-    box-sizing: border-box;
-    padding-left: 3px;
-    padding-right: 3px;
-    max-width: 70px;
-  }
 }
 </style>

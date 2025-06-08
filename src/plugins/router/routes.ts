@@ -32,4 +32,10 @@ export const routes: Array<RouteRecordRaw> = [
     meta: { accessMode: "private" },
     component: () => import('@/views/ProfileView.vue'),
   },
+    {
+    path: '/notes',
+    name: 'Notes',
+    meta: { accessMode: "private" },
+    component: () => import('@/views/NotesView.vue'),
+  },
 ]
