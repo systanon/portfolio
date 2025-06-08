@@ -6,8 +6,6 @@ import type { ID } from '../types/general'
 import { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type { SignInDto, SignUpDto, UserProfile } from '@/types/auth'
-import { delay } from '@/helpers/delay'
-
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any
@@ -86,7 +84,7 @@ export class Application<
       this.resolveProfileLoading?.()
       this.#ee.emit('logged');
     }
-    
+
     this.#loading.value = false
 
     return res
