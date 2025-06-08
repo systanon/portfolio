@@ -6,6 +6,7 @@ import type { ID } from '../types/general'
 import { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type { SignInDto, SignUpDto, UserProfile } from '@/types/auth'
+import { delay } from '@/helpers/delay'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
@@ -14,9 +15,8 @@ export class Application<
   #ee: EventEmitter = new EventEmitter()
   #todoService: TodoService
   #authService: AuthService
-  #profile: UserProfile | null = null
-  #isLodged: Ref<boolean> = ref(false)
-  #isInitApplication: Ref<boolean> = ref(false)
+  #profile: Ref<UserProfile | null> = ref(null)
+  #loading: Ref<boolean> = ref(false)
   resolveProfileLoading: (() => void) | null = null;
   profileLoading: Promise<void> = Promise.resolve()
 
@@ -26,15 +26,15 @@ export class Application<
   }
 
   public get userProfile() {
-    return this.#profile
+    return this.#profile.value
   }
 
   public get isLodged(): boolean {
-    return this.#isLodged.value
+    return this.#profile.value !== null
   }
 
-  public get isInitApplication(): boolean {
-    return this.#isInitApplication.value
+  public get loading(): boolean {
+    return this.#loading.value
   }
 
   public on<T extends EventEmitter.EventNames<EventTypes>>(
@@ -71,22 +71,23 @@ export class Application<
   }
 
   public async getProfile(): Promise<UserProfile | AppError> {
+    this.#loading.value = true
     this.profileLoading = new Promise<void>(
       (resolve) => (this.resolveProfileLoading = resolve)
     );
     const access_token = localStorage.getItem('access_token') ?? ""
     const res = await this.#authService.getProfile({ access_token })
     if (res instanceof AppError) {
-      this.#profile = null
-      this.#isLodged.value = false
+      this.#profile.value = null
       this.resolveProfileLoading?.()
       this.#ee.emit('unlogged');
     } else {
-      this.#profile = res
-      this.#isLodged.value = true
+      this.#profile.value = res
       this.resolveProfileLoading?.()
       this.#ee.emit('logged');
     }
+    
+    this.#loading.value = false
 
     return res
   }
@@ -130,6 +131,5 @@ export class Application<
 
   public async run(): Promise<void> {
     await this.getProfile()
-    this.#isInitApplication.value = true
   }
 }

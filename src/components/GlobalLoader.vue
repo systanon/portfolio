@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div class="global-loader" v-if="!isInitApplication">
+    <div class="global-loader" v-if="loading">
       <svg
         width="80"
         height="80"
@@ -42,10 +42,10 @@ import { application } from "../application";
 
 export default defineComponent({
   setup() {
-    const isInitApplication = computed(() => {
-      return application.isInitApplication;
+    const loading = computed(() => {
+      return application.loading;
     });
-    return { isInitApplication };
+    return { loading };
   },
 });
 </script>
@@ -54,7 +54,7 @@ export default defineComponent({
 .global-loader {
   position: fixed;
   inset: 0;
-  background: white;
+  background: rgba(0, 0, 0, 0.5);
   color: #3498db;
   display: flex;
   align-items: center;
@@ -69,7 +69,6 @@ export default defineComponent({
 
 @media (prefers-color-scheme: dark) {
   .global-loader {
-    background: #121212;
     color: #00c6ff;
   }
 }
