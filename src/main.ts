@@ -13,7 +13,7 @@ app.use(router)
 
 application.run()
 
-application.on("unlogged",router.checkAccessCurrentRoute)
+application.on("unlogged", router.checkAccessCurrentRoute)
 
 application.on("logged", router.checkAccessCurrentRoute)
 

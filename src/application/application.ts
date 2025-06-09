@@ -73,8 +73,7 @@ export class Application<
     this.profileLoading = new Promise<void>(
       (resolve) => (this.resolveProfileLoading = resolve)
     );
-    const access_token = localStorage.getItem('access_token') ?? ""
-    const res = await this.#authService.getProfile({ access_token })
+    const res = await this.#authService.getProfile()
     if (res instanceof AppError) {
       this.#profile.value = null
       this.resolveProfileLoading?.()
