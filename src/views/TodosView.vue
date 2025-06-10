@@ -2,8 +2,14 @@
   <h2>This is Todos page</h2>
   <button @click="createHandler">Create Todo</button>
   <section class="page-todo__todos">
-    <TodoItem v-for="[id, todo] of [...todosMap.entries()]" :key="id" :todo="todo" @editHandler="editHandler"
-      @deleteHandler="deleteHandler" @completeHandler="completeHandler" />
+    <TodoItem
+      v-for="[id, todo] of [...todosMap.entries()]"
+      :key="id"
+      :todo="todo"
+      @editHandler="editHandler"
+      @deleteHandler="deleteHandler"
+      @completeHandler="completeHandler"
+    />
     <!-- <TodoItem v-for="todo of todos" :key="todo.id" :todo="todo" @editHandler="editHandler"
       @deleteHandler="deleteHandler" @completeHandler="completeHandler" /> -->
     <p v-if="!todos.length">Epmty todos</p>
@@ -35,96 +41,130 @@
       </div>
     </template>
   </UIModal>
+
+  <UIPagination
+    v-model:page="pagination.page"
+    v-model:pages="pagination.pages"
+    @first-page="firstPage"
+    @prev-page="prevPage"
+    @next-page="nextPage"
+    @latest-page="latestPage"
+    @btn-page="btnPage"
+  />
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, reactive } from "vue";
-import { storeToRefs } from "pinia";
-import { useTodoStore } from "@/plugins/store/todos";
-import TodoItem from "@/components/TodoItem.vue";
-import UIModal, { type IModalOpen } from "@/components/UIModal.vue";
-import {
-  type UpdateTodoDTO,
-  type ReplaceTodoDTO,
-  type Todo,
-} from "../types/todo";
+  import { onMounted, ref, reactive, computed, watch } from 'vue';
+  import { storeToRefs } from 'pinia';
+  import { useTodoStore } from '@/plugins/store/todos';
+  import TodoItem from '@/components/TodoItem.vue';
+  import { usePagination } from '@/hooks/pagination';
+  import UIPagination from '@/components/UiPagination.vue';
 
-const todo = reactive({
-  title: "",
-  description: "",
-  completed: false,
-} as ReplaceTodoDTO);
+  import UIModal, { type IModalOpen } from '@/components/UiModal.vue';
+  import { type UpdateTodoDTO, type ReplaceTodoDTO, type Todo } from '../types/todo';
 
-const deleteModalRef = ref<IModalOpen | null>(null);
-const editModalRef = ref<IModalOpen | null>(null);
-const createModalRef = ref<IModalOpen | null>(null);
+  const todo = reactive({
+    title: '',
+    description: '',
+    completed: false,
+  } as ReplaceTodoDTO);
 
-const todoStore = useTodoStore();
-const { todos, todosMap } = storeToRefs(todoStore);
-const { init, update, create, remove } = todoStore;
+  const deleteModalRef = ref<IModalOpen | null>(null);
+  const editModalRef = ref<IModalOpen | null>(null);
+  const createModalRef = ref<IModalOpen | null>(null);
 
-const deleteHandler = async (todo: Todo) => {
-  const { id } = todo;
-  const modal = deleteModalRef.value;
-  const res = await modal?.open();
-  if (res) remove(id);
-};
+  const todoStore = useTodoStore();
+  const { pagination, firstPage, prevPage, nextPage, latestPage, btnPage, setPages } =
+    usePagination();
+  const { todos, todosMap, total, pages } = storeToRefs(todoStore);
+  const { getAll, update, create, remove } = todoStore;
 
-const editHandler = async (_todo: Todo) => {
-  const { id } = _todo;
-  fillInputs(_todo);
-  const modal = editModalRef.value;
-  const res = await modal?.open();
-  if (res) {
-    update(id, todo)
-  }
-  clearInputs();
-};
+  const requestParams = computed(() => {
+    const { perPage, page } = pagination;
+    return {
+      perPage,
+      page,
+    };
+  });
 
-const createHandler = async () => {
-  const modal = createModalRef.value;
-  const res = await modal?.open();
-  if (res) {
-    create(todo)
-  }
-  clearInputs();
-};
+  const deleteHandler = async (todo: Todo) => {
+    const { id } = todo;
+    const modal = deleteModalRef.value;
+    const res = await modal?.open();
+    if (res) remove(id);
+  };
 
-const completeHandler = ({ id, payload }: { id: number, payload: UpdateTodoDTO }) => {
-  update(id, payload)
-}
+  const editHandler = async (_todo: Todo) => {
+    const { id } = _todo;
+    fillInputs(_todo);
+    const modal = editModalRef.value;
+    const res = await modal?.open();
+    if (res) {
+      update(id, todo);
+    }
+    clearInputs();
+  };
 
-const clearInputs = () => {
-  todo.title = "";
-  todo.description = "";
-  todo.completed = false;
-};
+  const createHandler = async () => {
+    const modal = createModalRef.value;
+    const res = await modal?.open();
+    if (res) {
+      create(todo);
+    }
+    clearInputs();
+  };
 
-const fillInputs = (_todo: UpdateTodoDTO) => {
-  todo.title = _todo.title ?? "";
-  todo.description = _todo.description ?? "";
-  todo.completed = _todo.completed ?? false;
-};
+  const completeHandler = ({ id, payload }: { id: number; payload: UpdateTodoDTO }) => {
+    update(id, payload);
+  };
 
+  const clearInputs = () => {
+    todo.title = '';
+    todo.description = '';
+    todo.completed = false;
+  };
 
-onMounted(init);
+  const fillInputs = (_todo: UpdateTodoDTO) => {
+    todo.title = _todo.title ?? '';
+    todo.description = _todo.description ?? '';
+    todo.completed = _todo.completed ?? false;
+  };
+
+  watch(
+    pages,
+    (pages) => {
+      if (!pages) return;
+      setPages(pages);
+    },
+    { immediate: true },
+  );
+  watch(
+    requestParams,
+    (params) => {
+      getAll(params);
+    },
+    { immediate: true },
+  );
+
+  onMounted(() => getAll(requestParams.value));
 </script>
 
 <style scoped lang="scss">
-.page-todo {
-  &__todos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
+  .page-todo {
+    &__todos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
 
-  &__modal-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    width: 40vw;
-    min-width: 400px;
-    max-width: 600px;
+    &__modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 40vw;
+      min-width: 400px;
+      max-width: 600px;
+    }
   }
-}
 </style>

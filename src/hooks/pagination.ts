@@ -1,0 +1,55 @@
+import { reactive } from "vue";
+
+type Pagination = {
+  page: number;
+  pages: number;
+  perPage: number;
+};
+
+export function usePagination(LIMIT = 10) {
+  const pagination = reactive<Pagination>({
+    page: 1,
+    pages: 1,
+    perPage: LIMIT,
+  });
+
+  const firstPage = () => {
+    pagination.page = 1;
+  };
+  const prevPage = () => {
+    if (pagination.page > 1) {
+      pagination.page -= 1;
+    }
+  };
+  const nextPage = () => {
+    if (pagination.page < pagination.pages) {
+      pagination.page += 1;
+    }
+  };
+  const btnPage = (page: number) => {
+    pagination.page = page;
+  };
+  const latestPage = () => {
+    pagination.page = pagination.pages;
+  };
+  const setPages = (pages = 1) => {
+    pagination.pages = pages;
+    if (pages < pagination.page) {
+      latestPage();
+    }
+  };
+  const offset = () => {
+    return (pagination.page - 1) * pagination.perPage;
+  };
+
+  return {
+    pagination,
+    firstPage,
+    prevPage,
+    nextPage,
+    latestPage,
+    btnPage,
+    setPages,
+    offset,
+  };
+}
