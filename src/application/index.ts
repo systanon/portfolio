@@ -40,13 +40,17 @@ httpClient.interceptors.response.use(
     const originalRequest = (response as ResponseWithRequest).request;
 
     const alreadyTried = (originalRequest as any).data.retry
-    if (alreadyTried) return response;
+
+    if (alreadyTried || (typeof originalRequest.resource === 'string' &&
+      originalRequest.resource.includes('/refresh')) ||
+      (originalRequest.resource instanceof URL &&
+        originalRequest.resource.pathname.includes('/refresh'))) return response;
 
     try {
       await authService.refresh();
-      
-      (originalRequest as any).data.retry = true;
 
+      (originalRequest as any).data.retry = true;
+      
       return await httpClient.do(originalRequest.resource, originalRequest)
     } catch (e) {
       return response;
