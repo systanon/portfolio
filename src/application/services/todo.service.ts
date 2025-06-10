@@ -3,6 +3,8 @@ import type { CreateTodoDTO, Todo, ReplaceTodoDTO, UpdateTodoDTO } from '../../t
 import { AppError } from '../../types/app-errors';
 import type { ID } from '../../types/general';
 import { errorMsg } from '@/helpers/formatErrorMsg';
+import type { PaginateResult } from '@/types/aap.types';
+import { getTotalPages } from '@/utils/getTotalPages';
 
 export class TodoService {
   private readonly httpClient: HTTPClient;
@@ -29,10 +31,23 @@ export class TodoService {
     }
   }
 
-  async getAll(params: any): Promise<Array<Todo>> {
+  async getAll(params: any): Promise<PaginateResult<Todo>> {
     const url = '/api/todos';
-    const result = await this.httpClient.jsonDo<Array<Todo>>(url, params);
-    return result;
+    try {
+      const response = await this.httpClient.do(url, { params });
+      if (response.ok) {
+        const data = await response.json()
+        return ({
+          ...getTotalPages(response.headers),
+          data
+
+        })
+   
+      }
+      return Promise.reject(response)
+    } catch (error) {
+      return Promise.reject(error)
+    }
   }
 
   async getOne(id: ID): Promise<Todo | AppError> {

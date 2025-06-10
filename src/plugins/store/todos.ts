@@ -10,14 +10,18 @@ export const useTodoStore = defineStore('todos', () => {
 
   const todos = ref<Todo[]>([])
   const todosMap = ref(new Map<number, Todo>())
+  const total = ref<number>(0)
+  const pages = ref<number>(1)
 
-  async function init(params: any) {
-    const res = await application.getAllTodos(params)
-    if (res instanceof AppError) {
-      todos.value = []
-    } else {
-      todos.value = res
-      todosMap.value = new Map(res.map(todo => [todo.id, todo]))
+  async function getAll(params: any) {
+    try {
+      const { data, total: _total, pages: _pages } = await application.getAllTodos(params)
+      todos.value = data
+      todosMap.value = new Map(data.map(todo => [todo.id, todo]))
+      total.value = _total
+      pages.value = _pages
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -63,5 +67,5 @@ export const useTodoStore = defineStore('todos', () => {
     }
   }
 
-  return { init, todos, todosMap, update, create, remove }
+  return { getAll, todos, todosMap, update, create, remove, total, pages }
 })

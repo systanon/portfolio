@@ -6,6 +6,7 @@ import type { ID } from '../types/general'
 import { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type { SignInDto, SignUpDto, UserProfile } from '@/types/auth'
+import type { PaginateResult } from '@/types/aap.types'
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any
@@ -100,9 +101,12 @@ export class Application<
   }
 
 
-  public async getAllTodos(params: any): Promise<Todo[] | AppError> {
-    const res = await this.#todoService.getAll(params)
-    return res
+  public async getAllTodos(params: any): Promise<PaginateResult<Todo>> {
+    try {
+      return await this.#todoService.getAll(params)
+    } catch (error) {
+      return Promise.reject(error)
+    }
   }
 
 
