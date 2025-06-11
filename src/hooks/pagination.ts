@@ -6,7 +6,7 @@ type Pagination = {
   perPage: number;
 };
 
-export function usePagination(LIMIT = 10) {
+export function usePagination(LIMIT: number) {
   const pagination = reactive<Pagination>({
     page: 1,
     pages: 1,

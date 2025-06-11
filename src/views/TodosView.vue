@@ -55,6 +55,8 @@
 
 <script setup lang="ts">
   import { onMounted, ref, reactive, computed, watch } from 'vue';
+  import { APP_CONFIG } from '@/constants';
+  import { useRoute, useRouter } from 'vue-router';
   import { storeToRefs } from 'pinia';
   import { useTodoStore } from '@/plugins/store/todos';
   import TodoItem from '@/components/TodoItem.vue';
@@ -70,14 +72,19 @@
     completed: false,
   } as ReplaceTodoDTO);
 
+  const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG;
+
   const deleteModalRef = ref<IModalOpen | null>(null);
   const editModalRef = ref<IModalOpen | null>(null);
   const createModalRef = ref<IModalOpen | null>(null);
 
+  const route = useRoute();
+  const router = useRouter();
+
   const todoStore = useTodoStore();
   const { pagination, firstPage, prevPage, nextPage, latestPage, btnPage, setPages } =
-    usePagination();
-  const { todos, todosMap, total, pages } = storeToRefs(todoStore);
+    usePagination(DEFAULT_PAGE_SIZE);
+  const { todos, todosMap, pages } = storeToRefs(todoStore);
   const { getAll, update, create, remove } = todoStore;
 
   const requestParams = computed(() => {
@@ -104,6 +111,17 @@
       update(id, todo);
     }
     clearInputs();
+  };
+
+  const parsePouterQuery = () => {
+    const { page, perPage } = route.query;
+    pagination.page = Number(page) || DEFAULT_PAGE;
+    pagination.perPage = Number(perPage) || DEFAULT_PAGE_SIZE;
+  };
+
+  const saveRouterQuery = () => {
+    const query = { ...route.query, ...requestParams.value };
+    router.replace({ query });
   };
 
   const createHandler = async () => {
@@ -143,11 +161,15 @@
     requestParams,
     (params) => {
       getAll(params);
+      saveRouterQuery();
     },
     { immediate: true },
   );
 
-  onMounted(() => getAll(requestParams.value));
+  onMounted(() => {
+    parsePouterQuery();
+    getAll(requestParams.value);
+  });
 </script>
 
 <style scoped lang="scss">
