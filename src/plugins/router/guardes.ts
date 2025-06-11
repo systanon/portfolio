@@ -33,12 +33,12 @@ export const navigationGuard = (application: Application): NavigationGuard => as
 
   const canAccess = await canUserAccess(
     to,
-    application.isLodged,
+    application.isLogged,
   );
   if (!canAccess) {
     const canAccess = await canUserAccess(
       from,
-      application.isLodged,
+      application.isLogged,
     );
     if (!canAccess) {
 

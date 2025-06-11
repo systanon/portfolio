@@ -21,7 +21,7 @@ export const createRouter = (application: Application): Router => {
 
     const canAccess = await canUserAccess(
       route,
-      application.isLodged,
+      application.isLogged,
     );
     if (canAccess) return;
 

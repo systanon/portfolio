@@ -74,4 +74,20 @@ export class AuthService {
       throw new AppError(errorMsg(error))
     }
   }
+
+  async logout(): Promise<void | AppError> {
+    const url = '/api/auth/logout'
+    try {
+      await this.httpClient.jsonDo(url, {
+        method: 'POST',
+        credentials: 'include',
+        resource: url,
+        url
+      })
+      localStorage.removeItem('access_token');
+
+    } catch (error) {
+      throw new AppError(errorMsg(error))
+    }
+  }
 }
