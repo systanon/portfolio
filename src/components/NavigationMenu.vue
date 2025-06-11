@@ -15,7 +15,7 @@ export default defineComponent({
   name: "NavigationMenu",
   computed: {
     isLogged() {
-      return application.isLodged
+      return application.isLogged
     },
     navigationList(): NavigationMenu {
       return mainMenu.filter(byAuthorized(this.isLogged));
