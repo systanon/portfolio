@@ -24,11 +24,15 @@ export class Application<
     this.#authService = authService
   }
 
+  private clearProfile() {
+    this.#profile.value = null
+  }
+
   public get userProfile() {
     return this.#profile.value
   }
 
-  public get isLodged(): boolean {
+  public get isLogged(): boolean {
     return this.#profile.value !== null
   }
 
@@ -59,6 +63,15 @@ export class Application<
       return res
     }
     await this.getProfile()
+  }
+
+  public async logout(): Promise<void | AppError> {
+    const res = await this.#authService.logout()
+    if (res instanceof AppError) {
+      return res
+    }
+    this.clearProfile()
+    this.#ee.emit('unlogged');
   }
 
   public async signIn(dto: SignInDto): Promise<void | AppError> {
