@@ -29,11 +29,6 @@ defineProps<{
   gap: 1rem;
   width: 30rem;
   min-height: 10rem;
-  &__checked {
-    display: flex;
-    align-items: center;
-    flex: 0 0;
-  }
   &__info {
     flex: 1 1;
   }
