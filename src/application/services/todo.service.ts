@@ -3,7 +3,7 @@ import type { CreateTodoDTO, Todo, ReplaceTodoDTO, UpdateTodoDTO } from '../../t
 import { AppError } from '../../types/app-errors';
 import type { ID } from '../../types/general';
 import { errorMsg } from '@/helpers/formatErrorMsg';
-import type { PaginateResult } from '@/types/aap.types';
+import type { GetAllParams, PaginateResult } from '@/types/app.types';
 import { getTotalPages } from '@/utils/getTotalPages';
 
 export class TodoService {
@@ -31,7 +31,7 @@ export class TodoService {
     }
   }
 
-  async getAll(params: any): Promise<PaginateResult<Todo>> {
+  async getAll(params: GetAllParams): Promise<PaginateResult<Todo>> {
     const url = '/api/todos';
     try {
       const response = await this.httpClient.do(url, { params });

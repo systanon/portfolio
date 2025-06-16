@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 import { application } from '../../application'
 import { AppError } from '../../types/app-errors';
 import type { CreateTodoDTO, Todo, UpdateTodoDTO } from '../../types/todo';
+import type { GetAllParams } from '@/types/app.types';
 
 
 export const useTodoStore = defineStore('todos', () => {
@@ -13,7 +14,7 @@ export const useTodoStore = defineStore('todos', () => {
   const total = ref<number>(0)
   const pages = ref<number>(1)
 
-  async function getAll(params: any) {
+  async function getAll(params: GetAllParams) {
     try {
       const { data, total: _total, pages: _pages } = await application.getAllTodos(params)
       todos.value = data
