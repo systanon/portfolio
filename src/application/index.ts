@@ -1,6 +1,7 @@
 import { HTTPClient, type ResponseWithRequest } from "../lib/http.client";
 
 import { TodoService } from "./services/todo.service";
+import { NotesService } from "./services/notes.service";
 
 import { Application } from "./application";
 import { AuthService } from "./services/auth.service";
@@ -15,6 +16,7 @@ export const httpClient = new HTTPClient({
 
 export const todoService = new TodoService(httpClient);
 export const authService = new AuthService(httpClient);
+export const notesService = new NotesService(httpClient);
 httpClient.interceptors.request.use(
   (request) => {
     if (request.credentials === "include") {
@@ -62,7 +64,7 @@ httpClient.interceptors.response.use(
   { runWhen: () => true }
 )
 
-export const createApplication = (): Application => new Application(todoService, authService);
+export const createApplication = (): Application => new Application(todoService, authService, notesService);
 
 
 // Here only for Pinia
