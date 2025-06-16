@@ -8,7 +8,7 @@ import type { AuthService } from './services/auth.service'
 import type { SignInDto, SignUpDto, UserProfile } from '@/types/auth'
 import type { GetAllParams, PaginateResult } from '@/types/app.types'
 import type { NotesService } from './services/notes.service'
-import type { Note, ReplaceNoteDTO, UpdateNoteDTO } from '@/types/notes'
+import type { CreateNoteDTO, Note, ReplaceNoteDTO, UpdateNoteDTO } from '@/types/notes'
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any
@@ -153,6 +153,11 @@ export class Application<
     } catch (error) {
       return Promise.reject(error)
     }
+  }
+
+  public async createNote(dto: CreateNoteDTO): Promise<ID | AppError> {
+    const res = await this.#noteService.create(dto)
+    return res
   }
 
   public async getOneNote(id: ID): Promise<Note | AppError> {
