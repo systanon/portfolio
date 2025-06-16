@@ -6,22 +6,26 @@ import type { ID } from '../types/general'
 import { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type { SignInDto, SignUpDto, UserProfile } from '@/types/auth'
-import type { PaginateResult } from '@/types/aap.types'
+import type { GetAllParams, PaginateResult } from '@/types/app.types'
+import type { NotesService } from './services/notes.service'
+import type { Note, ReplaceNoteDTO, UpdateNoteDTO } from '@/types/notes'
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any
 > {
   #ee: EventEmitter = new EventEmitter()
   #todoService: TodoService
+  #noteService: NotesService
   #authService: AuthService
   #profile: Ref<UserProfile | null> = ref(null)
   #loading: Ref<boolean> = ref(false)
   resolveProfileLoading: (() => void) | null = null;
   profileLoading: Promise<void> = Promise.resolve()
 
-  constructor(todoService: TodoService, authService: AuthService) {
+  constructor(todoService: TodoService, authService: AuthService, notesService: NotesService) {
     this.#todoService = todoService
     this.#authService = authService
+    this.#noteService = notesService
   }
 
   private clearProfile() {
@@ -114,7 +118,7 @@ export class Application<
   }
 
 
-  public async getAllTodos(params: any): Promise<PaginateResult<Todo>> {
+  public async getAllTodos(params: GetAllParams): Promise<PaginateResult<Todo>> {
     try {
       return await this.#todoService.getAll(params)
     } catch (error) {
@@ -142,6 +146,36 @@ export class Application<
     const res = await this.#todoService.delete(id)
     return res
   }
+
+  public async getAllNotes(params: GetAllParams): Promise<PaginateResult<Note>>  {
+    try {
+      return await this.#noteService.getAll(params)
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+
+  public async getOneNote(id: ID): Promise<Note | AppError> {
+    const res = await this.#noteService.getOne(id)
+    return res
+  }
+
+  public async replaceNote(id: ID, dto: ReplaceNoteDTO): Promise<Note | AppError> {
+    const res = await this.#noteService.replace(id, dto)
+    return res
+  }
+
+  public async updateNote(id: ID, dto: UpdateNoteDTO): Promise<Note | AppError> {
+    const res = await this.#noteService.update(id, dto)
+    return res
+  }
+
+  public async deleteNote(id: ID): Promise<Note | AppError> {
+    const res = await this.#noteService.delete(id)
+    return res
+  }
+
+
 
   public async run(): Promise<void> {
     await this.getProfile()
