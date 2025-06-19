@@ -1,6 +1,6 @@
 <template>
   <h2>This is Notes page</h2>
-  <button @click="createHandler">Create Note</button>
+  <UiButtonIcon iconName="plus" @click="createHandler" />
   <section class="page-note__notes">
     <NoteItem
       v-for="[id, note] of [...notesMap.entries()]"
@@ -59,6 +59,7 @@
   import NoteItem from '@/components/NoteItem.vue';
   import { usePagination } from '@/hooks/pagination';
   import UIPagination from '@/components/UiPagination.vue';
+  import UiButtonIcon from '@/components/UiButtonIcon.vue';
 
   import UIModal, { type IModalOpen } from '@/components/UiModal.vue';
   import { type UpdateNoteDTO, type ReplaceNoteDTO, type Note } from '../types/notes';
@@ -172,6 +173,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
+      justify-content: center;
     }
 
     &__modal-form {
