@@ -5,6 +5,8 @@ import { createStore } from './plugins/store'
 
 import { application } from './application'
 
+import '@/sass/_reset.scss'
+
 const app = createApp(App)
 
 app.use(createStore(application))
