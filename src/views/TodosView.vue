@@ -1,56 +1,56 @@
 <template>
-  <h2>This is Todos page</h2>
-  <button @click="createHandler">Create Todo</button>
-  <section class="page-todo__todos">
-    <TodoItem
-      v-for="[id, todo] of [...todosMap.entries()]"
-      :key="id"
-      :todo="todo"
-      @editHandler="editHandler"
-      @deleteHandler="deleteHandler"
-      @completeHandler="completeHandler"
+  <section class="page-todo">
+    <h2>This is Todos page</h2>
+    <UiButtonIcon iconName="plus" @click="createHandler" />
+    <section class="page-todo__todos">
+      <TodoItem
+        v-for="[id, todo] of [...todosMap.entries()]"
+        :key="id"
+        :todo="todo"
+        @editHandler="editHandler"
+        @deleteHandler="deleteHandler"
+        @completeHandler="completeHandler"
+      />
+      <p v-if="!todos.length">Epmty todos</p>
+    </section>
+
+    <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
+      <template #default>
+        <div class="page-todo__modal-form delete-todo-form">
+          <h3>Are you sure you want to delete todo?</h3>
+        </div>
+      </template>
+    </UIModal>
+    <UIModal ref="editModalRef" title="Update todo" class="page-todo__modal">
+      <template #default>
+        <div class="page-todo__modal-form update-todo-form">
+          <h3>Edit todo</h3>
+          <input type="text" v-model="todo.title" />
+          <input type="text" v-model="todo.description" />
+        </div>
+      </template>
+    </UIModal>
+    <UIModal ref="createModalRef" title="Create Todo" class="page-todo__modal">
+      <template #default>
+        <div class="page-todo__modal-form update-todo-form">
+          <h3>Create todo</h3>
+          <input type="text" v-model="todo.title" />
+          <input type="text" v-model="todo.description" />
+          <input type="checkbox" v-model="todo.completed" />
+        </div>
+      </template>
+    </UIModal>
+
+    <UIPagination
+      v-model:page="pagination.page"
+      v-model:pages="pagination.pages"
+      @first-page="firstPage"
+      @prev-page="prevPage"
+      @next-page="nextPage"
+      @latest-page="latestPage"
+      @btn-page="btnPage"
     />
-    <!-- <TodoItem v-for="todo of todos" :key="todo.id" :todo="todo" @editHandler="editHandler"
-      @deleteHandler="deleteHandler" @completeHandler="completeHandler" /> -->
-    <p v-if="!todos.length">Epmty todos</p>
   </section>
-
-  <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
-    <template #default>
-      <div class="page-todo__modal-form delete-todo-form">
-        <h3>Are you sure you want to delete todo?</h3>
-      </div>
-    </template>
-  </UIModal>
-  <UIModal ref="editModalRef" title="Update todo" class="page-todo__modal">
-    <template #default>
-      <div class="page-todo__modal-form update-todo-form">
-        <h3>Edit todo</h3>
-        <input type="text" v-model="todo.title" />
-        <input type="text" v-model="todo.description" />
-      </div>
-    </template>
-  </UIModal>
-  <UIModal ref="createModalRef" title="Create Todo" class="page-todo__modal">
-    <template #default>
-      <div class="page-todo__modal-form update-todo-form">
-        <h3>Create todo</h3>
-        <input type="text" v-model="todo.title" />
-        <input type="text" v-model="todo.description" />
-        <input type="checkbox" v-model="todo.completed" />
-      </div>
-    </template>
-  </UIModal>
-
-  <UIPagination
-    v-model:page="pagination.page"
-    v-model:pages="pagination.pages"
-    @first-page="firstPage"
-    @prev-page="prevPage"
-    @next-page="nextPage"
-    @latest-page="latestPage"
-    @btn-page="btnPage"
-  />
 </template>
 
 <script setup lang="ts">
@@ -62,6 +62,7 @@
   import TodoItem from '@/components/TodoItem.vue';
   import { usePagination } from '@/hooks/pagination';
   import UIPagination from '@/components/UiPagination.vue';
+  import UiButtonIcon from '@/components/UiButtonIcon.vue';
 
   import UIModal, { type IModalOpen } from '@/components/UiModal.vue';
   import { type UpdateTodoDTO, type ReplaceTodoDTO, type Todo } from '../types/todo';
@@ -178,6 +179,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
+      justify-content: center;
     }
 
     &__modal-form {
