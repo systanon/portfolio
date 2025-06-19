@@ -18,14 +18,15 @@
       <p class="todo-item__description">{{ todo.description }}</p>
     </div>
     <div class="todo-item__actions">
-      <button @click="$emit('editHandler', todo)">edit</button>
-      <button @click="$emit('deleteHandler', todo)">remove</button>
+      <UiButtonIcon iconName="edit" @click="$emit('editHandler', todo)"/>
+      <UiButtonIcon iconName="trash" @click="$emit('deleteHandler', todo)"/>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { Todo } from "@/types/todo";
+import UiButtonIcon from '@/components/UiButtonIcon.vue'
 import { defineProps } from "vue";
 defineProps<{
   todo: Todo;
