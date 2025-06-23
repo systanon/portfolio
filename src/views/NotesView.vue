@@ -1,53 +1,55 @@
 <template>
-  <h2>This is Notes page</h2>
-  <UiButtonIcon iconName="plus" @click="createHandler" />
-  <section class="page-note__notes">
-    <NoteItem
-      v-for="[id, note] of [...notesMap.entries()]"
-      :key="id"
-      :note="note"
-      @editHandler="editHandler"
-      @deleteHandler="deleteHandler"
+  <section class="page-note">
+    <h2>This is Notes page</h2>
+    <UiButtonIcon iconName="plus" @click="createHandler" />
+    <section class="page-note__notes">
+      <NoteItem
+        v-for="[id, note] of [...notesMap.entries()]"
+        :key="id"
+        :note="note"
+        @editHandler="editHandler"
+        @deleteHandler="deleteHandler"
+      />
+
+      <p v-if="!notes.length">Epmty notes</p>
+    </section>
+
+    <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
+      <template #default>
+        <div class="page-note__modal-form delete-note-form">
+          <h3>Are you sure you want to delete note?</h3>
+        </div>
+      </template>
+    </UIModal>
+    <UIModal ref="editModalRef" title="Update note" class="page-note__modal">
+      <template #default>
+        <div class="page-note__modal-form update-note-form">
+          <h3>Edit note</h3>
+          <input type="text" v-model="note.title" />
+          <input type="text" v-model="note.description" />
+        </div>
+      </template>
+    </UIModal>
+    <UIModal ref="createModalRef" title="Create Note" class="page-note__modal">
+      <template #default>
+        <div class="page-note__modal-form update-note-form">
+          <h3>Create note</h3>
+          <input type="text" v-model="note.title" />
+          <input type="text" v-model="note.description" />
+        </div>
+      </template>
+    </UIModal>
+
+    <UIPagination
+      v-model:page="pagination.page"
+      v-model:pages="pagination.pages"
+      @first-page="firstPage"
+      @prev-page="prevPage"
+      @next-page="nextPage"
+      @latest-page="latestPage"
+      @btn-page="btnPage"
     />
-
-    <p v-if="!notes.length">Epmty notes</p>
   </section>
-
-  <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
-    <template #default>
-      <div class="page-note__modal-form delete-note-form">
-        <h3>Are you sure you want to delete note?</h3>
-      </div>
-    </template>
-  </UIModal>
-  <UIModal ref="editModalRef" title="Update note" class="page-note__modal">
-    <template #default>
-      <div class="page-note__modal-form update-note-form">
-        <h3>Edit note</h3>
-        <input type="text" v-model="note.title" />
-        <input type="text" v-model="note.description" />
-      </div>
-    </template>
-  </UIModal>
-  <UIModal ref="createModalRef" title="Create Note" class="page-note__modal">
-    <template #default>
-      <div class="page-note__modal-form update-note-form">
-        <h3>Create note</h3>
-        <input type="text" v-model="note.title" />
-        <input type="text" v-model="note.description" />
-      </div>
-    </template>
-  </UIModal>
-
-  <UIPagination
-    v-model:page="pagination.page"
-    v-model:pages="pagination.pages"
-    @first-page="firstPage"
-    @prev-page="prevPage"
-    @next-page="nextPage"
-    @latest-page="latestPage"
-    @btn-page="btnPage"
-  />
 </template>
 
 <script setup lang="ts">
@@ -169,6 +171,9 @@
 
 <style scoped lang="scss">
   .page-note {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
     &__notes {
       display: flex;
       flex-wrap: wrap;
