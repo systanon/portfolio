@@ -18,5 +18,6 @@
     display: flex;
     justify-content: end;
     gap: 15px;
+    padding: 2rem;
   }
 </style>

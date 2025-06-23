@@ -20,15 +20,11 @@
     },
   });
 </script>
-<style lang="scss">
-  .ui-icon {
-    color: var(--text-color-primary);
-  }
-</style>
 <style lang="scss" scoped>
   .ui-icon {
     height: 1.5rem;
     width: 1.5rem;
+    color: var(--text-color-primary);
     fill: currentColor;
   }
 </style>

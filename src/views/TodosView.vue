@@ -175,6 +175,9 @@
 
 <style scoped lang="scss">
   .page-todo {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
     &__todos {
       display: flex;
       flex-wrap: wrap;

@@ -36,6 +36,7 @@
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    background-color: transparent;
     &:disabled {
       pointer-events: none;
     }
