@@ -14,4 +14,8 @@
   <GlobalLoader />
 </template>
 
-<style scoped></style>
+<style scoped>
+* {
+  color: #fff;
+}
+</style>
