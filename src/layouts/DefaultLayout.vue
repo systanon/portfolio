@@ -14,7 +14,7 @@
       alt="Layer 3"
     />
     <main class="default-layout__main">
-      <router-view/>
+      <router-view />
     </main>
   </section>
 </template>
@@ -47,12 +47,15 @@
     width: 100%;
     height: 100vh;
     overflow: hidden;
-    background-image: url('@/assets/home-img/layer 4.png');
-    background-size: cover;
-    object-fit: cover;
-    &__main {
-      position: relative;
-      z-index: 10;
+    &:before {
+      content: '';
+      position: absolute;
+      background-image: url('@/assets/home-img/layer 4.png');
+      background-size: cover;
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
     &__layer-1 {
       top: 0%;
@@ -66,7 +69,7 @@
       object-fit: contain;
     }
   }
-  
+
   .layer {
     position: absolute;
     background-position: center;
