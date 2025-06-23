@@ -47,6 +47,8 @@
     width: 100%;
     height: 100vh;
     overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr;
     &:before {
       content: '';
       position: absolute;
@@ -75,5 +77,6 @@
     background-position: center;
     transition: transform 0.1s ease-out;
     will-change: transform;
+    z-index: -1;
   }
 </style>
