@@ -36,7 +36,7 @@
   .ui-button {
     background: transparent;
     border: none;
-    color: transparent;
+    color: var(--text-color-secondary);
     text-align: center;
     cursor: pointer;
     position: relative;

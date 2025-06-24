@@ -13,9 +13,3 @@
   <router-view />
   <GlobalLoader />
 </template>
-
-<style scoped>
-* {
-  color: #fff;
-}
-</style>
