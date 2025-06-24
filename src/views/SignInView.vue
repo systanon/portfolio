@@ -1,15 +1,19 @@
 <template>
-  <section class="sign-in">
-    <form @submit.prevent="submitHandler">
-      <input v-model="username" type="text" placeholder="username" required autocomplete="username"/>
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Password"
-        required
-        autocomplete="current-password"
+  <section class="page-sign-in">
+    <form class="page-sign-in__form" @submit.prevent="submitHandler">
+      <UiInput
+        v-model="username"
+        label="User name"
+        placeholder="Enter user name"
+        :validation="v$.username"
       />
-      <button type="submit">Submit</button>
+      <UiInput
+        v-model="password"
+        label="Password"
+        placeholder="Enter your password"
+        :validation="v$.password"
+      />
+      <UiButton type="submit" label="Submit" />
     </form>
   </section>
 </template>
@@ -17,10 +21,22 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { application } from '@/application';
+  import UiInput from '@/components/UiInput.vue';
+  import UiButton from '@/components/UiButton.vue';
+  import useVuelidate from '@vuelidate/core';
+  import { required, helpers } from '@vuelidate/validators';
   const username = ref('');
   const password = ref('');
 
+  const rules = {
+    password: { required: helpers.withMessage('Password is required', required) },
+    username: { required: helpers.withMessage('User name is required', required) },
+  };
+  const v$ = useVuelidate(rules, { password, username });
+
   const submitHandler = async () => {
+    const isValid = await v$.value.$validate();
+    if (!isValid) return;
     const payload = {
       username: username.value,
       password: password.value,
@@ -35,15 +51,17 @@
   };
 </script>
 
-<style scoped>
-  .sign-in {
-    max-width: 400px;
-    margin: 2rem auto;
-  }
-
-  form {
+<style scoped lang="scss">
+  .page-sign-in {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    &__form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      height: max-content;
+    }
   }
 </style>
