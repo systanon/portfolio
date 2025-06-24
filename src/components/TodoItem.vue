@@ -43,6 +43,7 @@ defineProps<{
   gap: 1rem;
   width: 30rem;
   min-height: 10rem;
+  color: var(--text-color-secondary);
   &__checked {
     display: flex;
     align-items: center;
