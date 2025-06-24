@@ -45,10 +45,11 @@
   .default-layout {
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 1fr;
+    &__main {
+      height: 100%;
+    }
     &:before {
       content: '';
       position: absolute;
@@ -67,7 +68,7 @@
     &__layer-2 {
       width: 140%;
       left: -15%;
-      bottom: -10vh;
+      bottom: -10%;
       object-fit: contain;
     }
   }

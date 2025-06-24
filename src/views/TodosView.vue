@@ -1,7 +1,7 @@
 <template>
   <section class="page-todo">
-    <h2>This is Todos page</h2>
-    <UiButtonIcon iconName="plus" @click="createHandler" />
+    <h2 class="page-todo__title">This is Todos page</h2>
+    <UiButtonIcon class="page-todo__create" iconName="plus" @click="createHandler" />
     <section class="page-todo__todos">
       <TodoItem
         v-for="[id, todo] of [...todosMap.entries()]"
@@ -42,6 +42,7 @@
     </UIModal>
 
     <UIPagination
+      class="page-todo__pagination"
       v-model:page="pagination.page"
       v-model:pages="pagination.pages"
       @first-page="firstPage"
@@ -177,12 +178,17 @@
   .page-todo {
     height: 100%;
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto 1fr 0.5fr;
+    &__title {
+      text-align: center;
+    }
     &__todos {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
       justify-content: center;
+      height: 100%;
+      overflow-y: scroll;
     }
 
     &__modal-form {
@@ -192,6 +198,26 @@
       width: 40vw;
       min-width: 400px;
       max-width: 600px;
+    }
+  }
+
+  @include media-query('large-desktop') {
+    .page-todo {
+      display: grid;
+      gap: 30px;
+      grid-template-columns: repeat(12, 1fr);
+      &__title {
+        grid-column: 1/ -1;
+      }
+      &__create {
+        grid-column: 1/ -1;
+      }
+      &__todos {
+        grid-column: 2/ 12;
+      }
+      &__pagination {
+        grid-column: 1/ -1;
+      }
     }
   }
 </style>
