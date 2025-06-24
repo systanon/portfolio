@@ -18,22 +18,15 @@
 
 <script setup lang="ts">
   import { computed, unref } from 'vue';
-  import type { ErrorObject } from '@vuelidate/core';
-  type FieldValidation = {
-    readonly $model: unknown;
-    readonly $dirty: boolean;
-    readonly $error: boolean;
-    readonly $errors: ErrorObject[];
-    readonly $touch: () => void;
-    readonly $validate: () => Promise<boolean>;
-  };
+  import type { BaseValidation } from '@vuelidate/core';
+
   interface Props {
     modelValue: string;
     label?: string;
     placeholder?: string;
     type?: string;
     id?: string;
-    validation?: FieldValidation;
+    validation?: BaseValidation;
   }
 
   const props = defineProps<Props>();
