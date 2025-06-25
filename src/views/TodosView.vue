@@ -188,7 +188,7 @@
       gap: 5px;
       justify-content: center;
       height: 100%;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
 
     &__modal-form {
