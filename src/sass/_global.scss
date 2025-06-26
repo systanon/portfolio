@@ -1,0 +1,24 @@
+@use './typography' as *;
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-color-secondary);
+}
+
+h1 {
+  @include typography('h1');
+}
+
+h2 {
+  @include typography('h2');
+}
