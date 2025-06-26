@@ -1,5 +1,6 @@
 <template>
-  <section class="default-layout" @mousemove="handleMouseMove">
+  <section class="default-layout">
+    <Comets />
     <AppHeader />
     <img
       class="default-layout__layer-1 layer"
@@ -21,7 +22,8 @@
 
 <script lang="ts" setup>
   import AppHeader from '@/components/AppHeader.vue';
-  import { ref } from 'vue';
+  import Comets from '@/components/Comets.vue';
+  import { ref, onMounted, onUnmounted } from 'vue';
 
   const offsetX = ref(0);
   const offsetY = ref(0);
@@ -40,6 +42,14 @@
       transform: `translate(${x}px, ${y}px)`,
     };
   }
+
+  onMounted(() => {
+    window.addEventListener('mousemove', handleMouseMove);
+  });
+
+  onUnmounted(() => {
+    window.removeEventListener('mousemove', handleMouseMove);
+  });
 </script>
 <style scoped lang="scss">
   .default-layout {
@@ -58,7 +68,7 @@
       object-fit: cover;
       width: 100%;
       height: 100%;
-      z-index: -1;
+      z-index: -5;
     }
     &__layer-1 {
       top: 0%;
@@ -78,6 +88,6 @@
     background-position: center;
     transition: transform 0.1s ease-out;
     will-change: transform;
-    z-index: -1;
+    z-index: -3;
   }
 </style>
