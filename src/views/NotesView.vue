@@ -132,10 +132,6 @@
     clearInputs();
   };
 
-  const completeHandler = ({ id, payload }: { id: number; payload: UpdateNoteDTO }) => {
-    update(id, payload);
-  };
-
   const clearInputs = () => {
     note.title = '';
     note.description = '';
