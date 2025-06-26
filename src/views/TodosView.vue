@@ -182,11 +182,15 @@
     &__title {
       text-align: center;
     }
+    &__create {
+      margin: 0 auto;
+    }
     &__todos {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: rem(30);
       justify-content: center;
+      align-content: baseline;
       height: 100%;
       overflow-y: auto;
     }
