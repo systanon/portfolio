@@ -4,7 +4,6 @@
 cypress
 dist
 node_modules
-scripts
 **/__test__/**
 
 *.md
