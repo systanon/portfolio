@@ -1,7 +1,7 @@
 <template>
   <section class="page-note">
-    <h2>This is Notes page</h2>
-    <UiButtonIcon iconName="plus" @click="createHandler" />
+    <h2 class="page-note__title">This is Notes page</h2>
+    <UiButtonIcon class="page-note__create" iconName="plus" @click="createHandler" />
     <section class="page-note__notes">
       <NoteItem
         v-for="[id, note] of [...notesMap.entries()]"
@@ -41,6 +41,7 @@
     </UIModal>
 
     <UIPagination
+      class="page-note__pagination"
       v-model:page="pagination.page"
       v-model:pages="pagination.pages"
       @first-page="firstPage"
@@ -169,21 +170,49 @@
   .page-note {
     height: 100%;
     display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto 1fr 0.5fr;
+    &__title {
+      text-align: center;
+    }
+    &__create {
+      margin: 0 auto;
+    }
     &__notes {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: rem(30);
       justify-content: center;
+      align-content: baseline;
+      height: 100%;
+      overflow-y: auto;
     }
 
     &__modal-form {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      width: 40vw;
       min-width: 400px;
       max-width: 600px;
+    }
+  }
+
+  @include media-query('large-desktop') {
+    .page-todo {
+      display: grid;
+      gap: 30px;
+      grid-template-columns: repeat(12, 1fr);
+      &__title {
+        grid-column: 1/ -1;
+      }
+      &__create {
+        grid-column: 1/ -1;
+      }
+      &__todos {
+        grid-column: 2/ 12;
+      }
+      &__pagination {
+        grid-column: 1/ -1;
+      }
     }
   }
 </style>

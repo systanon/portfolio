@@ -117,7 +117,6 @@
     }
     :deep(.ui-icon) {
       color: $icon-color-primary;
-      // transform: rotate(45deg);
     }
   }
 </style>

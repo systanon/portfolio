@@ -4,43 +4,97 @@
       <h2 class="note-item__title">{{ note.title }}</h2>
       <p class="note-item__description">{{ note.description }}</p>
     </div>
-    <div class="note-item__actions">
-      <UiButtonIcon iconName="edit" @click="$emit('editHandler', note)" />
-      <UiButtonIcon iconName="trash" @click="$emit('deleteHandler', note)" />
+    <div class="note-item__menu">
+      <UiButtonIcon class="note-item__menu-open" iconName="arrow-up-left" @click="toggleMenu" />
+      <div v-if="menuOpen" class="note-item__menu-actions">
+        <UiButtonIcon
+          class="note-item__menu-item"
+          style="--i: 2"
+          iconName="edit"
+          @click="$emit('editHandler', note)"
+        />
+        <UiButtonIcon
+          class="note-item__menu-item"
+          style="--i: 1"
+          iconName="trash"
+          @click="$emit('deleteHandler', note)"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
   import type { Note } from '@/types/notes';
-  import { defineProps } from 'vue';
-  import UiButtonIcon from '@/components/UiButtonIcon.vue'
+  import { defineProps, ref, type Ref } from 'vue';
+  import UiButtonIcon from '@/components/UiButtonIcon.vue';
   defineProps<{
     note: Note;
   }>();
+
+  const menuOpen: Ref<boolean> = ref(false);
+  const toggleMenu = () => (menuOpen.value = !menuOpen.value);
 </script>
 
 <style scoped lang="scss">
   .note-item {
-    box-sizing: border-box;
-    padding: 4rem;
+    position: relative;
+    padding: rem(15) rem(30) rem(15) rem(15);
     border-radius: 2rem;
     border: black solid 1px;
     display: flex;
     gap: 1rem;
     width: 30rem;
-    min-height: 10rem;
+    height: 10rem;
+    color: var(--text-color-secondary);
+    overflow: hidden;
     &__info {
       flex: 1 1;
     }
-    &__actions {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex: 0 0;
+    &__menu {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      &-open {
+        position: relative;
+        z-index: 2;
+      }
+      &:before {
+        content: '';
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        border-radius: 50%;
+        background: $bg-menu-secondary;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+      &-actions {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: $bg-menu-tertiary;
+        border-radius: 50%;
+      }
+      &-item {
+        --angle: calc(var(--i) * 150deg);
+        position: absolute;
+        top: 18%;
+        left: 16%;
+        transform: rotate(var(--angle)) translate(2rem) rotate(calc(var(--angle) * -1));
+        transition: transform 0.3s ease;
+        z-index: 10;
+      }
     }
-    &__title {
-      margin: 0;
+    :deep(.ui-icon) {
+      color: $icon-color-primary;
     }
   }
 </style>
