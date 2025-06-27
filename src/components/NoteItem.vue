@@ -40,12 +40,13 @@
   .note-item {
     position: relative;
     padding: rem(15) rem(30) rem(15) rem(15);
-    border-radius: 2rem;
-    border: black solid 1px;
+    border-radius: 1rem;
+    border: var(--todo-checked) solid 1px;
     display: flex;
     gap: 1rem;
     width: 30rem;
     height: 10rem;
+    background-color: var(--todo-bg-primary);
     color: var(--text-color-secondary);
     overflow: hidden;
     &__info {
