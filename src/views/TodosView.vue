@@ -20,24 +20,45 @@
           <h3>Are you sure you want to delete todo?</h3>
         </div>
       </template>
+      <template #actions="{ close, confirm }">
+        <UiButton @click="close" label="Cancel" />
+        <UiButton @click="confirm" label="Delete todo" />
+      </template>
     </UIModal>
     <UIModal ref="editModalRef" title="Update todo" class="page-todo__modal">
       <template #default>
         <div class="page-todo__modal-form update-todo-form">
           <h3>Edit todo</h3>
-          <input type="text" v-model="todo.title" />
-          <input type="text" v-model="todo.description" />
+          <UiInput v-model="todo.title" type="text" placeholder="Title" :validation="v$.title" />
+          <UiInput
+            v-model="todo.description"
+            type="text"
+            placeholder="Description"
+            :validation="v$.description"
+          />
         </div>
+      </template>
+      <template #actions="{ close }">
+        <UiButton @click="close" label="Cancel" />
+        <UiButton @click="updateTodo" label="Update todo" />
       </template>
     </UIModal>
     <UIModal ref="createModalRef" title="Create Todo" class="page-todo__modal">
       <template #default>
         <div class="page-todo__modal-form update-todo-form">
           <h3>Create todo</h3>
-          <input type="text" v-model="todo.title" />
-          <input type="text" v-model="todo.description" />
-          <input type="checkbox" v-model="todo.completed" />
+          <UiInput v-model="todo.title" type="text" placeholder="Title" :validation="v$.title" />
+          <UiInput
+            v-model="todo.description"
+            type="text"
+            placeholder="Description"
+            :validation="v$.description"
+          />
         </div>
+      </template>
+      <template #actions="{ close }">
+        <UiButton @click="close" label="Cancel" />
+        <UiButton @click="createTodo" label="Create todo" />
       </template>
     </UIModal>
 
@@ -56,6 +77,8 @@
 
 <script setup lang="ts">
   import { onMounted, ref, reactive, computed, watch } from 'vue';
+  import { required, helpers } from '@vuelidate/validators';
+  import useVuelidate from '@vuelidate/core';
   import { APP_CONFIG } from '@/constants';
   import { useRoute, useRouter } from 'vue-router';
   import { storeToRefs } from 'pinia';
@@ -64,9 +87,19 @@
   import { usePagination } from '@/hooks/pagination';
   import UIPagination from '@/components/UiPagination.vue';
   import UiButtonIcon from '@/components/UiButtonIcon.vue';
+  import UiInput from '@/components/UiInput.vue';
+  import UiButton from '@/components/UiButton.vue';
 
   import UIModal, { type IModalOpen } from '@/components/UiModal.vue';
   import { type UpdateTodoDTO, type ReplaceTodoDTO, type Todo } from '../types/todo';
+
+  const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG;
+  const deleteModalRef = ref<IModalOpen | null>(null);
+  const editModalRef = ref<IModalOpen | null>(null);
+  const createModalRef = ref<IModalOpen | null>(null);
+
+  const route = useRoute();
+  const router = useRouter();
 
   const todo = reactive({
     title: '',
@@ -74,14 +107,12 @@
     completed: false,
   } as ReplaceTodoDTO);
 
-  const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG;
+  const rules = {
+    title: { required: helpers.withMessage('Title is required', required) },
+    description: { required: helpers.withMessage('Description is required', required) },
+  };
 
-  const deleteModalRef = ref<IModalOpen | null>(null);
-  const editModalRef = ref<IModalOpen | null>(null);
-  const createModalRef = ref<IModalOpen | null>(null);
-
-  const route = useRoute();
-  const router = useRouter();
+  const v$ = useVuelidate(rules, todo);
 
   const todoStore = useTodoStore();
   const { pagination, firstPage, prevPage, nextPage, latestPage, btnPage, setPages } =
@@ -105,14 +136,23 @@
   };
 
   const editHandler = async (_todo: Todo) => {
-    const { id } = _todo;
     fillInputs(_todo);
+    router.replace({ query: { ...route.query, id: _todo.id } });
     const modal = editModalRef.value;
-    const res = await modal?.open();
-    if (res) {
-      update(id, todo);
-    }
+    await modal?.open();
+    const { id, ...restQuery } = route.query;
+    router.replace({ query: restQuery });
     clearInputs();
+    v$.value.$reset();
+  };
+  const updateTodo = async () => {
+    const id = route.query.id;
+    const modal = editModalRef.value;
+    const isValid = await v$.value.$validate();
+    if (!isValid || !id) return;
+
+    await update(Number(id), todo);
+    modal?.confirm(true);
   };
 
   const parsePouterQuery = () => {
@@ -128,11 +168,18 @@
 
   const createHandler = async () => {
     const modal = createModalRef.value;
-    const res = await modal?.open();
-    if (res) {
-      create(todo);
-    }
+    await modal?.open();
     clearInputs();
+    v$.value.$reset();
+  };
+
+  const createTodo = async () => {
+    const modal = createModalRef.value;
+    const isValid = await v$.value.$validate();
+    if (!isValid) return;
+
+    await create(todo);
+    modal?.confirm(true);
   };
 
   const completeHandler = ({ id, payload }: { id: number; payload: UpdateTodoDTO }) => {
@@ -199,7 +246,6 @@
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      width: 40vw;
       min-width: 400px;
       max-width: 600px;
     }
