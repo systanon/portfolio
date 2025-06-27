@@ -20,14 +20,27 @@
           <h3>Are you sure you want to delete todo?</h3>
         </div>
       </template>
+      <template #actions="{ close, confirm }">
+        <UiButton @click="close" label="Cancel" />
+        <UiButton @click="confirm" label="Delete todo" />
+      </template>
     </UIModal>
     <UIModal ref="editModalRef" title="Update todo" class="page-todo__modal">
       <template #default>
         <div class="page-todo__modal-form update-todo-form">
           <h3>Edit todo</h3>
-          <input type="text" v-model="todo.title" />
-          <input type="text" v-model="todo.description" />
+          <UiInput v-model="todo.title" type="text" placeholder="Title" :validation="v$.title" />
+          <UiInput
+            v-model="todo.description"
+            type="text"
+            placeholder="Description"
+            :validation="v$.description"
+          />
         </div>
+      </template>
+      <template #actions="{ close }">
+        <UiButton @click="close" label="Cancel" />
+        <UiButton @click="updateTodo" label="Update todo" />
       </template>
     </UIModal>
     <UIModal ref="createModalRef" title="Create Todo" class="page-todo__modal">
@@ -45,7 +58,7 @@
       </template>
       <template #actions="{ close }">
         <UiButton @click="close" label="Cancel" />
-        <UiButton @click="createTodo" label="OK" />
+        <UiButton @click="createTodo" label="Create todo" />
       </template>
     </UIModal>
 
@@ -123,14 +136,23 @@
   };
 
   const editHandler = async (_todo: Todo) => {
-    const { id } = _todo;
     fillInputs(_todo);
+    router.replace({ query: { ...route.query, id: _todo.id } });
     const modal = editModalRef.value;
-    const res = await modal?.open();
-    if (res) {
-      update(id, todo);
-    }
+    await modal?.open();
+    const { id, ...restQuery } = route.query;
+    router.replace({ query: restQuery });
     clearInputs();
+    v$.value.$reset();
+  };
+  const updateTodo = async () => {
+    const id = route.query.id;
+    const modal = editModalRef.value;
+    const isValid = await v$.value.$validate();
+    if (!isValid || !id) return;
+
+    await update(Number(id), todo);
+    modal?.confirm(true);
   };
 
   const parsePouterQuery = () => {
@@ -156,7 +178,7 @@
     const isValid = await v$.value.$validate();
     if (!isValid) return;
 
-    await create(todo)
+    await create(todo);
     modal?.confirm(true);
   };
 
