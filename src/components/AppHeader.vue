@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-  import { computed } from 'vue';
   import NavigationMenu from '@/components/NavigationMenu.vue';
-  import { application } from '@/application';
+  import NavigationMenuMobile from './NavigationMenuMobile.vue';
+  import { useInjectWindowResize } from '@/composables/useWindowResize';
 
-  const isLogged = computed(() => application.isLogged);
+  const { isTablet, isMobile } = useInjectWindowResize();
 </script>
 
 <template>
   <header class="app-header">
-    <NavigationMenu />
-    <button class="app-header__logout"v-if="isLogged" @click="application.logout">Logout</button>
+    <NavigationMenuMobile v-if="isMobile || isTablet" />
+    <NavigationMenu v-else />
   </header>
 </template>
 

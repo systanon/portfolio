@@ -3,6 +3,7 @@
     <RouterLink v-for="{ path, text } in navigationList" :key="path" :to="path">
       {{ text }}
     </RouterLink>
+    <UiButton label="Logout" v-if="isLogged" />
   </nav>
 </template>
 
@@ -10,9 +11,11 @@
   import { defineComponent } from 'vue';
   import { byAuthorized, mainMenu, type NavigationMenu } from '@/config/main-menu';
   import { application } from '@/application';
+  import UiButton from './UiButton.vue';
 
   export default defineComponent({
     name: 'NavigationMenu',
+    components: { UiButton },
     computed: {
       isLogged() {
         return application.isLogged;
