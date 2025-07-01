@@ -1,14 +1,29 @@
 import { ref, type Ref } from 'vue'
 import EventEmitter from 'eventemitter3'
-import type { CreateTodoDTO, ReplaceTodoDTO, Todo, UpdateTodoDTO } from '../types/todo'
+import type {
+  CreateTodoDTO,
+  ReplaceTodoDTO,
+  Todo,
+  UpdateTodoDTO,
+} from '../types/todo'
 import type { TodoService } from './services/todo.service'
 import type { ID } from '../types/general'
 import { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
-import type { SignInDto, SignUpDto, UserProfile } from '@/types/auth'
+import type {
+  SignInDto,
+  SignUpDto,
+  UserProfile,
+  UserProfileUpdateInfo,
+} from '@/types/auth'
 import type { GetAllParams, PaginateResult } from '@/types/app.types'
 import type { NotesService } from './services/notes.service'
-import type { CreateNoteDTO, Note, ReplaceNoteDTO, UpdateNoteDTO } from '@/types/notes'
+import type {
+  CreateNoteDTO,
+  Note,
+  ReplaceNoteDTO,
+  UpdateNoteDTO,
+} from '@/types/notes'
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any
@@ -19,10 +34,14 @@ export class Application<
   #authService: AuthService
   #profile: Ref<UserProfile | null> = ref(null)
   #loading: Ref<boolean> = ref(false)
-  resolveProfileLoading: (() => void) | null = null;
+  resolveProfileLoading: (() => void) | null = null
   profileLoading: Promise<void> = Promise.resolve()
 
-  constructor(todoService: TodoService, authService: AuthService, notesService: NotesService) {
+  constructor(
+    todoService: TodoService,
+    authService: AuthService,
+    notesService: NotesService
+  ) {
     this.#todoService = todoService
     this.#authService = authService
     this.#noteService = notesService
@@ -52,12 +71,12 @@ export class Application<
     return this.#ee.on(event, fn, context)
   }
 
-  public off<T extends EventEmitter.EventNames<EventTypes>
-  >(
+  public off<T extends EventEmitter.EventNames<EventTypes>>(
     event: T,
     fn?: EventEmitter.EventListener<EventTypes, T>,
     context?: EventContext,
-    once?: boolean): EventEmitter {
+    once?: boolean
+  ): EventEmitter {
     return this.#ee.off(event, fn, context, once)
   }
 
@@ -75,7 +94,7 @@ export class Application<
       return res
     }
     this.clearProfile()
-    this.#ee.emit('unlogged');
+    this.#ee.emit('unlogged')
   }
 
   public async signIn(dto: SignInDto): Promise<void | AppError> {
@@ -90,21 +109,27 @@ export class Application<
     this.#loading.value = true
     this.profileLoading = new Promise<void>(
       (resolve) => (this.resolveProfileLoading = resolve)
-    );
+    )
     const res = await this.#authService.getProfile()
     if (res instanceof AppError) {
       this.#profile.value = null
       this.resolveProfileLoading?.()
-      this.#ee.emit('unlogged');
+      this.#ee.emit('unlogged')
     } else {
       this.#profile.value = res
       this.resolveProfileLoading?.()
-      this.#ee.emit('logged');
+      this.#ee.emit('logged')
     }
 
     this.#loading.value = false
 
     return res
+  }
+
+  public async updateProfileInfo(
+    dto: UserProfileUpdateInfo
+  ): Promise<AppError | string> {
+    return await this.#authService.updateProfile(dto)
   }
 
   public async refreshToken(): Promise<void | AppError> {
@@ -117,8 +142,9 @@ export class Application<
     return res
   }
 
-
-  public async getAllTodos(params: GetAllParams): Promise<PaginateResult<Todo>> {
+  public async getAllTodos(
+    params: GetAllParams
+  ): Promise<PaginateResult<Todo>> {
     try {
       return await this.#todoService.getAll(params)
     } catch (error) {
@@ -126,18 +152,23 @@ export class Application<
     }
   }
 
-
   public async getOneTodo(id: ID): Promise<Todo | AppError> {
     const res = await this.#todoService.getOne(id)
     return res
   }
 
-  public async replaceTodo(id: ID, dto: ReplaceTodoDTO): Promise<Todo | AppError> {
+  public async replaceTodo(
+    id: ID,
+    dto: ReplaceTodoDTO
+  ): Promise<Todo | AppError> {
     const res = await this.#todoService.replace(id, dto)
     return res
   }
 
-  public async updateTodo(id: ID, dto: UpdateTodoDTO): Promise<Todo | AppError> {
+  public async updateTodo(
+    id: ID,
+    dto: UpdateTodoDTO
+  ): Promise<Todo | AppError> {
     const res = await this.#todoService.update(id, dto)
     return res
   }
@@ -147,7 +178,9 @@ export class Application<
     return res
   }
 
-  public async getAllNotes(params: GetAllParams): Promise<PaginateResult<Note>>  {
+  public async getAllNotes(
+    params: GetAllParams
+  ): Promise<PaginateResult<Note>> {
     try {
       return await this.#noteService.getAll(params)
     } catch (error) {
@@ -165,12 +198,18 @@ export class Application<
     return res
   }
 
-  public async replaceNote(id: ID, dto: ReplaceNoteDTO): Promise<Note | AppError> {
+  public async replaceNote(
+    id: ID,
+    dto: ReplaceNoteDTO
+  ): Promise<Note | AppError> {
     const res = await this.#noteService.replace(id, dto)
     return res
   }
 
-  public async updateNote(id: ID, dto: UpdateNoteDTO): Promise<Note | AppError> {
+  public async updateNote(
+    id: ID,
+    dto: UpdateNoteDTO
+  ): Promise<Note | AppError> {
     const res = await this.#noteService.update(id, dto)
     return res
   }
@@ -179,8 +218,6 @@ export class Application<
     const res = await this.#noteService.delete(id)
     return res
   }
-
-
 
   public async run(): Promise<void> {
     await this.getProfile()

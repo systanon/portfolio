@@ -1,13 +1,19 @@
-import { errorMsg } from "@/helpers/formatErrorMsg";
-import type { HTTPClient } from "@/lib/http.client";
-import { AppError } from "@/types/app-errors";
-import type { AuthResponse, SignInDto, SignUpDto, UserProfile } from "@/types/auth";
+import { errorMsg } from '@/helpers/formatErrorMsg'
+import type { HTTPClient } from '@/lib/http.client'
+import { AppError } from '@/types/app-errors'
+import type {
+  AuthResponse,
+  SignInDto,
+  SignUpDto,
+  UserProfile,
+  UserProfileUpdateInfo,
+} from '@/types/auth'
 
 export class AuthService {
-  private readonly httpClient: HTTPClient;
+  private readonly httpClient: HTTPClient
 
   constructor(httpClient: HTTPClient) {
-    this.httpClient = httpClient;
+    this.httpClient = httpClient
   }
 
   async registration(dto: SignUpDto): Promise<void | AppError> {
@@ -19,10 +25,9 @@ export class AuthService {
         body,
         credentials: 'include',
         resource: url,
-        url
+        url,
       })
-      localStorage.setItem('access_token', result.access_token);
-
+      localStorage.setItem('access_token', result.access_token)
     } catch (error) {
       return new AppError(errorMsg(error))
     }
@@ -36,10 +41,9 @@ export class AuthService {
         body,
         credentials: 'include',
         resource: url,
-        url
+        url,
       })
-      localStorage.setItem('access_token', result.access_token);
-
+      localStorage.setItem('access_token', result.access_token)
     } catch (error) {
       return new AppError(errorMsg(error))
     }
@@ -51,10 +55,25 @@ export class AuthService {
         method: 'POST',
         credentials: 'include',
         resource: url,
-        url
+        url,
       })
-      return result
-
+      return result.message
+    } catch (error) {
+      return new AppError(errorMsg(error))
+    }
+  }
+  async updateProfile(dto: UserProfileUpdateInfo): Promise<AppError | string> {
+    const url = '/api/auth/profile'
+    const body = JSON.stringify(dto)
+    try {
+      const result = await this.httpClient.jsonDo(url, {
+        method: 'PATCH',
+        credentials: 'include',
+        resource: url,
+        body,
+        url,
+      })
+      return result.msg
     } catch (error) {
       return new AppError(errorMsg(error))
     }
@@ -66,10 +85,9 @@ export class AuthService {
         method: 'POST',
         credentials: 'include',
         resource: url,
-        url
+        url,
       })
-      localStorage.setItem('access_token', result.access_token);
-
+      localStorage.setItem('access_token', result.access_token)
     } catch (error) {
       throw new AppError(errorMsg(error))
     }
@@ -82,10 +100,9 @@ export class AuthService {
         method: 'POST',
         credentials: 'include',
         resource: url,
-        url
+        url,
       })
-      localStorage.removeItem('access_token');
-
+      localStorage.removeItem('access_token')
     } catch (error) {
       throw new AppError(errorMsg(error))
     }
