@@ -1,29 +1,32 @@
 export type SignUpDto = {
-  email: string;
-  password: string;
-};
+  email: string
+  password: string
+}
 
-export type SignInDto = SignUpDto;
+export type SignInDto = SignUpDto
 
 export type AuthResponse = {
-  access_token: string;
-};
+  access_token: string
+}
 
-export type AuthRequest = AuthResponse;
+export type AuthRequest = AuthResponse
 
 export type UserProfile = {
-  id: number;
-  email: string;
-  phone: string;
-  first_name: string;
-  last_name: string;
-  bio: string;
-  birth_date: string;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-};
+  id: number
+  email: string
+  phone: string
+  first_name: string
+  last_name: string
+  bio: string
+  birth_date: string
+  avatar: string
+  created_at: string
+  updated_at: string
+}
 //TODO:use correct formating for birth_date
 export type UserProfileUpdateInfo = Partial<
-  Omit<UserProfile, 'id' | 'created_at' | 'updated_at' | 'avatar' | 'birth_date'>
->;
+  Omit<
+    UserProfile,
+    'id' | 'created_at' | 'updated_at' | 'avatar' | 'birth_date'
+  >
+>
