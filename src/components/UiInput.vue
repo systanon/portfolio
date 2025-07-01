@@ -6,6 +6,7 @@
       v-model="modelValueProxy"
       :type="type"
       :placeholder="placeholder"
+      :disabled="disabled"
       :class="{ 'ui-input__field--error': $v?.$error }"
       class="ui-input__field"
       @blur="$v?.$touch()"
@@ -26,6 +27,7 @@
     placeholder?: string;
     type?: string;
     id?: string;
+    disabled?: boolean;
     validation?: BaseValidation;
   }
 
@@ -68,6 +70,9 @@
 
       &--error {
         border-color: $error-color;
+      }
+      &:disabled {
+        color: var(--text-color-secondary);
       }
     }
 
