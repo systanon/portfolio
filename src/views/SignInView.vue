@@ -1,12 +1,7 @@
 <template>
   <section class="page-sign-in">
     <form class="page-sign-in__form" @submit.prevent="submitHandler">
-      <UiInput
-        v-model="username"
-        label="User name"
-        placeholder="Enter user name"
-        :validation="v$.username"
-      />
+      <UiInput v-model="email" label="Email" placeholder="Enter email" :validation="v$.email" />
       <UiInput
         v-model="password"
         label="Password"
@@ -25,20 +20,20 @@
   import UiButton from '@/components/UiButton.vue';
   import useVuelidate from '@vuelidate/core';
   import { required, helpers } from '@vuelidate/validators';
-  const username = ref('');
+  const email = ref('');
   const password = ref('');
 
   const rules = {
     password: { required: helpers.withMessage('Password is required', required) },
-    username: { required: helpers.withMessage('User name is required', required) },
+    email: { required: helpers.withMessage('Email is required', required) },
   };
-  const v$ = useVuelidate(rules, { password, username });
+  const v$ = useVuelidate(rules, { password, email });
 
   const submitHandler = async () => {
     const isValid = await v$.value.$validate();
     if (!isValid) return;
     const payload = {
-      username: username.value,
+      email: email.value,
       password: password.value,
     };
 

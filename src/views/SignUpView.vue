@@ -2,12 +2,7 @@
   <section class="page-sign-up">
     <form class="page-sign-up__form" @submit.prevent="submitHandler">
       <h2 class="page-sign-up__form-title">Sign up</h2>
-      <UiInput
-        v-model="username"
-        label="User name"
-        placeholder="Enter user name"
-        :validation="v$.username"
-      />
+      <UiInput v-model="email" label="Email" placeholder="Enter email" :validation="v$.email" />
       <UiInput
         v-model="password"
         type="password"
@@ -35,7 +30,7 @@
   import useVuelidate from '@vuelidate/core';
   import { required, helpers, minLength, sameAs, maxLength } from '@vuelidate/validators';
 
-  const username = ref<string>('');
+  const email = ref<string>('');
   const password = ref<string>('');
   const confirmPassword = ref<string>('');
 
@@ -44,8 +39,8 @@
       required: helpers.withMessage('Password is required', required),
       minLength: helpers.withMessage('Minimum 6 characters', minLength(6)),
     },
-    username: {
-      required: helpers.withMessage('User name is required', required),
+    email: {
+      required: helpers.withMessage('Email is required', required),
       maxLength: helpers.withMessage('To much characters', maxLength(50)),
     },
     confirmPassword: {
@@ -54,7 +49,7 @@
     },
   };
   const v$ = useVuelidate(rules, {
-    username,
+    email,
     password,
     confirmPassword,
   });
@@ -63,7 +58,7 @@
     const isValid = await v$.value.$validate();
     if (!isValid) return;
     const payload = {
-      username: username.value,
+      email: email.value,
       password: password.value,
     };
 
