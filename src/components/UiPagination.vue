@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-pagination">
+  <div v-if="pages > 1" class="ui-pagination">
     <UiButtonIcon
       @click="$emit('firstPage')"
       :disabled="page <= 1"
