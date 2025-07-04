@@ -1,16 +1,21 @@
 <template>
   <div class="ui-input">
     <label v-if="label" :for="id" class="ui-input__label">{{ label }}</label>
-    <input
-      :id="id"
-      v-model="modelValueProxy"
-      :type="type"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :class="{ 'ui-input__field--error': $v?.$error }"
-      class="ui-input__field"
-      @blur="$v?.$touch()"
-    />
+    <div class="ui-input__wrapper">
+      <input
+        :id="id"
+        v-model="modelValueProxy"
+        :type="type"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :class="{ 'ui-input__field--error': $v?.$error }"
+        class="ui-input__field"
+        @blur="$v?.$touch()"
+      />
+      <template v-if="iconName" class="ui-input__icon">
+        <UiButtonIcon :iconName="iconName" @click="$emit('iconClick')" />
+      </template>
+    </div>
     <p v-show="$v?.$error" class="ui-input__error">
       <span
         class="ui-input__error-text"
@@ -25,10 +30,12 @@
 <script setup lang="ts">
 import { computed, unref } from 'vue'
 import type { BaseValidation } from '@vuelidate/core'
+import UiButtonIcon from './UiButtonIcon.vue'
 
 interface Props {
   modelValue: string
   label?: string
+  iconName?: string
   placeholder?: string
   type?: string
   id?: string
@@ -39,6 +46,7 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
+  (e: 'iconClick'): void
 }>()
 
 const modelValueProxy = computed({
@@ -66,12 +74,17 @@ const errorMessages = computed(() => {
     margin-bottom: 0.25rem;
     font-weight: 500;
   }
+  &__wrapper {
+    position: relative;
+    width: 100%;
+  }
 
   &__field {
-    padding: 0.5rem;
+    padding: 0.5rem 2.25rem 0.5rem 0.5rem;
     border: 1px solid $border-color;
     border-radius: 6px;
     font-size: 1rem;
+    width: 100%;
 
     &--error {
       border-color: $error-color;
@@ -79,6 +92,13 @@ const errorMessages = computed(() => {
     &:disabled {
       color: var(--text-color-secondary);
     }
+  }
+
+  :deep(.ui-button-icon) {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
   }
 
   &__error {
@@ -89,6 +109,9 @@ const errorMessages = computed(() => {
     &-text {
       color: $error-color;
     }
+  }
+  :deep(.ui-icon) {
+    color: var(--todo-checked);
   }
 }
 </style>

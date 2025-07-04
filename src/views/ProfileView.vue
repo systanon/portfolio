@@ -1,37 +1,39 @@
 <template>
   <section class="page-profile">
-    <h2 class="page-profile__title">Profile</h2>
-    <section class="page-profile__info">
+    <h2 class="page-profile__info-title">Profile</h2>
+
+    <div class="page-profile__fields">
       <div
         v-for="(field, key) in fields"
         :key="key"
-        class="page-profile__fields"
+        class="page-profile__fields-item"
       >
-        <div class="page-profile__fields-item">
-          <UiInput
-            v-model="field.value.value"
-            :label="field.label"
-            :placeholder="field.label"
-            :type="'text'"
-            :validation="v$[key]"
-            :id="key"
-            :disabled="!field.isEditing.value"
+        <div class="page-profile__fields-label">
+          <h3>{{ field.label }}</h3>
+        </div>
+        <UiInput
+          v-model="field.value.value"
+          :placeholder="field.label"
+          :type="'text'"
+          :validation="v$[key]"
+          :id="key"
+          :iconName="field.isEditing.value ? 'close-square' : 'edit'"
+          :disabled="!field.isEditing.value"
+          @iconClick="field.isEditing.value ? cancelEdit(key) : toggleEdit(key)"
+        />
+        <div class="page-profile__fields-actions">
+          <UiButton
+            :disabled="
+              !field.isEditing.value ||
+              v$[key].$error ||
+              field.value.value === field.originalValue
+            "
+            @click="submitField(key)"
+            label="Submit"
           />
-          <div class="page-profile__fields-actions">
-            <UiButtonIcon
-              v-if="!field.isEditing.value"
-              @click="toggleEdit(key)"
-              iconName="edit"
-            />
-
-            <template v-else>
-              <UiButtonIcon @click="cancelEdit(key)" iconName="close-square" />
-              <UiButtonIcon @click="submitField(key)" iconName="submit" />
-            </template>
-          </div>
         </div>
       </div>
-    </section>
+    </div>
   </section>
 </template>
 
@@ -40,7 +42,7 @@ import { ref, computed, type Ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
 import UiInput from '@/components/UiInput.vue'
-import UiButtonIcon from '@/components/UiButtonIcon.vue'
+import UiButton from '@/components/UiButton.vue'
 import { type UserProfileUpdateInfo } from '@/types/auth'
 import { application } from '@/application'
 import { AppError } from '@/types/app-errors'
@@ -141,27 +143,42 @@ async function submitField(key: FieldKey) {
 </script>
 <style scoped lang="scss">
 .page-profile {
-  &__title {
-    text-align: center;
-  }
   &__info {
-    background-color: rgba(0, 0, 0, 0.8);
+    margin: 0 auto;
+    background-color: var(--bg-primary);
+    &-title {
+      text-align: center;
+      padding-bottom: 3rem;
+    }
   }
   &__fields {
     display: flex;
+    text-align: center;
     justify-content: center;
+    flex-direction: column;
+    background-color: var(--bg-primary);
+    padding: 2.4rem 2rem 1.2rem 2rem;
+    width: 300px;
+    margin: 0 auto;
   }
-  &__fields-item {
+  &__fields-label > {
+    h3 {
+      padding: 0.5rem;
+      font-size: 1.25rem;
+    }
+  }
+}
+
+@include media-query('tablet') {
+  .page-profile__fields {
+    width: 600px;
+    text-align: left;
+  }
+  .page-profile__fields-item {
     display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  &__fields-actions {
-    display: flex;
-    gap: 0.25rem;
-    min-width: 100px;
+    grid-template-columns: 0.5fr 1fr auto;
+    align-items: flex-start;
+    gap: 2rem;
   }
 }
 </style>
