@@ -8,6 +8,7 @@ import type {
   UserProfile,
   UserProfileUpdateInfo,
 } from '@/types/auth'
+import { API_URL } from '@/constants'
 
 export class AuthService {
   private readonly httpClient: HTTPClient
@@ -17,7 +18,7 @@ export class AuthService {
   }
 
   async registration(dto: SignUpDto): Promise<void | AppError> {
-    const url = '/api/auth/sign-up'
+    const url = API_URL.auth.sign_up
     const body = JSON.stringify(dto)
     try {
       const result: AuthResponse = await this.httpClient.jsonDo(url, {
@@ -33,7 +34,7 @@ export class AuthService {
     }
   }
   async authorization(dto: SignInDto): Promise<void | AppError> {
-    const url = '/api/auth/sign-in'
+    const url = API_URL.auth.sign_in
     const body = JSON.stringify(dto)
     try {
       const result: AuthResponse = await this.httpClient.jsonDo(url, {
@@ -49,7 +50,7 @@ export class AuthService {
     }
   }
   async getProfile(): Promise<UserProfile | AppError> {
-    const url = '/api/auth/profile'
+    const url = API_URL.auth.profile
     try {
       const result = await this.httpClient.jsonDo(url, {
         method: 'POST',
@@ -63,7 +64,7 @@ export class AuthService {
     }
   }
   async updateProfile(dto: UserProfileUpdateInfo): Promise<AppError | string> {
-    const url = '/api/auth/profile'
+    const url = API_URL.auth.profile
     const body = JSON.stringify(dto)
     try {
       const result = await this.httpClient.jsonDo(url, {
@@ -79,7 +80,7 @@ export class AuthService {
     }
   }
   async refresh(): Promise<void | AppError> {
-    const url = '/api/auth/refresh'
+    const url = API_URL.auth.refresh
     try {
       const result = await this.httpClient.jsonDo(url, {
         method: 'POST',
@@ -94,7 +95,7 @@ export class AuthService {
   }
 
   async logout(): Promise<void | AppError> {
-    const url = '/api/auth/logout'
+    const url = API_URL.auth.logout
     try {
       await this.httpClient.jsonDo(url, {
         method: 'POST',
