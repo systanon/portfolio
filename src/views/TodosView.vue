@@ -273,7 +273,7 @@ onMounted(() => {
     background-color: $bg-menu-secondary;
     border-radius: rem(6);
     :deep(.ui-icon) {
-      color: #ffffff;
+      color: $icon-color-primary;
     }
     &-text {
       padding-right: 1rem;
@@ -307,6 +307,7 @@ onMounted(() => {
     column-gap: rem(30);
     grid-template-columns: repeat(12, 1fr);
     &__title {
+      align-self: center;
       grid-column: 1/ -1;
     }
     &__create {
@@ -317,6 +318,9 @@ onMounted(() => {
     }
     &__pagination {
       grid-column: 1/ -1;
+    }
+    &__create {
+      align-self: center;
     }
   }
 }
