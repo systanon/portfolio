@@ -49,6 +49,10 @@ onUnmounted(() => {
   overflow: hidden;
   &__main {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
   }
   &:before {
     content: '';
