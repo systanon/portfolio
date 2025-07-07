@@ -18,10 +18,10 @@ const { isTablet, isMobile } = useInjectWindowResize()
   display: flex;
   gap: 15px;
   padding: 1rem;
+  justify-content: end;
 }
 @include media-query('tablet') {
   .app-header {
-    justify-content: end;
     padding: 2rem;
   }
 }

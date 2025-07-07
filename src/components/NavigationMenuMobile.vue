@@ -45,7 +45,7 @@ export default defineComponent({
     v-on-click-outside="close"
   >
     <UIButtonIcon @click="toggleNav" iconName="close-square" />
-    <NavigationMenu />
+    <NavigationMenu @click="close" />
   </aside>
 </template>
 
@@ -69,7 +69,7 @@ export default defineComponent({
   align-items: end;
   gap: 1em;
   height: 100%;
-  width: 25%;
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
