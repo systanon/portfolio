@@ -306,6 +306,7 @@ onMounted(() => {
     display: grid;
     column-gap: rem(30);
     grid-template-columns: repeat(12, 1fr);
+    flex-grow: unset;
     &__title {
       align-self: center;
       grid-column: 1/ -1;
