@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-  import NavigationMenu from '@/components/NavigationMenu.vue';
-  import NavigationMenuMobile from './NavigationMenuMobile.vue';
-  import { useInjectWindowResize } from '@/composables/useWindowResize';
+import NavigationMenu from '@/components/NavigationMenu.vue'
+import NavigationMenuMobile from './NavigationMenuMobile.vue'
+import { useInjectWindowResize } from '@/composables/useWindowResize'
 
-  const { isTablet, isMobile } = useInjectWindowResize();
+const { isTablet, isMobile } = useInjectWindowResize()
 </script>
 
 <template>
@@ -14,10 +14,15 @@
 </template>
 
 <style scoped lang="scss">
+.app-header {
+  display: flex;
+  gap: 15px;
+  padding: 1rem;
+  justify-content: end;
+}
+@include media-query('tablet') {
   .app-header {
-    display: flex;
-    justify-content: end;
-    gap: 15px;
     padding: 2rem;
   }
+}
 </style>
