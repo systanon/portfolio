@@ -143,23 +143,29 @@ async function submitField(key: FieldKey) {
 </script>
 <style scoped lang="scss">
 .page-profile {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
   &__info {
     margin: 0 auto;
     background-color: var(--bg-primary);
     &-title {
       text-align: center;
-      padding-bottom: 3rem;
+      padding: 3rem 0;
     }
   }
   &__fields {
     display: flex;
     text-align: center;
-    justify-content: center;
     flex-direction: column;
+    overflow-y: auto;
+    min-height: 0;
     background-color: var(--bg-primary);
     padding: 2.4rem 2rem 1.2rem 2rem;
     width: 300px;
-    margin: 0 auto;
+    margin: auto auto;
+    border-radius: 1rem;
   }
   &__fields-label > {
     h3 {
