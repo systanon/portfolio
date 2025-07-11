@@ -40,7 +40,6 @@ export default defineComponent({
   text-align: center;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
   padding: 0.5rem;
   border-radius: rem(6);
   transition: box-shadow 0.4s ease;
