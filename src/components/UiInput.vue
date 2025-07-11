@@ -80,10 +80,10 @@ const errorMessages = computed(() => {
   }
 
   &__field {
-    padding: 0.5rem 2.25rem 0.5rem 0.5rem;
+    padding: 1rem 2.25rem 1rem 1rem;
     border: 1px solid $border-color;
     border-radius: 6px;
-    font-size: 1rem;
+    font-size: rem(18);
     width: 100%;
 
     &--error {
