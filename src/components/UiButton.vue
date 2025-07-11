@@ -40,12 +40,10 @@ export default defineComponent({
   text-align: center;
   cursor: pointer;
   position: relative;
-  padding: 0.5rem;
+  padding: 1.157rem;
   border-radius: rem(6);
   transition: box-shadow 0.4s ease;
-  &__content {
-    font-size: 1.25rem;
-  }
+  font-size: rem(18);
   &:hover {
     box-shadow: 0 0 10px var(--todo-checked), 0 0 20px var(--todo-checked),
       0 0 30px var(--todo-checked);
