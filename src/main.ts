@@ -1,17 +1,23 @@
 import { createApp } from 'vue'
+import FloatingVue from 'floating-vue'
 import App from './App.vue'
 import { router } from './plugins/router'
 import { createStore } from './plugins/store'
 
 import { application } from './application'
 
+
 import '@/sass/_theme.scss'
+import 'floating-vue/dist/style.css'
+
 
 const app = createApp(App)
 
 app.use(createStore(application))
 
 app.use(router)
+
+app.use(FloatingVue)
 
 application.run()
 
