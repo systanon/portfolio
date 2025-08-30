@@ -14,7 +14,9 @@
     </div>
     <div class="todo-item__info">
       <h2 class="todo-item__title">{{ todo.title }}</h2>
-      <p class="todo-item__description">{{ todo.description }}</p>
+      <div class="todo-item__description">
+        <p class="todo-item__description-text">{{ todo.description }}</p>
+      </div>
     </div>
     <div class="todo-item__menu">
       <UiButtonIcon
@@ -71,7 +73,15 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
     flex: 0 0;
   }
   &__info {
-    flex: 1 1;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  &__description {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    margin-right: 3rem;
   }
   &__menu {
     position: absolute;
