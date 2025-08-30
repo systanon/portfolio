@@ -43,9 +43,8 @@
             placeholder="Title"
             :validation="v$.title"
           />
-          <UiInput
+          <UiTextarea
             v-model="todo.description"
-            type="text"
             placeholder="Description"
             :validation="v$.description"
           />
@@ -66,9 +65,8 @@
             placeholder="Title"
             :validation="v$.title"
           />
-          <UiInput
+          <UiTextarea
             v-model="todo.description"
-            type="text"
             placeholder="Description"
             :validation="v$.description"
           />
@@ -114,6 +112,7 @@ import {
   type ReplaceTodoDTO,
   type Todo,
 } from '../types/todo'
+import UiTextarea from '@/components/UiTextarea.vue'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 const deleteModalRef = ref<IModalOpen | null>(null)

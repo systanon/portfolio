@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.3",
@@ -24,10 +26,13 @@
     "@types/node": "^22.13.14",
     "@types/qs": "^6.14.0",
     "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
+    "jsdom": "^26.1.0",
     "sass-embedded": "^1.89.1",
     "typescript": "~5.7.2",
     "vite": "^6.2.3",
+    "vitest": "^3.2.4",
     "vue-tsc": "^2.2.4"
   }
 }
