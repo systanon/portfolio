@@ -301,7 +301,7 @@ onMounted(() => {
   }
 }
 
-@include media-query('large-desktop') {
+@include media-query('ultra-wide') {
   .page-todo {
     display: grid;
     column-gap: rem(30);
