@@ -52,5 +52,9 @@ export default defineConfig(async ({ mode }) => {
         },
       },
     },
+    test: {
+      globals: true,
+      environment: 'jsdom'
+    }
   }
 })
