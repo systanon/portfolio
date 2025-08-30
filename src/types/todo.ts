@@ -1,16 +1,20 @@
 export type DBEntity = {
-  id: number;
-  createdAt: string;
-  updatedAt: string;
-};
+  id: number
+  createdAt: string
+  updatedAt: string
+}
 
 export type CreateTodoDTO = {
-  title?: string;
-  description: string;
-  completed?: boolean;
-};
+  title: string
+  description: string
+  completed?: boolean
+}
 
-export type UpdateTodoDTO = Partial<CreateTodoDTO>;
-export type ReplaceTodoDTO = Required<CreateTodoDTO>;
+export type UpdateTodoDTO = Partial<CreateTodoDTO>
+export type ReplaceTodoDTO = Required<CreateTodoDTO>
 
-export type Todo = DBEntity & CreateTodoDTO;
+export type Todo = {
+  title: string
+  description: string
+  completed: boolean
+} & DBEntity

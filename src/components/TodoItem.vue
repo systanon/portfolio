@@ -13,7 +13,9 @@
       />
     </div>
     <div class="todo-item__info">
-      <h2 class="todo-item__title">{{ todo.title }}</h2>
+      <h2 class="todo-item__title">
+        <UiLittleKip :text="todo.title" />
+      </h2>
       <div class="todo-item__description">
         <p class="todo-item__description-text">{{ todo.description }}</p>
       </div>
@@ -46,6 +48,7 @@
 import type { Todo } from '@/types/todo'
 import UiButtonIcon from '@/components/UiButtonIcon.vue'
 import { defineProps, ref, type Ref } from 'vue'
+import UiLittleKip from '@/components/UiLittleKip.vue'
 defineProps<{
   todo: Todo
 }>()
@@ -77,11 +80,15 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    width: calc(100% - 0.9375rem);
   }
   &__description {
     flex: 1 1 auto;
     overflow-y: auto;
-    margin-right: 3rem;
+    width: calc(100% - 4rem);
+  }
+  &__description-text {
+    @include break-long-words;
   }
   &__menu {
     position: absolute;
