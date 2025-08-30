@@ -1,9 +1,11 @@
-@use "sass:map"; 
+@use 'sass:map';
 $breakpoints: (
-  "mobile": 768px,
-  "tablet": 1024px,
-  "desktop": 1280px,
-  "large-desktop": 1920px
+  'mobile': 768px,
+  'tablet': 1024px,
+  'desktop': 1280px,
+  'large-desktop': 1920px,
+  'extra-large-desktop': 2580px,
+  'ultra-wide': 3200px,
 );
 
 @mixin media-query($breakpoint) {
