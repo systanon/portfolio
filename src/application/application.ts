@@ -24,6 +24,7 @@ import type {
   ReplaceNoteDTO,
   UpdateNoteDTO,
 } from '@/types/notes'
+import type { NotificationService } from './services/notification.service'
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any
@@ -32,6 +33,7 @@ export class Application<
   #todoService: TodoService
   #noteService: NotesService
   #authService: AuthService
+  #notificationService: NotificationService
   #profile: Ref<UserProfile | null> = ref(null)
   #loading: Ref<boolean> = ref(false)
   resolveProfileLoading: (() => void) | null = null
@@ -40,11 +42,13 @@ export class Application<
   constructor(
     todoService: TodoService,
     authService: AuthService,
-    notesService: NotesService
+    notesService: NotesService,
+    notificationService: NotificationService
   ) {
     this.#todoService = todoService
     this.#authService = authService
     this.#noteService = notesService
+    this.#notificationService = notificationService
   }
 
   private clearProfile() {
@@ -53,6 +57,9 @@ export class Application<
 
   public get userProfile() {
     return this.#profile.value
+  }
+  public get notifications() {
+    return this.#notificationService.notifications.value
   }
 
   public get isLogged(): boolean {
@@ -83,6 +90,7 @@ export class Application<
   public async signUp(dto: SignUpDto): Promise<void | AppError> {
     const res = await this.#authService.registration(dto)
     if (res instanceof AppError) {
+      this.#notificationService.notify('error', res.message)
       return res
     }
     await this.getProfile()
@@ -91,6 +99,7 @@ export class Application<
   public async logout(): Promise<void | AppError> {
     const res = await this.#authService.logout()
     if (res instanceof AppError) {
+      this.#notificationService.notify('error', res.message)
       return res
     }
     this.clearProfile()
@@ -100,6 +109,7 @@ export class Application<
   public async signIn(dto: SignInDto): Promise<void | AppError> {
     const res = await this.#authService.authorization(dto)
     if (res instanceof AppError) {
+      this.#notificationService.notify('error', res.message)
       return res
     }
     await this.getProfile()
@@ -114,6 +124,7 @@ export class Application<
     if (res instanceof AppError) {
       this.#profile.value = null
       this.resolveProfileLoading?.()
+      this.#notificationService.notify('error', res.message)
       this.#ee.emit('unlogged')
     } else {
       this.#profile.value = res
