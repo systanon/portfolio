@@ -3,6 +3,8 @@ import type { HTTPClient } from '@/lib/http.client'
 import { AppError } from '@/types/app-errors'
 import type {
   AuthResponse,
+  ConfirmQuery,
+  RegistrationResponse,
   SignInDto,
   SignUpDto,
   UserProfile,
@@ -17,22 +19,40 @@ export class AuthService {
     this.httpClient = httpClient
   }
 
-  async registration(dto: SignUpDto): Promise<void | AppError> {
+  async registration(dto: SignUpDto): Promise<RegistrationResponse | AppError> {
     const url = API_URL.auth.sign_up
     const body = JSON.stringify(dto)
     try {
-      const result: AuthResponse = await this.httpClient.jsonDo(url, {
+      const result: RegistrationResponse = await this.httpClient.jsonDo(url, {
         method: 'POST',
         body,
         credentials: 'include',
         resource: url,
         url,
       })
-      localStorage.setItem('access_token', result.access_token)
+      return result
     } catch (error) {
       return new AppError(errorMsg(error))
     }
   }
+
+  async confirmEmail(params: ConfirmQuery): Promise<void | AppError> {
+    try {
+      const response = await this.httpClient.do(API_URL.auth.confirm, {
+        method: 'POST',
+        params,
+      })
+      if (response.ok) {
+        const { access_token } = (await response.json()) as AuthResponse
+        localStorage.setItem('access_token', access_token)
+      }
+
+      return new AppError(errorMsg(await response.json()))
+    } catch (error) {
+      return new AppError(errorMsg(error))
+    }
+  }
+
   async authorization(dto: SignInDto): Promise<void | AppError> {
     const url = API_URL.auth.sign_in
     const body = JSON.stringify(dto)
