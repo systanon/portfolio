@@ -1,12 +1,12 @@
 type ErrorOptions = {
-  cause?: unknown;
-};
+  cause?: unknown
+}
 
 export class AppError extends Error {
-  public cause?: unknown; 
+  public cause?: unknown
   constructor(message?: string, options?: ErrorOptions) {
-    super(message);
-    this.name = this.constructor.name;
-    this.cause = options?.cause; 
+    super(message)
+    this.name = this.constructor.name
+    this.cause = options?.cause
   }
 }
