@@ -50,6 +50,12 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { accessMode: 'private' },
         component: () => import('@/views/NotesView.vue'),
       },
+      {
+        path: '/resend-email-verification',
+        name: 'ResendEmailVerification',
+        meta: { accessMode: 'only-for-unauthorized' },
+        component: () => import('@/views/ResendVerificationEmailView.vue'),
+      },
     ],
   },
 ]

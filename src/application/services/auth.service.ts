@@ -5,8 +5,10 @@ import type {
   AuthResponse,
   ConfirmQuery,
   RegistrationResponse,
+  ResendConfirmEmailDto,
   SignInDto,
   SignUpDto,
+  SuccessResponse,
   UserProfile,
   UserProfileUpdateInfo,
 } from '@/types/auth'
@@ -45,9 +47,26 @@ export class AuthService {
       if (response.ok) {
         const { access_token } = (await response.json()) as AuthResponse
         localStorage.setItem('access_token', access_token)
+      } else {
+        return new AppError(errorMsg(await response.json()))
       }
-
-      return new AppError(errorMsg(await response.json()))
+    } catch (error) {
+      return new AppError(errorMsg(error))
+    }
+  }
+  async resendConfirmEmail(
+    dto: ResendConfirmEmailDto
+  ): Promise<SuccessResponse | AppError> {
+    const url = API_URL.auth.resendEmail
+    const body = JSON.stringify(dto)
+    try {
+      const result: RegistrationResponse = await this.httpClient.jsonDo(url, {
+        method: 'POST',
+        body,
+        resource: url,
+        url,
+      })
+      return result
     } catch (error) {
       return new AppError(errorMsg(error))
     }

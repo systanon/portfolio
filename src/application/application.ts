@@ -12,6 +12,7 @@ import { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type {
   ConfirmQuery,
+  ResendConfirmEmailDto,
   SignInDto,
   SignUpDto,
   UserProfile,
@@ -108,6 +109,18 @@ export class Application<
       return
     }
     await this.getProfile()
+  }
+
+  public async resendConfirmEmail(dto: ResendConfirmEmailDto): Promise<void> {
+    this.#loading.value = true
+    const res = await this.#authService.resendConfirmEmail(dto)
+    if (res instanceof AppError) {
+      this.#loading.value = false
+      this.#notificationService.notify('error', res.message)
+      return
+    }
+    this.#loading.value = false
+    this.#notificationService.notify('success', res.message)
   }
 
   public async logout(): Promise<void | AppError> {
