@@ -4,8 +4,10 @@ import { AppError } from '@/types/app-errors'
 import type {
   AuthResponse,
   ConfirmQuery,
+  ForgotPasswordDto,
   RegistrationResponse,
   ResendConfirmEmailDto,
+  ResetPasswordDto,
   SignInDto,
   SignUpDto,
   SuccessResponse,
@@ -71,6 +73,39 @@ export class AuthService {
       return new AppError(errorMsg(error))
     }
   }
+  async forgotPassword(
+    dto: ForgotPasswordDto
+  ): Promise<SuccessResponse | AppError> {
+    const url = API_URL.auth.forgotPass
+    const body = JSON.stringify(dto)
+    try {
+      return await this.httpClient.jsonDo(url, {
+        method: 'POST',
+        body,
+        resource: url,
+        url,
+      })
+    } catch (error) {
+      return new AppError(errorMsg(error))
+    }
+  }
+
+  async resetPassword(
+    dto: ResetPasswordDto
+  ): Promise<SuccessResponse | AppError> {
+    const url = API_URL.auth.resetPass
+    const body = JSON.stringify(dto)
+    try {
+      return await this.httpClient.jsonDo(url, {
+        method: 'POST',
+        body,
+        resource: url,
+        url,
+      })
+    } catch (error) {
+      return new AppError(errorMsg(error))
+    }
+  }
 
   async authorization(dto: SignInDto): Promise<void | AppError> {
     const url = API_URL.auth.sign_in
@@ -132,7 +167,6 @@ export class AuthService {
       throw new AppError(errorMsg(error))
     }
   }
-
   async logout(): Promise<void | AppError> {
     const url = API_URL.auth.logout
     try {

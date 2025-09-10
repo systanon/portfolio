@@ -12,7 +12,9 @@ import { AppError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type {
   ConfirmQuery,
+  ForgotPasswordDto,
   ResendConfirmEmailDto,
+  ResetPasswordDto,
   SignInDto,
   SignUpDto,
   UserProfile,
@@ -173,6 +175,28 @@ export class Application<
   public async refreshToken(): Promise<void | AppError> {
     const res = await this.#authService.refresh()
     return res
+  }
+
+  public async forgotPassword(dto: ForgotPasswordDto): Promise<void> {
+    this.#loading.value = true
+    const res = await this.#authService.forgotPassword(dto)
+    if (res instanceof AppError) {
+      this.#notificationService.notify('error', res.message)
+    } else {
+      this.#notificationService.notify('success', res.message)
+    }
+    this.#loading.value = false
+  }
+
+  public async resetPassword(dto: ResetPasswordDto): Promise<void> {
+    this.#loading.value = true
+    const res = await this.#authService.resetPassword(dto)
+    if (res instanceof AppError) {
+      this.#notificationService.notify('error', res.message)
+    } else {
+      this.#notificationService.notify('success', res.message)
+    }
+    this.#loading.value = false
   }
 
   public async createTodo(dto: CreateTodoDTO): Promise<ID | AppError> {

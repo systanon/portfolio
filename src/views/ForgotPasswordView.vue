@@ -1,28 +1,16 @@
 <template>
-  <section class="page-sign-in">
-    <form class="page-sign-in__form" @submit.prevent="submitHandler">
-      <h2 class="page-sign-in__form-title">Sign in</h2>
+  <div class="forgot-pass-page">
+    <form class="forgot-pass-page__form" @submit.prevent="submitHandler">
+      <h2 class="forgot-pass-page__title">Forgot password</h2>
       <UiInput
         v-model="email"
         label="Email"
         placeholder="Enter email"
         :validation="v$.email"
       />
-      <UiInput
-        v-model="password"
-        label="Password"
-        placeholder="Enter your password"
-        :validation="v$.password"
-      />
-      <RouterLink
-        class="page-sign-in__forgot-pass"
-        :to="{ name: 'ForgotPassword' }"
-      >
-        Forgot password?</RouterLink
-      >
       <UiButton type="submit" label="Submit" />
     </form>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -30,64 +18,57 @@ import { ref } from 'vue'
 import { application } from '@/application'
 import UiInput from '@/components/UiInput.vue'
 import UiButton from '@/components/UiButton.vue'
+
 import useVuelidate from '@vuelidate/core'
 import {
   required,
   helpers,
+  maxLength,
   email as emailValidation,
 } from '@vuelidate/validators'
-const email = ref('')
-const password = ref('')
+
+const email = ref<string>('')
 
 const rules = {
-  password: { required: helpers.withMessage('Password is required', required) },
   email: {
     required: helpers.withMessage('Email is required', required),
+    maxLength: helpers.withMessage('To much characters', maxLength(50)),
     emailValidation: helpers.withMessage('invalid email', emailValidation),
   },
 }
-const v$ = useVuelidate(rules, { password, email })
+
+const v$ = useVuelidate(rules, {
+  email,
+})
 
 const submitHandler = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
   const payload = {
     email: email.value,
-    password: password.value,
   }
 
-  try {
-    const response = await application.signIn(payload)
-    console.log('Login success:', response)
-  } catch (error) {
-    console.error('Login failed:', error)
-  }
+  await application.forgotPassword(payload)
 }
 </script>
 
 <style scoped lang="scss">
-.page-sign-in {
+.forgot-pass-page {
   display: flex;
-  min-height: 0;
   justify-content: center;
-  margin-top: 6rem;
+  &__title {
+    text-align: center;
+    color: var(--text-color-primary);
+  }
   &__form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    overflow-y: auto;
-    scrollbar-gutter: stable both-edges;
     background-color: var(--bg-primary);
     padding: 2rem;
     border-radius: 1rem;
-    width: rem(400);
-    max-width: rem(400);
-    &-title {
-      text-align: center;
-    }
-  }
-  &__forgot-pass {
-    text-align: right;
+    width: rem(500);
+    max-width: rem(500);
   }
 }
 </style>
