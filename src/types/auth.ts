@@ -18,13 +18,19 @@ export type AuthRequest = AuthResponse
 export type RegistrationResponse = {
   message: string
 }
+
 export type ResendConfirmEmailDto = {
   email: string
 }
 
-export type SuccessResponse = {
-  message: string
+export type ForgotPasswordDto = ResendConfirmEmailDto
+
+export type ResetPasswordDto = {
+  password: string
+  token: string
 }
+
+export type SuccessResponse = RegistrationResponse
 
 export type UserProfile = {
   id: number

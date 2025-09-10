@@ -56,6 +56,18 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/ResendVerificationEmailView.vue'),
       },
+      {
+        path: '/forgot-password',
+        name: 'ForgotPassword',
+        meta: { accessMode: 'only-for-unauthorized' },
+        component: () => import('@/views/ForgotPasswordView.vue'),
+      },
+      {
+        path: '/reset-password',
+        name: 'ResetPassword',
+        meta: { accessMode: 'only-for-unauthorized' },
+        component: () => import('@/views/ResetPasswordView.vue'),
+      },
     ],
   },
 ]
