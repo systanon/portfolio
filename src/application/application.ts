@@ -8,7 +8,7 @@ import type {
 } from '../types/todo'
 import type { TodoService } from './services/todo.service'
 import type { ID } from '../types/general'
-import { AppError } from '../types/app-errors'
+import { AppError, AppSilentError } from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type {
   ConfirmQuery,
@@ -144,7 +144,7 @@ export class Application<
     await this.getProfile()
   }
 
-  public async getProfile(): Promise<UserProfile | AppError> {
+  public async getProfile(): Promise<UserProfile | AppError | AppSilentError> {
     this.#loading.value = true
     this.profileLoading = new Promise<void>(
       (resolve) => (this.resolveProfileLoading = resolve)
@@ -152,14 +152,16 @@ export class Application<
     const res = await this.#authService.getProfile()
     if (res instanceof AppError) {
       this.#profile.value = null
-      this.resolveProfileLoading?.()
       this.#notificationService.notify('error', res.message)
+      this.#ee.emit('unlogged')
+    } else if (res instanceof AppSilentError) {
+      this.#profile.value = null
       this.#ee.emit('unlogged')
     } else {
       this.#profile.value = res
-      this.resolveProfileLoading?.()
       this.#ee.emit('logged')
     }
+    this.resolveProfileLoading?.()
 
     this.#loading.value = false
 

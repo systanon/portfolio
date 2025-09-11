@@ -1,6 +1,6 @@
 import { errorMsg } from '@/helpers/formatErrorMsg'
 import type { HTTPClient } from '@/lib/http.client'
-import { AppError } from '@/types/app-errors'
+import { AppError, AppSilentError, type APIError } from '@/types/app-errors'
 import type {
   AuthResponse,
   ConfirmQuery,
@@ -133,8 +133,13 @@ export class AuthService {
         url,
       })
       return result.message
-    } catch (error) {
-      return new AppError(errorMsg(error))
+    } catch (e: unknown) {
+      const error = e as APIError
+      const msg = errorMsg(error.data)
+      if (error.status === 401) {
+        return new AppSilentError(msg)
+      }
+      return new AppError(msg)
     }
   }
   async updateProfile(dto: UserProfileUpdateInfo): Promise<AppError | string> {
