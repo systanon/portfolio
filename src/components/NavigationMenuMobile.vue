@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, type Directive } from 'vue'
 import { vOnClickOutside as baseOnClickOutside } from '@vueuse/components'
-import UIButtonIcon from '@/components/UiButtonIcon.vue'
+import UIButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import NavigationMenu from './NavigationMenu.vue'
 
 const vOnClickOutside: Directive = baseOnClickOutside

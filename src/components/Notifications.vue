@@ -18,8 +18,8 @@
 
 <script setup lang="ts">
 import { application } from '@/application'
-import UiButtonIcon from './UiButtonIcon.vue'
-import UiLittleKip from './UiLittleKip.vue'
+import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
+import UiLittleKip from '@/components/ui/UiLittleKip.vue'
 
 const notifications = application.notifications
 </script>

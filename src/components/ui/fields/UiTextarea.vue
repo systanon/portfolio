@@ -1,31 +1,20 @@
 <template>
-  <div class="ui-textarea">
-    <label v-if="label" :for="id" class="ui-textarea__label">{{ label }}</label>
-    <div class="ui-textarea__wrapper">
-      <textarea
-        :id="id"
-        v-model="modelValueProxy"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :class="{ 'ui-textarea__field--error': $v?.$error }"
-        class="ui-textarea__field"
-        @blur="$v?.$touch()"
-      />
-    </div>
-    <p v-show="$v?.$error" class="ui-textarea__error">
-      <span
-        class="ui-textarea__error-text"
-        v-for="error in errorMessages"
-        :key="error"
-      >
-        {{ error }}
-      </span>
-    </p>
-  </div>
+  <BaseField :id="id" :label="label" :validation="validation">
+    <textarea
+      :id="id"
+      v-model="modelValueProxy"
+      :placeholder="placeholder"
+      :disabled="disabled"
+      :class="{ 'ui-textarea__field--error': $v?.$error }"
+      class="ui-textarea__field"
+      @blur="$v?.$touch()"
+    />
+  </BaseField>
 </template>
 
 <script setup lang="ts">
-import { computed, unref } from 'vue'
+import { computed } from 'vue'
+import BaseField from '@/components/ui/fields/BaseField.vue'
 import type { BaseValidation } from '@vuelidate/core'
 
 interface Props {
@@ -48,11 +37,6 @@ const modelValueProxy = computed({
 })
 
 const $v = props.validation
-
-const errorMessages = computed(() => {
-  if (!$v || !$v.$errors) return []
-  return $v.$errors.map((err) => unref(err.$message))
-})
 </script>
 
 <style scoped lang="scss">

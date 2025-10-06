@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import UIIcon from '@/components/UiIcon.vue'
+import UIIcon from '@/components/ui/icons/UiIcon.vue'
 
 export default defineComponent({
   components: { UIIcon },
