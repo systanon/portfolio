@@ -13,9 +13,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
 import BaseField from '@/components/ui/fields/BaseField.vue'
 import type { BaseValidation } from '@vuelidate/core'
+import { useField } from '@/composables/useField'
 
 interface Props {
   modelValue: string
@@ -31,12 +31,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-const modelValueProxy = computed({
-  get: () => props.modelValue,
-  set: (val) => emit('update:modelValue', val),
-})
-
-const $v = props.validation
+const { modelValueProxy, $v } = useField(props, emit)
 </script>
 
 <style scoped lang="scss">
