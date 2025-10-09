@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, defineExpose } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { delay } from '@/helpers/delay'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 

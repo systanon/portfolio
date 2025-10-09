@@ -47,7 +47,7 @@
 <script lang="ts" setup>
 import type { Todo } from '@/types/todo'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
-import { defineProps, ref, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import UiLittleKip from '@/components/ui/UiLittleKip.vue'
 defineProps<{
   todo: Todo
