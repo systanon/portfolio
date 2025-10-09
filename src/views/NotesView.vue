@@ -97,18 +97,18 @@ import { storeToRefs } from 'pinia'
 import { useNotesStore } from '@/plugins/store/notes'
 import NoteItem from '@/components/NoteItem.vue'
 import { usePagination } from '@/hooks/pagination'
-import UIPagination from '@/components/UiPagination.vue'
-import UiButtonIcon from '@/components/UiButtonIcon.vue'
-import UiInput from '@/components/UiInput.vue'
-import UiButton from '@/components/UiButton.vue'
+import UIPagination from '@/components/ui/UiPagination.vue'
+import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
+import UiInput from '@/components/ui/fields/UiInput.vue'
+import UiButton from '@/components/ui/buttons/UiButton.vue'
 
-import UIModal, { type IModalOpen } from '@/components/UiModal.vue'
+import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import {
   type UpdateNoteDTO,
   type ReplaceNoteDTO,
   type Note,
 } from '../types/notes'
-import UiTextarea from '@/components/UiTextarea.vue'
+import UiTextarea from '@/components/ui/fields/UiTextarea.vue'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 

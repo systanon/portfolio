@@ -1,10 +1,9 @@
 <template>
   <div ref="todo" :class="['todo-item', { _checked: todo.completed }]">
     <div class="todo-item__checked">
-      <input
-        type="checkbox"
-        :checked="todo.completed"
-        @input="
+      <UiCheckbox
+        :modelValue="todo.completed"
+        @change="
           $emit('completeHandler', {
             id: todo.id,
             payload: { completed: !todo.completed },
@@ -46,9 +45,10 @@
 
 <script lang="ts" setup>
 import type { Todo } from '@/types/todo'
-import UiButtonIcon from '@/components/UiButtonIcon.vue'
-import { defineProps, ref, type Ref } from 'vue'
-import UiLittleKip from '@/components/UiLittleKip.vue'
+import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
+import { ref, type Ref } from 'vue'
+import UiLittleKip from '@/components/ui/UiLittleKip.vue'
+import UiCheckbox from './ui/fields/UiCheckbox.vue'
 defineProps<{
   todo: Todo
 }>()

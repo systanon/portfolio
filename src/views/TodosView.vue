@@ -101,18 +101,18 @@ import { storeToRefs } from 'pinia'
 import { useTodoStore } from '@/plugins/store/todos'
 import TodoItem from '@/components/TodoItem.vue'
 import { usePagination } from '@/hooks/pagination'
-import UIPagination from '@/components/UiPagination.vue'
-import UiButtonIcon from '@/components/UiButtonIcon.vue'
-import UiInput from '@/components/UiInput.vue'
-import UiButton from '@/components/UiButton.vue'
+import UIPagination from '@/components/ui/UiPagination.vue'
+import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
+import UiInput from '@/components/ui/fields/UiInput.vue'
+import UiButton from '@/components/ui/buttons/UiButton.vue'
 
-import UIModal, { type IModalOpen } from '@/components/UiModal.vue'
+import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import {
   type UpdateTodoDTO,
   type ReplaceTodoDTO,
   type Todo,
 } from '../types/todo'
-import UiTextarea from '@/components/UiTextarea.vue'
+import UiTextarea from '@/components/ui/fields/UiTextarea.vue'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 const deleteModalRef = ref<IModalOpen | null>(null)

@@ -11,7 +11,7 @@
 import { defineComponent } from 'vue'
 import { byAuthorized, mainMenu, type NavigationMenu } from '@/config/main-menu'
 import { application } from '@/application'
-import UiButton from './UiButton.vue'
+import UiButton from './ui/buttons/UiButton.vue'
 
 export default defineComponent({
   name: 'NavigationMenu',

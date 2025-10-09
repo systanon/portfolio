@@ -30,8 +30,8 @@
 
 <script lang="ts" setup>
 import type { Note } from '@/types/notes'
-import { defineProps, ref, type Ref } from 'vue'
-import UiButtonIcon from '@/components/UiButtonIcon.vue'
+import { ref, type Ref } from 'vue'
+import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 defineProps<{
   note: Note
 }>()

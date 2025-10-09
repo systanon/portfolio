@@ -1,13 +1,13 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import TextArea from '@/components/UiTextarea.vue'
+import TextArea from '@/components/ui/fields/UiTextarea.vue'
 import type { BaseValidation } from '@vuelidate/core'
 import { ref } from 'vue'
 
 describe('TextArea.vue', () => {
   it('renders the textarea with the passed value', () => {
     const wrapper = mount(TextArea, {
-      props: { modelValue: 'Initial text' }
+      props: { modelValue: 'Initial text' },
     })
     const textarea = wrapper.find('textarea')
     expect(textarea.exists()).toBe(true)
@@ -16,7 +16,7 @@ describe('TextArea.vue', () => {
 
   it('renders the label if provided', () => {
     const wrapper = mount(TextArea, {
-      props: { label: 'Описание', modelValue: '' }
+      props: { label: 'Описание', modelValue: '' },
     })
     const label = wrapper.find('label')
     expect(label.exists()).toBe(true)
@@ -43,7 +43,7 @@ describe('TextArea.vue', () => {
     } as unknown as BaseValidation
 
     const wrapper = mount(TextArea, {
-      props: { modelValue: '', validation }
+      props: { modelValue: '', validation },
     })
     const error = wrapper.find('.ui-textarea__error-text')
     expect(error.exists()).toBe(true)
@@ -56,7 +56,7 @@ describe('TextArea.vue', () => {
       $error: false,
     } as unknown as BaseValidation
     const wrapper = mount(TextArea, {
-      props: { modelValue: '', validation }
+      props: { modelValue: '', validation },
     })
     const error = wrapper.find('.ui-textarea__error-text')
     expect(error.exists()).toBe(false)
@@ -64,9 +64,13 @@ describe('TextArea.vue', () => {
 
   it('calls $touch on blur', async () => {
     const $touch = vi.fn()
-    const validation = { $touch, $errors: [], $error: false } as unknown as BaseValidation
+    const validation = {
+      $touch,
+      $errors: [],
+      $error: false,
+    } as unknown as BaseValidation
     const wrapper = mount(TextArea, {
-      props: { modelValue: '', validation }
+      props: { modelValue: '', validation },
     })
     const textarea = wrapper.find('textarea')
     await textarea.trigger('blur')
