@@ -1,14 +1,17 @@
 <template>
-  <BaseField :id="id" :label="label" :validation="validation">
-    <textarea
-      :id="id"
-      v-model="modelValueProxy"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :class="{ 'ui-textarea__field--error': $v?.$error }"
-      class="ui-textarea__field"
-      @blur="$v?.$touch()"
-    />
+  <BaseField :label="label" :validation="validation">
+    <template #default="{ id }">
+      <textarea
+        v-bind="$attrs"
+        :id="id"
+        v-model="modelValueProxy"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :class="{ 'ui-textarea__field--error': $v?.$error }"
+        class="ui-textarea__field"
+        @blur="$v?.$touch()"
+      />
+    </template>
   </BaseField>
 </template>
 
@@ -21,7 +24,6 @@ interface Props {
   modelValue: string
   label?: string
   placeholder?: string
-  id?: string
   disabled?: boolean
   validation?: BaseValidation
 }

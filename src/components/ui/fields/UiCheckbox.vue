@@ -1,18 +1,21 @@
 <template>
-  <BaseField :id="id" :label="label" :validation="validation">
-    <label class="ui-checkbox">
-      <input
-        type="checkbox"
-        class="ui-checkbox__input"
-        :id="id"
-        :checked="modelValue"
-        :disabled="disabled"
-        @change="onChange"
-      />
-      <span class="ui-checkbox__text">
-        <slot>{{ label }}</slot>
-      </span>
-    </label>
+  <BaseField :label="label" :validation="validation">
+    <template #default="{ id }">
+      <label class="ui-checkbox">
+        <input
+          v-bind="$attrs"
+          type="checkbox"
+          class="ui-checkbox__input"
+          :id="id"
+          :checked="modelValue"
+          :disabled="disabled"
+          @change="onChange"
+        />
+        <span class="ui-checkbox__text">
+          <slot>{{ label }}</slot>
+        </span>
+      </label>
+    </template>
   </BaseField>
 </template>
 
@@ -22,7 +25,6 @@ import type { BaseValidation } from '@vuelidate/core'
 
 interface Props {
   modelValue: boolean
-  id?: string
   label?: string
   disabled?: boolean
   validation?: BaseValidation

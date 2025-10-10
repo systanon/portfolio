@@ -6,6 +6,7 @@
         v-model="email"
         label="Email"
         placeholder="Enter email"
+        autocomplete="email"
         :validation="v$.email"
       />
       <UiInput
@@ -14,12 +15,14 @@
         label="Password"
         placeholder="Enter your password"
         :validation="v$.password"
+        autocomplete="new-password"
       />
       <UiInput
         v-model="confirmPassword"
         label="Confirm password"
         type="password"
         placeholder="Confirm your password"
+        autocomplete="new-password"
         :validation="v$.confirmPassword"
       />
       <UiButton type="submit" label="Submit" />

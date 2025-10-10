@@ -1,22 +1,25 @@
 <template>
-  <BaseField :id="id" :label="label" :validation="validation">
-    <input
-      :id="id"
-      v-model="modelValueProxy"
-      :type="type"
-      :placeholder="placeholder"
-      :disabled="disabled"
-      :class="{ 'ui-input__field--error': $v?.$error }"
-      class="ui-input__field"
-      @blur="$v?.$touch()"
-    />
+  <BaseField :label="label" :validation="validation">
+    <template #default="{ id }">
+      <input
+        v-bind="$attrs"
+        :id="id"
+        v-model="modelValueProxy"
+        :type="type"
+        :placeholder="placeholder"
+        :disabled="disabled"
+        :class="{ 'ui-input__field--error': $v?.$error }"
+        class="ui-input__field"
+        @blur="$v?.$touch()"
+      />
 
-    <UiButtonIcon
-      v-if="iconName"
-      :iconName="iconName"
-      @click="$emit('iconClick')"
-      class="ui-input__icon"
-    />
+      <UiButtonIcon
+        v-if="iconName"
+        :iconName="iconName"
+        @click="$emit('iconClick')"
+        class="ui-input__icon"
+      />
+    </template>
   </BaseField>
 </template>
 
@@ -32,7 +35,6 @@ interface Props {
   iconName?: string
   placeholder?: string
   type?: string
-  id?: string
   disabled?: boolean
   validation?: BaseValidation
 }
