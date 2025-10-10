@@ -5,7 +5,7 @@
     </label>
 
     <div class="base-field__control">
-      <slot></slot>
+      <slot :id="id" />
     </div>
 
     <p v-show="$v?.$error" class="base-field__error">
@@ -23,14 +23,16 @@
 <script setup lang="ts">
 import { computed, unref } from 'vue'
 import type { BaseValidation } from '@vuelidate/core'
+import { v4 as uuidv4 } from 'uuid'
 
 interface Props {
-  id?: string
   label?: string
   validation?: BaseValidation
 }
 
 defineOptions({ inheritAttrs: false })
+
+const id = computed(() => uuidv4())
 
 const props = defineProps<Props>()
 
