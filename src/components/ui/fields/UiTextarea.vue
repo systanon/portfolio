@@ -1,6 +1,7 @@
 <template>
   <BaseField :id="id" :label="label" :validation="validation">
     <textarea
+      v-bind="$attrs"
       :id="id"
       v-model="modelValueProxy"
       :placeholder="placeholder"

@@ -1,6 +1,7 @@
 <template>
   <BaseField :id="id" :label="label" :validation="validation">
     <input
+      v-bind="$attrs"
       :id="id"
       v-model="modelValueProxy"
       :type="type"

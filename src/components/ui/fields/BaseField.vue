@@ -30,6 +30,8 @@ interface Props {
   validation?: BaseValidation
 }
 
+defineOptions({ inheritAttrs: false })
+
 const props = defineProps<Props>()
 
 const $v = props.validation

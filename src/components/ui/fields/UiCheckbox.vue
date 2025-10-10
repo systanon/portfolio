@@ -2,6 +2,7 @@
   <BaseField :id="id" :label="label" :validation="validation">
     <label class="ui-checkbox">
       <input
+        v-bind="$attrs"
         type="checkbox"
         class="ui-checkbox__input"
         :id="id"
