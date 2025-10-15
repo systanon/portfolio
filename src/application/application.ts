@@ -28,7 +28,10 @@ import type {
   ReplaceNoteDTO,
   UpdateNoteDTO,
 } from '@/types/notes'
-import type { NotificationService } from './services/notification.service'
+import type {
+  NotificationService,
+  NotificationType,
+} from './services/notification.service'
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any
@@ -285,5 +288,9 @@ export class Application<
 
   public async run(): Promise<void> {
     await this.getProfile()
+  }
+
+  public notify(type: NotificationType, message: string): void {
+    this.#notificationService.notify(type, message)
   }
 }
