@@ -11,12 +11,18 @@ import { errorMsg } from '@/helpers/formatErrorMsg'
 import type { GetAllParams, PaginateResult } from '@/types/app.types'
 import { getTotalPages } from '@/utils/getTotalPages'
 import { API_URL } from '@/constants'
+import type { NotificationService } from './notification.service'
 
 export class TodoService {
   private readonly httpClient: HTTPClient
+  private readonly notificationService: NotificationService
 
-  constructor(httpClient: HTTPClient) {
+  constructor(
+    httpClient: HTTPClient,
+    notificationService: NotificationService
+  ) {
     this.httpClient = httpClient
+    this.notificationService = notificationService
   }
 
   async create(dto: CreateTodoDTO): Promise<ID | AppError> {
@@ -33,7 +39,9 @@ export class TodoService {
 
       return id
     } catch (error) {
-      return new AppError(errorMsg(error))
+      const msg = errorMsg(error)
+      this.notificationService.notify('error', msg)
+      return new AppError(msg)
     }
   }
 
@@ -60,7 +68,9 @@ export class TodoService {
       const result = await this.httpClient.jsonDo<Todo>(url)
       return result
     } catch (error) {
-      return new AppError(errorMsg(error))
+      const msg = errorMsg(error)
+      this.notificationService.notify('error', msg)
+      return new AppError(msg)
     }
   }
 
@@ -76,7 +86,9 @@ export class TodoService {
       })
       return result
     } catch (error) {
-      return new AppError(errorMsg(error))
+      const msg = errorMsg(error)
+      this.notificationService.notify('error', msg)
+      return new AppError(msg)
     }
   }
 
@@ -92,7 +104,9 @@ export class TodoService {
       })
       return result
     } catch (error) {
-      return new AppError(errorMsg(error))
+      const msg = errorMsg(error)
+      this.notificationService.notify('error', msg)
+      return new AppError(msg)
     }
   }
 
@@ -106,7 +120,9 @@ export class TodoService {
       })
       return result
     } catch (error) {
-      return new AppError(errorMsg(error))
+      const msg = errorMsg(error)
+      this.notificationService.notify('error', msg)
+      return new AppError(msg)
     }
   }
 }

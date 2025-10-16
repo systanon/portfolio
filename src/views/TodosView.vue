@@ -113,6 +113,7 @@ import {
   type Todo,
 } from '../types/todo'
 import UiTextarea from '@/components/ui/fields/UiTextarea.vue'
+import { AppError } from '@/types/app-errors'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 const deleteModalRef = ref<IModalOpen | null>(null)
@@ -162,7 +163,11 @@ const deleteHandler = async (todo: Todo) => {
   const { id } = todo
   const modal = deleteModalRef.value
   const res = await modal?.open()
-  if (res) remove(id)
+  if (res) {
+    const res = await remove(id)
+    if (res instanceof AppError) return
+    getAll(requestParams.value)
+  }
 }
 
 const editHandler = async (_todo: Todo) => {
@@ -181,7 +186,8 @@ const updateTodo = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid || !id) return
 
-  await update(Number(id), todo)
+  const res = await update(Number(id), todo)
+  if (!(res instanceof AppError)) getAll(requestParams.value)
   modal?.confirm(true)
 }
 
@@ -208,7 +214,8 @@ const createTodo = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
 
-  await create(todo)
+  const res = await create(todo)
+  if (!(res instanceof AppError)) getAll(requestParams.value)
   modal?.confirm(true)
 }
 
@@ -242,14 +249,10 @@ watch(
   },
   { immediate: true }
 )
-watch(
-  requestParams,
-  (params) => {
-    getAll(params)
-    saveRouterQuery()
-  },
-  { immediate: true }
-)
+watch(requestParams, (params) => {
+  getAll(params)
+  saveRouterQuery()
+})
 
 onMounted(() => {
   parsePouterQuery()

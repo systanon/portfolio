@@ -14,10 +14,10 @@ export const httpClient = new HTTPClient({
   },
 })
 
-export const todoService = new TodoService(httpClient)
+export const notificationService = new NotificationService()
+export const todoService = new TodoService(httpClient, notificationService)
 export const authService = new AuthService(httpClient)
 export const notesService = new NotesService(httpClient)
-export const notificationService = new NotificationService()
 httpClient.interceptors.request.use(
   (request) => {
     if (request.credentials === 'include') {
