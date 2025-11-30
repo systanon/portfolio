@@ -1,6 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import TodoLayout from '@/layouts/TodoLayout.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -13,12 +14,6 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'Home',
         meta: { accessMode: 'public' },
         component: HomeView,
-      },
-      {
-        path: '/todos',
-        name: 'TodoList',
-        meta: { accessMode: 'public' },
-        component: () => import('@/views/TodosView.vue'),
       },
       {
         path: '/verify-email',
@@ -67,6 +62,25 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'ResetPassword',
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/ResetPasswordView.vue'),
+      },
+    ],
+  },
+  {
+    path: '/todos',
+    name: 'TodoLayout',
+    component: TodoLayout,
+    children: [
+      {
+        path: '/todos',
+        name: 'TodoList',
+        meta: { accessMode: 'public' },
+        component: () => import('@/views/TodosView.vue'),
+      },
+      {
+        path: '/todos/:id',
+        name: 'TodoDetails',
+        meta: { accessMode: 'public' },
+        component: () => import('@/views/TodoDetailView.vue'),
       },
     ],
   },
