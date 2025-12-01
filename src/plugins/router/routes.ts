@@ -78,7 +78,7 @@ export const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/todos/:id',
-        name: 'TodoDetails',
+        name: 'TodoDetail',
         meta: { accessMode: 'public' },
         component: () => import('@/views/TodoDetailView.vue'),
       },
