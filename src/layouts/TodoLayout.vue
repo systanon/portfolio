@@ -6,11 +6,13 @@
         <router-view />
       </div>
     </main>
+    <MainFooter />
   </section>
 </template>
 
 <script lang="ts" setup>
 import AppHeader from '@/components/AppHeader.vue'
+import MainFooter from '@/components/MainFooter.vue'
 </script>
 <style scoped lang="scss">
 .todo-layout {
@@ -24,7 +26,8 @@ import AppHeader from '@/components/AppHeader.vue'
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     min-height: 0;
   }
   &:before {
