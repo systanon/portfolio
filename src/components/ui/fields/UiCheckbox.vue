@@ -47,13 +47,12 @@ function onChange(event: Event) {
 .ui-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   cursor: pointer;
   user-select: none;
 
   &__input {
-    width: 1.1rem;
-    height: 1.1rem;
+    width: rem(20);
+    height: rem(20);
     cursor: pointer;
     accent-color: $bg-menu-secondary;
     margin: 0;
@@ -65,7 +64,6 @@ function onChange(event: Event) {
   }
 
   &__text {
-    font-size: 1rem;
     color: var(--text-color-secondary);
   }
 }
