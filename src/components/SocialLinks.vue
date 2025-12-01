@@ -1,33 +1,26 @@
 <template>
   <nav class="social-links" aria-label="Social Links">
     <a
-      v-for="item in items"
-      :key="item.icon"
-      :href="item.href"
+      v-for="link in links"
+      :key="link.icon"
+      :href="link.href"
       target="_blank"
       rel="noopener"
       class="social-links__item"
-      :aria-label="item.label"
+      :aria-label="link.label"
     >
-      <UIIcon :name="item.icon" />
+      <UIIcon :name="link.icon" />
     </a>
   </nav>
 </template>
 
 <script lang="ts" setup>
 import UIIcon from '@/components/ui/icons/UiIcon.vue'
+import type { SocialLink } from '@/types/social-links.type'
 
-export type SocialItem = {
-  icon: string
-  href: string
-  label: string
-}
-
-const items: SocialItem[] = [
-  { icon: 'telegram', href: 'https://t.me/your', label: 'Telegram' },
-  { icon: 'linkedin', href: 'https://linkedin.com/in/your', label: 'LinkedIn' },
-  { icon: 'whatsapp', href: 'https://wa.me/your', label: 'WhatsApp' },
-]
+defineProps<{
+  links: SocialLink[]
+}>()
 </script>
 
 <style lang="scss" scoped>

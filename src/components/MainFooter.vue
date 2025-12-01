@@ -2,7 +2,7 @@
   <footer class="main-footer">
     <div class="container">
       <div class="main-footer__info">
-        <SocialLinks class="main-footer__info-links" />
+        <SocialLinks class="main-footer__info-links" :links="socialLinks" />
         <p class="main-footer__info-copyright">
           © 2025 Tustanovskyi. All rights reserved.
         </p>
@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import SocialLinks from './SocialLinks.vue'
+import { socialLinks } from '@/config/social-links'
 </script>
 
 <style lang="scss" scoped>
