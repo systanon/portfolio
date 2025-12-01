@@ -69,7 +69,7 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
   border: transparent solid 1px;
   display: flex;
   gap: 1rem;
-  width: 100%;
+  width: rem(350);
   background-color: var(--bg-primary);
   color: var(--text-color-secondary);
   overflow: hidden;
@@ -152,7 +152,7 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
 
 @include media-query('mobile') {
   .todo-item {
-    width: 30rem;
+    width: rem(480);
   }
 }
 </style>
