@@ -11,20 +11,18 @@
       </template>
     </UiButtonIcon>
 
-    <div class="page-todo__scroll-container">
-      <section class="page-todo__todos">
-        <TodoItem
-          v-for="[id, todo] of [...todosMap.entries()]"
-          :key="id"
-          :todo="todo"
-          @editHandler="editHandler"
-          @deleteHandler="deleteHandler"
-          @completeHandler="completeHandler"
-          @detailTodo="detailHandler"
-        />
-        <p v-if="!todos.length">Epmty todos</p>
-      </section>
-    </div>
+    <section class="page-todo__todos">
+      <TodoItem
+        v-for="[id, todo] of [...todosMap.entries()]"
+        :key="id"
+        :todo="todo"
+        @editHandler="editHandler"
+        @deleteHandler="deleteHandler"
+        @completeHandler="completeHandler"
+        @detailTodo="detailHandler"
+      />
+      <p v-if="!todos.length">Epmty todos</p>
+    </section>
 
     <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
       <template #default>
@@ -277,8 +275,6 @@ onMounted(() => {
   flex-direction: column;
   gap: 2rem;
   height: 100%;
-  flex-grow: 1;
-  min-height: 0;
   &__title {
     text-align: center;
   }
@@ -295,25 +291,12 @@ onMounted(() => {
     }
   }
 
-  &__scroll-container {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-  }
-
   &__todos {
     display: flex;
     flex-wrap: wrap;
     gap: rem(30);
     justify-content: center;
     align-content: baseline;
-    overflow-y: auto;
-    flex-grow: 1;
-    min-height: 0;
-  }
-
-  &__pagination {
-    margin-top: auto;
   }
 
   &__modal-form {

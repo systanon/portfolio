@@ -21,24 +21,21 @@ import MainFooter from '@/components/MainFooter.vue'
   grid-template-rows: auto 1fr auto;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  min-height: 100vh;
   &__main {
     height: 100%;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
-    min-height: 0;
   }
   &:before {
     content: '';
-    position: absolute;
+    position: fixed;
     background-image: url('@/assets/home-img/layer 4.png');
     background-size: cover;
-    object-fit: cover;
+    background-position: center;
     width: 100%;
     height: 100%;
-    z-index: -5;
+    z-index: -1;
   }
 }
 </style>
