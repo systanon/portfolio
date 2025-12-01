@@ -26,19 +26,12 @@ defineProps<{
 <style lang="scss" scoped>
 .social-links {
   display: flex;
-  flex-direction: column;
   gap: rem(20);
   &__item {
     display: inline-flex;
     width: 2rem;
     height: 2rem;
     color: var(--text-color-primary);
-  }
-}
-
-@include media-query('tablet') {
-  .social-links {
-    flex-direction: row;
   }
 }
 </style>
