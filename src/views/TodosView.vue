@@ -158,7 +158,7 @@ const {
   setPages,
 } = usePagination(DEFAULT_PAGE_SIZE)
 const { todos, todosMap, pages } = storeToRefs(todoStore)
-const { getAll, update, create, remove } = todoStore
+const { getAll, update, create, remove, completedToggler } = todoStore
 
 const requestParams = computed(() => {
   const { perPage, page } = pagination
@@ -233,9 +233,9 @@ const completeHandler = ({
   payload,
 }: {
   id: number
-  payload: UpdateTodoDTO
+  payload: { completed: boolean }
 }) => {
-  update(id, payload)
+  completedToggler(id, payload)
 }
 
 const clearInputs = () => {
@@ -292,44 +292,21 @@ onMounted(() => {
   }
 
   &__todos {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: rem(30);
-    justify-content: center;
-    align-content: baseline;
   }
 
   &__modal-form {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    min-width: 400px;
-    max-width: 600px;
+    min-width: rem(400);
+    max-width: rem(600);
   }
 }
-
-@include media-query('ultra-wide') {
-  .page-todo {
-    display: grid;
-    column-gap: rem(30);
-    grid-template-columns: repeat(12, 1fr);
-    flex-grow: unset;
-    &__title {
-      align-self: center;
-      grid-column: 1/ -1;
-    }
-    &__create {
-      grid-column: 1/ -1;
-    }
-    &__todos {
-      grid-column: 2/ 12;
-    }
-    &__pagination {
-      grid-column: 1/ -1;
-    }
-    &__create {
-      align-self: center;
-    }
+@include media-query('tablet') {
+  .page-todo__todos {
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>

@@ -43,6 +43,25 @@ export const useTodoStore = defineStore('todos', () => {
     }
   }
 
+  async function completedToggler(
+    _id: number,
+    payload: { completed: boolean }
+  ): Promise<void> {
+    const res = await application.updateTodo(_id, payload)
+    if (!(res instanceof AppError)) {
+      const current = todosMap.value.get(_id)
+      if (!current) return
+
+      const updated = { ...current, ...payload }
+
+      todosMap.value.set(_id, updated)
+      const index = todos.value.findIndex((t) => t.id === _id)
+      if (index !== -1) {
+        todos.value[index] = updated
+      }
+    }
+  }
+
   async function create(payload: CreateTodoDTO): Promise<AppError | void> {
     const res = await application.createTodo(payload)
     if (res instanceof AppError) {
@@ -57,5 +76,15 @@ export const useTodoStore = defineStore('todos', () => {
     }
   }
 
-  return { getAll, todos, todosMap, update, create, remove, total, pages }
+  return {
+    getAll,
+    todos,
+    todosMap,
+    update,
+    create,
+    remove,
+    total,
+    pages,
+    completedToggler,
+  }
 })
