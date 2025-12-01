@@ -24,26 +24,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
-export default defineComponent({
+
+interface Pagination {
+  page: number
+  pages: number
+}
+defineOptions({
   name: 'UiPagination',
-  components: {
-    UiButtonIcon,
-    UiButton,
-  },
-  props: {
-    page: {
-      type: Number,
-      default: 1,
-    },
-    pages: {
-      type: Number,
-      default: 1,
-    },
-  },
+})
+
+withDefaults(defineProps<Pagination>(), {
+  page: 1,
+  pages: 1,
 })
 </script>
 <style lang="scss" scoped>
@@ -53,7 +48,7 @@ export default defineComponent({
   justify-content: center;
   text-align: center;
   gap: 1rem;
-  padding: 2rem;
+  padding: rem(30) 0;
   & ._active {
     color: var(--text-active-primary);
   }
