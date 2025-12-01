@@ -13,11 +13,9 @@
     </div>
     <div class="todo-item__info">
       <h2 class="todo-item__title">
-        <UiLittleKip :text="todo.title" />
+        {{ todo.title }}
       </h2>
-      <div class="todo-item__description">
-        <p class="todo-item__description-text">{{ todo.description }}</p>
-      </div>
+      <p class="todo-item__description">{{ todo.description }}</p>
       <div class="todo-item__actions">
         <UiButton label="More detail" @click="$emit('detailTodo', todo.id)" />
       </div>
@@ -51,7 +49,6 @@ import type { Todo } from '@/types/todo'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import { ref, type Ref } from 'vue'
-import UiLittleKip from '@/components/ui/UiLittleKip.vue'
 import UiCheckbox from './ui/fields/UiCheckbox.vue'
 defineProps<{
   todo: Todo
@@ -64,12 +61,12 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
 <style scoped lang="scss">
 .todo-item {
   position: relative;
-  padding: rem(15) rem(70) rem(15) rem(15);
+  padding: rem(15) 0 rem(15) rem(15);
   border-radius: 1rem;
   border: transparent solid 1px;
-  display: flex;
-  gap: 1rem;
-  width: rem(350);
+  display: grid;
+  gap: rem(16);
+  width: 100%;
   background-color: var(--bg-primary);
   color: var(--text-color-secondary);
   overflow: hidden;
@@ -77,18 +74,19 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
   &__checked {
     display: flex;
     align-items: center;
-    flex: 0 0;
+    justify-content: center;
   }
-
   &__info {
-    flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    width: calc(100% - rem(70));
+    gap: rem(25);
+  }
+  &__title {
+    @include break-long-words;
+    @include truncate-multi-line(1);
   }
 
-  &__description-text {
+  &__description {
     @include break-long-words;
     @include truncate-multi-line(1);
   }
@@ -152,7 +150,7 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
 
 @include media-query('mobile') {
   .todo-item {
-    width: rem(480);
+    grid-template-columns: auto 1fr 0.2fr;
   }
 }
 </style>
