@@ -10,17 +10,21 @@
         <span class="page-todo__create-text"> Create todo </span>
       </template>
     </UiButtonIcon>
-    <section class="page-todo__todos">
-      <TodoItem
-        v-for="[id, todo] of [...todosMap.entries()]"
-        :key="id"
-        :todo="todo"
-        @editHandler="editHandler"
-        @deleteHandler="deleteHandler"
-        @completeHandler="completeHandler"
-      />
-      <p v-if="!todos.length">Epmty todos</p>
-    </section>
+
+    <div class="page-todo__scroll-container">
+      <section class="page-todo__todos">
+        <TodoItem
+          v-for="[id, todo] of [...todosMap.entries()]"
+          :key="id"
+          :todo="todo"
+          @editHandler="editHandler"
+          @deleteHandler="deleteHandler"
+          @completeHandler="completeHandler"
+          @detailTodo="detailHandler"
+        />
+        <p v-if="!todos.length">Epmty todos</p>
+      </section>
+    </div>
 
     <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
       <template #default>
@@ -134,6 +138,13 @@ const rules = {
   description: {
     required: helpers.withMessage('Description is required', required),
   },
+}
+
+const detailHandler = (id: string) => {
+  router.push({
+    name: 'TodoDetail',
+    params: { id },
+  })
 }
 
 const v$ = useVuelidate(rules, todo)
@@ -265,6 +276,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  height: 100%;
   flex-grow: 1;
   min-height: 0;
   &__title {
@@ -282,16 +294,26 @@ onMounted(() => {
       font-size: 1.5rem;
     }
   }
+
+  &__scroll-container {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+
   &__todos {
     display: flex;
     flex-wrap: wrap;
     gap: rem(30);
     justify-content: center;
     align-content: baseline;
-    height: 100%;
     overflow-y: auto;
     flex-grow: 1;
     min-height: 0;
+  }
+
+  &__pagination {
+    margin-top: auto;
   }
 
   &__modal-form {
