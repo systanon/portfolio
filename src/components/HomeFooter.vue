@@ -1,14 +1,18 @@
 <template>
-  <footer
+  <div
     class="app-footer"
     :style="{
       '--x': `${x * 20}px`,
       '--y': `${y * 20}px`,
     }"
-  ></footer>
+  >
+    <MainFooter />
+  </div>
 </template>
 
 <script setup lang="ts">
+import MainFooter from './MainFooter.vue'
+
 defineProps<{
   x: number
   y: number

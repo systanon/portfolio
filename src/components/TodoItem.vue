@@ -18,6 +18,9 @@
       <div class="todo-item__description">
         <p class="todo-item__description-text">{{ todo.description }}</p>
       </div>
+      <div class="todo-item__actions">
+        <UiButton label="More detail" @click="$emit('detailTodo', todo.id)" />
+      </div>
     </div>
     <div class="todo-item__menu">
       <UiButtonIcon
@@ -46,6 +49,7 @@
 <script lang="ts" setup>
 import type { Todo } from '@/types/todo'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
+import UiButton from '@/components/ui/buttons/UiButton.vue'
 import { ref, type Ref } from 'vue'
 import UiLittleKip from '@/components/ui/UiLittleKip.vue'
 import UiCheckbox from './ui/fields/UiCheckbox.vue'
@@ -60,36 +64,39 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
 <style scoped lang="scss">
 .todo-item {
   position: relative;
-  padding: rem(15) rem(30) rem(15) rem(15);
+  padding: rem(15) rem(70) rem(15) rem(15);
   border-radius: 1rem;
   border: transparent solid 1px;
   display: flex;
   gap: 1rem;
   width: 30rem;
-  height: 10rem;
   background-color: var(--bg-primary);
   color: var(--text-color-secondary);
   overflow: hidden;
+
   &__checked {
     display: flex;
     align-items: center;
     flex: 0 0;
   }
+
   &__info {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    width: calc(100% - 0.9375rem);
+    width: calc(100% - rem(70));
   }
-  &__description {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    width: calc(100% - 4rem);
-  }
+
   &__description-text {
     @include break-long-words;
+    @include truncate-multi-line(1);
   }
+
+  &__actions {
+    text-align: center;
+  }
+
   &__menu {
     position: absolute;
     bottom: 0;
@@ -137,6 +144,7 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
   &._checked {
     border-color: var(--todo-checked);
   }
+
   :deep(.ui-icon) {
     color: $icon-color-primary;
   }

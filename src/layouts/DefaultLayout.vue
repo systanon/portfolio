@@ -11,12 +11,12 @@
     <main class="default-layout__main">
       <router-view />
     </main>
-    <AppFooter :x="offsetX" :y="offsetY" />
+    <HomeFooter :x="offsetX" :y="offsetY" />
   </section>
 </template>
 
 <script lang="ts" setup>
-import AppFooter from '@/components/AppFooter.vue'
+import HomeFooter from '@/components/HomeFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import Comets from '@/components/Comets.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
