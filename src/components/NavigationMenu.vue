@@ -1,8 +1,14 @@
 <template>
   <nav class="navigation-menu">
-    <RouterLink v-for="{ path, text } in navigationList" :key="path" :to="path">
+    <AppLink
+      v-for="{ path, text, routeName } in navigationList"
+      :key="path"
+      :to="{ name: routeName }"
+      inactive-class="link"
+      exactActiveClass="link--active"
+    >
       {{ text }}
-    </RouterLink>
+    </AppLink>
     <UiButton label="Logout" v-if="isLogged" @click="logout" />
   </nav>
 </template>
@@ -12,10 +18,11 @@ import { defineComponent } from 'vue'
 import { byAuthorized, mainMenu, type NavigationMenu } from '@/config/main-menu'
 import { application } from '@/application'
 import UiButton from './ui/buttons/UiButton.vue'
+import AppLink from './AppLink.vue'
 
 export default defineComponent({
   name: 'NavigationMenu',
-  components: { UiButton },
+  components: { UiButton, AppLink },
   computed: {
     isLogged() {
       return application.isLogged
@@ -41,8 +48,8 @@ export default defineComponent({
   margin: 0;
   padding: 0;
 
-  :deep(.router-link-exact-active) {
-    color: orange;
-  }
+  // :deep(.router-link-exact-active) {
+  //   color: orange;
+  // }
 }
 </style>
