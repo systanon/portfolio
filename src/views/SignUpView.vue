@@ -25,6 +25,18 @@
         autocomplete="new-password"
         :validation="v$.confirmPassword"
       />
+      <div class="page-sign-up__redirect">
+        <span class="page-sign-up__redirect-text"
+          >Already have an account?</span
+        >
+
+        <AppLink
+          :to="{ name: 'SignIn' }"
+          inactive-class="link-secondary"
+          active-class="link-secondary--active"
+          >Sign In</AppLink
+        >
+      </div>
       <UiButton type="submit" label="Submit" />
     </form>
   </section>
@@ -44,6 +56,7 @@ import {
   maxLength,
   email as emailValidation,
 } from '@vuelidate/validators'
+import AppLink from '@/components/AppLink.vue'
 
 const email = ref<string>('')
 const password = ref<string>('')
@@ -95,7 +108,7 @@ const submitHandler = async () => {
   display: flex;
   min-height: 0;
   justify-content: center;
-  margin-top: 6rem;
+  margin-top: rem(80);
   &__form {
     display: flex;
     flex-direction: column;
@@ -109,6 +122,13 @@ const submitHandler = async () => {
     max-width: rem(400);
     &-title {
       text-align: center;
+    }
+  }
+  &__redirect {
+    text-align: center;
+    padding-bottom: rem(15);
+    &-text {
+      padding-right: rem(10);
     }
   }
 }
