@@ -47,9 +47,5 @@ export default defineComponent({
   gap: 25px;
   margin: 0;
   padding: 0;
-
-  // :deep(.router-link-exact-active) {
-  //   color: orange;
-  // }
 }
 </style>
