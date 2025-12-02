@@ -10,8 +10,7 @@
     <UiButton
       v-for="_page in pages"
       :key="_page"
-      class="ui-pagination__buttons"
-      :class="{ _active: page === _page }"
+      :class="['ui-pagination__buttons', { _active: page === _page }]"
       @click="$emit('btnPage', _page)"
       :label="`${_page}`"
     />
@@ -49,8 +48,12 @@ withDefaults(defineProps<Pagination>(), {
   text-align: center;
   gap: 1rem;
   padding: rem(30) 0;
-  & ._active {
-    color: var(--text-active-primary);
+  &__buttons {
+    &._active {
+      :deep(.ui-button__content) {
+        color: var(--active-primary);
+      }
+    }
   }
   :deep(.ui-button__content) {
     font-size: 1.5rem;
