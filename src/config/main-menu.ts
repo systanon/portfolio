@@ -58,14 +58,6 @@ export const mainMenu: NavigationMenu = [
     icon: '',
     showMode: 'unauthorized',
   },
-  {
-    path: '/resend-email-verification',
-    text: 'Resend email verification',
-    i18n_key: 'sign_up',
-    routeName: 'ResendEmailVerification',
-    icon: '',
-    showMode: 'unauthorized',
-  },
 ]
 
 export const mapperMainMenu = {
