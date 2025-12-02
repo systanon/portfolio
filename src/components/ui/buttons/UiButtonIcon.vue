@@ -40,6 +40,7 @@ export default defineComponent({
   background-color: transparent;
   &:disabled {
     pointer-events: none;
+    opacity: $disabled-opacity;
   }
 }
 </style>
