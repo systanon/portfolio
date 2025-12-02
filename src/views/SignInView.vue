@@ -14,12 +14,23 @@
         placeholder="Enter your password"
         :validation="v$.password"
       />
-      <RouterLink
-        class="page-sign-in__forgot-pass"
-        :to="{ name: 'ForgotPassword' }"
-      >
-        Forgot password?</RouterLink
-      >
+      <div class="page-sign-in__redirect">
+        <AppLink
+          class="page-sign-in__redirect-link"
+          inactive-class="link-secondary"
+          active-class="link-secondary--active"
+          :to="{ name: 'ForgotPassword' }"
+        >
+          Forgot password?</AppLink
+        >
+        <AppLink
+          class="page-sign-in__redirect-link"
+          :to="{ name: 'ResendEmailVerification' }"
+          inactive-class="link-secondary"
+          active-class="link-secondary--active"
+          >Resend verification email?</AppLink
+        >
+      </div>
       <UiButton type="submit" label="Submit" />
     </form>
   </section>
@@ -36,6 +47,7 @@ import {
   helpers,
   email as emailValidation,
 } from '@vuelidate/validators'
+import AppLink from '@/components/AppLink.vue'
 const email = ref('')
 const password = ref('')
 
@@ -86,8 +98,12 @@ const submitHandler = async () => {
       text-align: center;
     }
   }
-  &__forgot-pass {
-    text-align: right;
+  &__redirect {
+    display: flex;
+    flex-direction: column;
+    gap: rem(20);
+    text-align: end;
+    padding-bottom: rem(15);
   }
 }
 </style>

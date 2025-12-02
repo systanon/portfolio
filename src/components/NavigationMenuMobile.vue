@@ -52,7 +52,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .app-nav {
   display: flex;
-  align-items: center;
+  justify-content: end;
 
   &__burger-menu {
     background-color: transparent;
@@ -83,7 +83,8 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: rem(30);
+    font-size: rem(22);
 
     &__item {
       cursor: pointer;
