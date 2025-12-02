@@ -79,8 +79,15 @@
         <UiButton @click="createTodo" label="Create todo" />
       </template>
     </UIModal>
-
+    <UiPaginationMobile
+      v-if="isMobile || isTablet"
+      v-model:page="pagination.page"
+      v-model:pages="pagination.pages"
+      @prev-page="prevPage"
+      @next-page="nextPage"
+    />
     <UIPagination
+      v-else
       class="page-todo__pagination"
       v-model:page="pagination.page"
       v-model:pages="pagination.pages"
@@ -116,11 +123,14 @@ import {
 } from '../types/todo'
 import UiTextarea from '@/components/ui/fields/UiTextarea.vue'
 import { AppError } from '@/types/app-errors'
+import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
+import { useInjectWindowResize } from '@/composables/useWindowResize'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 const deleteModalRef = ref<IModalOpen | null>(null)
 const editModalRef = ref<IModalOpen | null>(null)
 const createModalRef = ref<IModalOpen | null>(null)
+const { isMobile, isTablet } = useInjectWindowResize()
 
 const route = useRoute()
 const router = useRouter()
