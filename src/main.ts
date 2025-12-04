@@ -29,6 +29,10 @@ application.run()
 
 application.on('unlogged', router.checkAccessCurrentRoute)
 
+application.on('redirect', (routeName) => {
+  router.push({ name: routeName })
+})
+
 application.on('logged', router.checkAccessCurrentRoute)
 
 app.mount('#app')

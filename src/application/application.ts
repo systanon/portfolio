@@ -32,6 +32,8 @@ import type {
   NotificationService,
   NotificationType,
 } from './services/notification.service'
+import type { RouteName } from '@/types/router'
+
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any
@@ -200,6 +202,7 @@ export class Application<
       this.#notificationService.notify('error', res.message)
     } else {
       this.#notificationService.notify('success', res.message)
+      this.#ee.emit('redirect', 'SignIn' satisfies RouteName)
     }
     this.#loading.value = false
   }
