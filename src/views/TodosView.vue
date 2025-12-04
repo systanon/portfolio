@@ -125,6 +125,7 @@ import UiTextarea from '@/components/ui/fields/UiTextarea.vue'
 import { AppError } from '@/types/app-errors'
 import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
+import type { RouteName } from '@/types/router'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 const deleteModalRef = ref<IModalOpen | null>(null)
@@ -150,7 +151,7 @@ const rules = {
 
 const detailHandler = (id: string) => {
   router.push({
-    name: 'TodoDetail',
+    name: 'TodoDetail' satisfies RouteName,
     params: { id },
   })
 }

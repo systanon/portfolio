@@ -6,7 +6,6 @@ import TodoLayout from '@/layouts/TodoLayout.vue'
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'DefaultLayout',
     component: DefaultLayout,
     children: [
       {
@@ -67,7 +66,6 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/todos',
-    name: 'TodoLayout',
     component: TodoLayout,
     children: [
       {
