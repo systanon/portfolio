@@ -9,7 +9,6 @@
     >
       {{ text }}
     </AppLink>
-    <UiButton label="Logout" v-if="isLogged" @click="logout" />
   </nav>
 </template>
 
@@ -31,11 +30,6 @@ export default defineComponent({
       return mainMenu.filter(byAuthorized(this.isLogged))
     },
   },
-  methods: {
-    logout() {
-      application.logout()
-    },
-  },
 })
 </script>
 <style scoped lang="scss">
@@ -44,7 +38,7 @@ export default defineComponent({
   align-content: center;
   justify-content: flex-end;
   align-items: center;
-  gap: 25px;
+  gap: rem(25);
   margin: 0;
   padding: 0;
 }
