@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import TodoLayout from '@/layouts/TodoLayout.vue'
+import AccountLayout from '@/layouts/AccountLayout.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
@@ -31,12 +32,6 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'SignUp',
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/SignUpView.vue'),
-      },
-      {
-        path: '/profile',
-        name: 'Profile',
-        meta: { accessMode: 'private' },
-        component: () => import('@/views/ProfileView.vue'),
       },
       {
         path: '/notes',
@@ -79,6 +74,18 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'TodoDetail',
         meta: { accessMode: 'public' },
         component: () => import('@/views/TodoDetailView.vue'),
+      },
+    ],
+  },
+  {
+    path: '/profile',
+    component: AccountLayout,
+    children: [
+      {
+        path: '/profile',
+        name: 'Profile',
+        meta: { accessMode: 'private' },
+        component: () => import('@/views/ProfileView.vue'),
       },
     ],
   },
