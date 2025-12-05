@@ -111,6 +111,7 @@ defineExpose({
   }
   &__dialog {
     background-color: $bg-menu-secondary;
+    width: calc(100% - rem(15));
     border-radius: 10px;
     left: 50%;
     padding: 20px;
@@ -131,6 +132,31 @@ defineExpose({
     gap: 1em;
     justify-content: end;
     text-align: right;
+  }
+}
+@include media-query('tablet') {
+  .ui-modal__dialog {
+    width: 70%;
+  }
+}
+@include media-query('desktop') {
+  .ui-modal__dialog {
+    width: 60%;
+  }
+}
+@include media-query('large-desktop') {
+  .ui-modal__dialog {
+    width: 50%;
+  }
+}
+@include media-query('extra-large-desktop') {
+  .ui-modal__dialog {
+    width: 40%;
+  }
+}
+@include media-query('ultra-wide') {
+  .ui-modal__dialog {
+    width: 30%;
   }
 }
 </style>
