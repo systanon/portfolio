@@ -20,6 +20,7 @@ export default defineComponent({
     },
     iconName: {
       type: String,
+      required: true,
     },
     disabled: {
       type: Boolean,

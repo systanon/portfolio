@@ -1,8 +1,11 @@
 <template>
   <section class="page-profile">
-    <h2 class="page-profile__info-title">Profile</h2>
+    <h2 class="page-profile__title title">Profile</h2>
+    <div class="page-profile__avatar avatar">
+      <img :src="avatar" alt="avatar" class="page-profile__avatar-image" />
+    </div>
 
-    <div class="page-profile__fields">
+    <div class="page-profile__fields fields">
       <div
         v-for="(field, key) in fields"
         :key="key"
@@ -22,19 +25,45 @@
           @iconClick="field.isEditing.value ? cancelEdit(key) : toggleEdit(key)"
         />
         <div class="page-profile__fields-actions">
-          <UiButton
+          <UiButtonIcon
             :disabled="
               !field.isEditing.value ||
               v$[key].$error ||
               field.value.value === field.originalValue
             "
             @click="submitField(key)"
-            label="Submit"
+            iconName="save"
           />
         </div>
       </div>
     </div>
+    <div class="page-profile__actions actions">
+      <UiButton label="Delete Account" @click="deleteHandler" />
+      <UiButton label="Sign Out" @click="signOutHandler" />
+    </div>
   </section>
+  <UIModal ref="deleteModalRef" title="Delete account" class="profile__modal">
+    <template #default>
+      <div class="profile__modal-form">
+        <h3>Are you sure you want to delete your account?</h3>
+      </div>
+    </template>
+    <template #actions="{ close, confirm }">
+      <UiButton @click="close" label="Cancel" />
+      <UiButton @click="confirm" label="Delete account" />
+    </template>
+  </UIModal>
+  <UIModal ref="signOutModalRef" title="Sign out" class="profile__modal">
+    <template #default>
+      <div class="profile__modal-form">
+        <h3>Do you really want to sign out?</h3>
+      </div>
+    </template>
+    <template #actions="{ close, confirm }">
+      <UiButton @click="close" label="Cancel" />
+      <UiButton @click="confirm" label="Sign out" />
+    </template>
+  </UIModal>
 </template>
 
 <script setup lang="ts">
@@ -46,6 +75,9 @@ import UiButton from '@/components/ui/buttons/UiButton.vue'
 import { type UserProfileUpdateInfo } from '@/types/auth'
 import { application } from '@/application'
 import { AppError } from '@/types/app-errors'
+import avatar from '@/assets/avatar.webp'
+import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
+import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 
 type FieldKey = keyof UserProfileUpdateInfo
 
@@ -55,6 +87,9 @@ interface FieldData {
   originalValue: string
   isEditing: Ref<boolean>
 }
+
+const deleteModalRef = ref<IModalOpen | null>(null)
+const signOutModalRef = ref<IModalOpen | null>(null)
 
 const fields = {
   email: {
@@ -140,32 +175,57 @@ async function submitField(key: FieldKey) {
   field.isEditing.value = false
   validation.$reset()
 }
+
+const deleteHandler = async () => {
+  const modal = deleteModalRef.value
+  const res = await modal?.open()
+  if (res) {
+    console.log('delete account')
+  }
+}
+
+const signOutHandler = async () => {
+  const modal = signOutModalRef.value
+  const res = await modal?.open()
+  if (res) {
+    application.logout()
+  }
+}
 </script>
 <style scoped lang="scss">
 .page-profile {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  height: 100%;
-  &__info {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'title'
+    'avatar'
+    'fields'
+    'actions';
+  gap: rem(50);
+  background-color: var(--bg-primary);
+  border-radius: rem(10);
+  margin: 0 rem(-15);
+  padding: rem(15);
+  &__title {
+    text-align: center;
+  }
+  &__avatar {
+    width: rem(200);
+    height: rem(200);
+    border-radius: 50%;
     margin: 0 auto;
-    background-color: var(--bg-primary);
-    &-title {
-      text-align: center;
-      padding: 3rem 0;
-    }
+    overflow: hidden;
+  }
+  &__avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
   }
   &__fields {
     display: flex;
     text-align: center;
     flex-direction: column;
-    overflow-y: auto;
-    min-height: 0;
-    background-color: var(--bg-primary);
-    padding: 2.4rem 2rem 1.2rem 2rem;
-    width: 300px;
-    margin: auto auto;
-    border-radius: 1rem;
   }
   &__fields-label > {
     h3 {
@@ -173,18 +233,62 @@ async function submitField(key: FieldKey) {
       font-size: 1.25rem;
     }
   }
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: rem(30);
+    align-items: center;
+  }
+  :deep(.ui-modal__dialog) {
+    width: calc(100% - rem(15));
+  }
+
+  .title {
+    grid-area: title;
+  }
+  .avatar {
+    grid-area: avatar;
+  }
+  .fields {
+    grid-area: fields;
+  }
+  .actions {
+    grid-area: actions;
+  }
+}
+
+.profile__modal {
+  :deep(.ui-modal__dialog) {
+    width: calc(100% - rem(15));
+  }
 }
 
 @include media-query('tablet') {
-  .page-profile__fields {
-    width: 600px;
-    text-align: left;
-  }
   .page-profile__fields-item {
     display: grid;
     grid-template-columns: 0.5fr 1fr auto;
     align-items: flex-start;
     gap: 2rem;
+  }
+  .page-profile__actions {
+    flex-direction: row;
+    justify-content: end;
+  }
+}
+
+@include media-query('desktop') {
+  .page-profile {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    grid-template-areas:
+      'title title'
+      'avatar fields'
+      'actions actions';
+
+    &__avatar {
+      width: rem(300);
+      height: rem(300);
+    }
   }
 }
 </style>

@@ -311,8 +311,6 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    min-width: rem(400);
-    max-width: rem(600);
   }
 }
 @include media-query('tablet') {

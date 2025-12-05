@@ -21,7 +21,7 @@
     <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
       <template #default>
         <div class="page-note__modal-form delete-note-form">
-          <h3>Are you sure you want to delete note?</h3>
+          <h3>Are you sure you want to delete a note?</h3>
         </div>
       </template>
       <template #actions="{ close, confirm }">
@@ -267,8 +267,6 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    min-width: 400px;
-    max-width: 600px;
   }
 }
 
