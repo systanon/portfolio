@@ -1,19 +1,15 @@
 import type { RouteRecordRaw } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import TodoLayout from '@/layouts/TodoLayout.vue'
-import AccountLayout from '@/layouts/AccountLayout.vue'
 
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    component: DefaultLayout,
+    component: () => import('@/layouts/DefaultLayout.vue'),
     children: [
       {
         path: '/',
         name: 'Home',
         meta: { accessMode: 'public' },
-        component: HomeView,
+        component: () => import('@/views/HomeView.vue'),
       },
       {
         path: '/verify-email',
@@ -61,7 +57,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/todos',
-    component: TodoLayout,
+    component: () => import('@/layouts/TodoLayout.vue'),
     children: [
       {
         path: '/todos',
@@ -79,7 +75,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/profile',
-    component: AccountLayout,
+    component: () => import('@/layouts/AccountLayout.vue'),
     children: [
       {
         path: '/profile',

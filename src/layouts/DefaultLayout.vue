@@ -6,7 +6,7 @@
       '--y': `${offsetY * 10}px`,
     }"
   >
-    <Comets />
+    <Comets v-if="showCommets" />
     <AppHeader />
     <main class="default-layout__main">
       <router-view />
@@ -20,19 +20,30 @@ import HomeFooter from '@/components/HomeFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import Comets from '@/components/Comets.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
+import { delay } from '@/helpers/delay'
 
 const offsetX = ref(0)
 const offsetY = ref(0)
+const showCommets = ref(false)
+let frame: number | null = null
 
 function handleMouseMove(event: MouseEvent) {
-  const x = (event.clientX / window.innerWidth - 0.5) * 2
-  const y = (event.clientY / window.innerHeight - 0.5) * 2
-  offsetX.value = x
-  offsetY.value = y
+  if (frame) return
+  frame = requestAnimationFrame(() => {
+    offsetX.value = (event.clientX / window.innerWidth - 0.5) * 2
+    offsetY.value = (event.clientY / window.innerHeight - 0.5) * 2
+    frame = null
+  })
+}
+
+const showCommetsHandler = async () => {
+  await delay(2000)
+  showCommets.value = true
 }
 
 onMounted(() => {
   window.addEventListener('mousemove', handleMouseMove)
+  showCommetsHandler()
 })
 
 onUnmounted(() => {
