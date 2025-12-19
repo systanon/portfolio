@@ -11,6 +11,7 @@
       <UiInput
         v-model="password"
         label="Password"
+        type="password"
         placeholder="Enter your password"
         :validation="v$.password"
       />
