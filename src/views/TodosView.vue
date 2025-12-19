@@ -102,7 +102,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref, reactive, computed, watch } from 'vue'
-import { required, helpers } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { APP_CONFIG } from '@/constants'
 import { useRoute, useRouter } from 'vue-router'
@@ -126,6 +125,7 @@ import { AppError } from '@/types/app-errors'
 import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
 import type { RouteName } from '@/types/router'
+import { useValidationRules } from '@/composables/useValidationRules'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 const deleteModalRef = ref<IModalOpen | null>(null)
@@ -142,11 +142,11 @@ const todo = reactive({
   completed: false,
 } as ReplaceTodoDTO)
 
+const { titleRules, descriptionRules } = useValidationRules()
+
 const rules = {
-  title: { required: helpers.withMessage('Title is required', required) },
-  description: {
-    required: helpers.withMessage('Description is required', required),
-  },
+  title: titleRules,
+  description: descriptionRules,
 }
 
 const detailHandler = (id: string) => {

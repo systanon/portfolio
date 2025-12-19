@@ -48,37 +48,17 @@ import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import useVuelidate from '@vuelidate/core'
-import {
-  required,
-  helpers,
-  minLength,
-  sameAs,
-  maxLength,
-  email as emailValidation,
-} from '@vuelidate/validators'
 import AppLink from '@/components/AppLink.vue'
+import { useValidationRules } from '@/composables/useValidationRules'
 
 const email = ref<string>('')
 const password = ref<string>('')
 const confirmPassword = ref<string>('')
-
+const { emailRules, passwordRules, confirmPasswordRules } = useValidationRules()
 const rules = {
-  password: {
-    required: helpers.withMessage('Password is required', required),
-    minLength: helpers.withMessage('Minimum 6 characters', minLength(6)),
-  },
-  email: {
-    required: helpers.withMessage('Email is required', required),
-    maxLength: helpers.withMessage('To much characters', maxLength(50)),
-    emailValidation: helpers.withMessage('invalid email', emailValidation),
-  },
-  confirmPassword: {
-    required,
-    sameAsPassword: helpers.withMessage(
-      'Passwords do not match',
-      sameAs(password)
-    ),
-  },
+  password: passwordRules,
+  email: emailRules,
+  confirmPassword: confirmPasswordRules(password),
 }
 const v$ = useVuelidate(rules, {
   email,

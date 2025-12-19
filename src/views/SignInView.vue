@@ -43,21 +43,17 @@ import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import useVuelidate from '@vuelidate/core'
-import {
-  required,
-  helpers,
-  email as emailValidation,
-} from '@vuelidate/validators'
 import AppLink from '@/components/AppLink.vue'
+import { useValidationRules } from '@/composables/useValidationRules'
+
 const email = ref('')
 const password = ref('')
 
+const { emailRules, passwordRules } = useValidationRules()
+
 const rules = {
-  password: { required: helpers.withMessage('Password is required', required) },
-  email: {
-    required: helpers.withMessage('Email is required', required),
-    emailValidation: helpers.withMessage('invalid email', emailValidation),
-  },
+  password: passwordRules,
+  email: emailRules,
 }
 const v$ = useVuelidate(rules, { password, email })
 
