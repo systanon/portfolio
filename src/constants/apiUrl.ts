@@ -17,6 +17,7 @@ export const API_URL = {
     },
     notes: '/api/v1/notes',
     todos: '/api/v1/todos',
+    statistic: '/api/v1/cv/download',
   },
   development: {
     auth: {
@@ -32,5 +33,6 @@ export const API_URL = {
     },
     notes: '/api/notes',
     todos: '/api/todos',
+    statistic: '/api/cv/download',
   },
 }[mode]
