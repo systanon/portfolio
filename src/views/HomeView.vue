@@ -57,6 +57,7 @@ import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import { application } from '@/application'
 import type { StatisticDTO } from '@/types/statistic'
+import { AppError } from '@/types/app-errors'
 
 const cvModalRef = ref<IModalOpen | null>(null)
 
@@ -99,14 +100,18 @@ const handleMouseMove = (): void => {
 const sendStatistic = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
-  await application.saveStatistic(statistic)
-  cvModalRef.value?.confirm(true)
+  const res = await application.saveStatistic(statistic)
+  if (!(res instanceof AppError)) {
+    cvModalRef.value?.confirm(true)
+    resetStatistic()
+    v$.value.$reset()
+  }
 }
 const openForm = async () => {
   const confirm = await cvModalRef.value?.open()
   if (!confirm) {
-    v$.value.$reset()
     resetStatistic()
+    v$.value.$reset()
   }
 }
 
