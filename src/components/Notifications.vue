@@ -26,20 +26,20 @@ const notifications = application.notifications
 <style lang="scss" scoped>
 .notification-messages {
   position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  z-index: 50;
+  top: rem(16);
+  right: rem(16);
+  z-index: 105;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: rem(5);
   &__item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    min-width: 250px;
-    max-width: 350px;
+    padding: rem(8) rem(16);
+    border-radius: rem(8);
+    min-width: rem(250);
+    max-width: rem(350);
 
     &.success {
       background-color: var(--success);
