@@ -32,13 +32,19 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .ui-button-icon {
-  padding: 0.5rem;
+  padding: rem(16);
   border: none;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   position: relative;
   background-color: transparent;
+  font-size: rem(18);
+  border-radius: rem(6);
+  gap: rem(10);
+  &:hover {
+    box-shadow: var(--btn-shadow);
+  }
   &:disabled {
     pointer-events: none;
     opacity: $disabled-opacity;
