@@ -11,7 +11,9 @@
         scalability, and clean architecture. Experienced in crypto platforms,
         reusable component systems, and cross-browser compatibility.
       </p>
-      <UiButton label="Download CV" @click="openForm" />
+      <UiButtonIcon @click="openForm" iconName="download">
+        <template #prepend> <span>Download CV</span> </template>
+      </UiButtonIcon>
     </div>
   </div>
   <UIModal ref="cvModalRef" title="Download CV" class="home-page__modal">
@@ -51,6 +53,7 @@ import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { useValidationRules } from '@/composables/useValidationRules'
 import useVuelidate from '@vuelidate/core'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
+import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import { application } from '@/application'
 import type { StatisticDTO } from '@/types/statistic'
@@ -133,6 +136,10 @@ onUnmounted(() => {
   }
   &__description {
     background-color: var(--bg-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: rem(16);
     margin: 0 auto;
     padding: rem(45);
     max-width: rem(550);
