@@ -19,6 +19,7 @@ import { socialLinks } from '@/config/social-links'
 <style lang="scss" scoped>
 .main-footer {
   padding: rem(20) 0;
+  margin-top: rem(20);
   background-color: var(--bg-primary);
   &__info {
     display: flex;

@@ -55,24 +55,22 @@ onUnmounted(() => {
   position: relative;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: visible;
   &__main {
-    height: 100%;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     min-height: 0;
   }
   &:before {
     content: '';
     position: absolute;
+    inset: 0;
     background-image: url('@/assets/home-img/layer 4.png');
     background-size: cover;
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
     z-index: -5;
   }
 
@@ -85,9 +83,6 @@ onUnmounted(() => {
     background-repeat: no-repeat;
     background-position: center;
     z-index: -5;
-    transform: translate(var(--x), var(--y));
-    transition: transform 0.1s ease-out;
-    will-change: transform;
     top: -50%;
   }
 }
@@ -97,8 +92,15 @@ onUnmounted(() => {
   }
 }
 @include media-query('desktop') {
-  .default-layout::after {
-    top: 10%;
+  .default-layout {
+    overflow: hidden;
+
+    &::after {
+      top: 10%;
+      transform: translate(var(--x), var(--y));
+      transition: transform 0.1s ease-out;
+      will-change: transform;
+    }
   }
 }
 @include media-query('large-desktop') {
