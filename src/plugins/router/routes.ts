@@ -6,49 +6,49 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('@/layouts/DefaultLayout.vue'),
     children: [
       {
-        path: '/',
+        path: '',
         name: 'Home',
         meta: { accessMode: 'public' },
         component: () => import('@/views/HomeView.vue'),
       },
       {
-        path: '/verify-email',
+        path: 'verify-email',
         name: 'VerifyEmail',
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/VerifyEmailView.vue'),
       },
       {
-        path: '/sign-in',
+        path: 'sign-in',
         name: 'SignIn',
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/SignInView.vue'),
       },
       {
-        path: '/sign-up',
+        path: 'sign-up',
         name: 'SignUp',
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/SignUpView.vue'),
       },
       {
-        path: '/notes',
+        path: 'notes',
         name: 'Notes',
         meta: { accessMode: 'private' },
         component: () => import('@/views/NotesView.vue'),
       },
       {
-        path: '/resend-email-verification',
+        path: 'resend-email-verification',
         name: 'ResendEmailVerification',
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/ResendVerificationEmailView.vue'),
       },
       {
-        path: '/forgot-password',
+        path: 'forgot-password',
         name: 'ForgotPassword',
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/ForgotPasswordView.vue'),
       },
       {
-        path: '/reset-password',
+        path: 'reset-password',
         name: 'ResetPassword',
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/ResetPasswordView.vue'),
@@ -60,13 +60,13 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('@/layouts/TodoLayout.vue'),
     children: [
       {
-        path: '/todos',
+        path: '',
         name: 'TodoList',
         meta: { accessMode: 'public' },
         component: () => import('@/views/TodosView.vue'),
       },
       {
-        path: '/todos/:id',
+        path: ':id',
         name: 'TodoDetail',
         meta: { accessMode: 'public' },
         component: () => import('@/views/TodoDetailView.vue'),
@@ -78,7 +78,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import('@/layouts/AccountLayout.vue'),
     children: [
       {
-        path: '/profile',
+        path: '',
         name: 'Profile',
         meta: { accessMode: 'private' },
         component: () => import('@/views/ProfileView.vue'),
