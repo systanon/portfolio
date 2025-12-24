@@ -6,6 +6,7 @@ import { NotificationService } from './services/notification.service'
 
 import { Application } from './application'
 import { AuthService } from './services/auth.service'
+import { StatisticService } from './services/statistic.service'
 
 export const httpClient = new HTTPClient({
   base: import.meta.env.VITE_APP_API_URL,
@@ -18,6 +19,7 @@ export const notificationService = new NotificationService()
 export const todoService = new TodoService(httpClient, notificationService)
 export const authService = new AuthService(httpClient)
 export const notesService = new NotesService(httpClient)
+export const statisticService = new StatisticService(httpClient, notificationService)
 httpClient.interceptors.request.use(
   (request) => {
     if (request.credentials === 'include') {
@@ -26,7 +28,7 @@ httpClient.interceptors.request.use(
       if (newToken) {
         newHeaders.set('Authorization', newToken)
       }
-      ;(request as any).headers = newHeaders
+      ; (request as any).headers = newHeaders
       return request
     }
     return request
@@ -55,7 +57,7 @@ httpClient.interceptors.response.use(
 
     try {
       await authService.refresh()
-      ;(originalRequest as any).data.retry = true
+        ; (originalRequest as any).data.retry = true
 
       return await httpClient.do(originalRequest.resource, originalRequest)
     } catch (e) {
@@ -69,7 +71,7 @@ httpClient.interceptors.response.use(
 )
 
 export const createApplication = (): Application =>
-  new Application(todoService, authService, notesService, notificationService)
+  new Application(todoService, authService, notesService, notificationService, statisticService)
 
 // Here only for Pinia
 export const application = createApplication()

@@ -33,6 +33,8 @@ import type {
   NotificationType,
 } from './services/notification.service'
 import type { RouteName } from '@/types/router'
+import type { StatisticService } from './services/statistic.service'
+import type { StatisticDTO } from '@/types/statistic'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
@@ -47,17 +49,20 @@ export class Application<
   #loading: Ref<boolean> = ref(false)
   resolveProfileLoading: (() => void) | null = null
   profileLoading: Promise<void> = Promise.resolve()
+  private statisticService: StatisticService
 
   constructor(
     todoService: TodoService,
     authService: AuthService,
     notesService: NotesService,
-    notificationService: NotificationService
+    notificationService: NotificationService,
+    statisticService: StatisticService
   ) {
     this.#todoService = todoService
     this.#authService = authService
     this.#noteService = notesService
     this.#notificationService = notificationService
+    this.statisticService = statisticService
   }
 
   private clearProfile() {
@@ -286,6 +291,14 @@ export class Application<
 
   public async deleteNote(id: ID): Promise<Note | AppError> {
     const res = await this.#noteService.delete(id)
+    return res
+  }
+
+
+  public async saveStatistic(
+    dto: StatisticDTO
+  ): Promise<any | AppError> {
+    const res = await this.statisticService.save(dto)
     return res
   }
 

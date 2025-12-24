@@ -89,7 +89,6 @@
 
 <script setup lang="ts">
 import { onMounted, ref, reactive, computed, watch } from 'vue'
-import { required, helpers } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
 import { APP_CONFIG } from '@/constants'
 import { useRoute, useRouter } from 'vue-router'
@@ -109,6 +108,7 @@ import {
   type Note,
 } from '../types/notes'
 import UiTextarea from '@/components/ui/fields/UiTextarea.vue'
+import { useValidationRules } from '@/composables/useValidationRules'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 
@@ -124,11 +124,11 @@ const note = reactive({
   description: '',
 } as ReplaceNoteDTO)
 
+const { titleRules, descriptionRules } = useValidationRules()
+
 const rules = {
-  title: { required: helpers.withMessage('Title is required', required) },
-  description: {
-    required: helpers.withMessage('Description is required', required),
-  },
+  title: titleRules,
+  description: descriptionRules,
 }
 
 const v$ = useVuelidate(rules, note)

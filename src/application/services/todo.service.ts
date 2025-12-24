@@ -1,12 +1,12 @@
-import { HTTPClient } from '../../lib/http.client'
+import { HTTPClient } from '@/lib/http.client'
 import type {
   CreateTodoDTO,
   Todo,
   ReplaceTodoDTO,
   UpdateTodoDTO,
-} from '../../types/todo'
-import { AppError } from '../../types/app-errors'
-import type { ID } from '../../types/general'
+} from '@/types/todo'
+import { AppError } from '@/types/app-errors'
+import type { ID } from '@/types/general'
 import { errorMsg } from '@/helpers/formatErrorMsg'
 import type { GetAllParams, PaginateResult } from '@/types/app.types'
 import { getTotalPages } from '@/utils/getTotalPages'

@@ -139,7 +139,7 @@ export class HTTPClient {
 
     const fallbackOnRequestFulfilled: OnFulfilled<HTTPRequest> = (request) => request
     const fallbackOnRequestRejected: OnRejected<Error> = (e) => e
-    const requestInterceptorChain: Array<[OnFulfilled<HTTPRequest>,  OnRejected<Error>]> = []
+    const requestInterceptorChain: Array<[OnFulfilled<HTTPRequest>, OnRejected<Error>]> = []
     this.interceptors.request.forEach(
       interceptor =>
         (interceptor.runWhen?.(httpRequest) ?? false) &&
@@ -228,7 +228,9 @@ export class HTTPClient {
       const response = await this.do(resource, options)
       if (response.ok) return response.blob()
 
-      return Promise.reject(response)
+      const failed = await response.json()
+
+      return Promise.reject(failed)
     } catch (error) {
       return Promise.reject(error)
     }
