@@ -36,6 +36,19 @@ h3 {
   @include typography('h3');
 }
 
+h4 {
+  @include typography('h4');
+}
+
+h5 {
+  @include typography('h5');
+}
+
+p {
+  @include typography('p');
+}
+
+
 * {
   scrollbar-width: thin;
   scrollbar-color: $bg-menu-secondary transparent;
