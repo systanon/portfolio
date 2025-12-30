@@ -1,10 +1,10 @@
-import { ref } from 'vue'
+import { inject, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { application } from '../../application'
-import { AppError } from '../../types/app-errors';
-import type { CreateNoteDTO, Note, UpdateNoteDTO } from '../../types/notes';
+import { AppError } from '@/types/app-errors';
+import type { CreateNoteDTO, Note, UpdateNoteDTO } from '@/types/notes';
 import type { GetAllParams } from '@/types/app.types';
+import type { Application } from '@/application/application';
 
 
 export const useNotesStore = defineStore('notes', () => {
@@ -13,6 +13,8 @@ export const useNotesStore = defineStore('notes', () => {
   const notesMap = ref(new Map<number, Note>())
   const total = ref<number>(0)
   const pages = ref<number>(1)
+
+  const application = inject('application') as Application
 
   async function getAll(params: GetAllParams) {
     try {
