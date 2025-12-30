@@ -1,9 +1,8 @@
 import { createApp } from 'vue'
 import FloatingVue from 'floating-vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import { router } from './plugins/router'
-import { createStore } from './plugins/store'
-
 import { application } from './application'
 
 import '@/sass/_theme.scss'
@@ -19,7 +18,10 @@ if ('serviceWorker' in navigator) {
 
 const app = createApp(App)
 
-app.use(createStore(application))
+
+app.provide('application', application)
+
+app.use(createPinia())
 
 app.use(router)
 
