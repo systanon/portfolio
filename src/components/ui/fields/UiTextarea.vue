@@ -7,8 +7,10 @@
         v-model="modelValueProxy"
         :placeholder="placeholder"
         :disabled="disabled"
-        :class="{ 'ui-textarea__field--error': $v?.$error }"
-        class="ui-textarea__field"
+        :class="[
+          'ui-textarea__field',
+          { 'ui-textarea__field--error': $v?.$error },
+        ]"
         @blur="$v?.$touch()"
       />
     </template>
@@ -44,15 +46,6 @@ const { modelValueProxy, $v } = useField(props, emit)
   color: var(--text-color-secondary);
   padding-bottom: 1.2rem;
 
-  &__label {
-    margin-bottom: 0.25rem;
-    font-weight: 500;
-  }
-  &__wrapper {
-    position: relative;
-    width: 100%;
-  }
-
   &__field {
     padding: 1rem;
     border: 1px solid $border-color;
@@ -67,16 +60,6 @@ const { modelValueProxy, $v } = useField(props, emit)
     }
     &:disabled {
       color: var(--text-color-secondary);
-    }
-  }
-
-  &__error {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    font-size: 0.875rem;
-    &-text {
-      color: $error-color;
     }
   }
 }
