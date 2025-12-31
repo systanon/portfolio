@@ -16,11 +16,11 @@ describe('TextArea.vue', () => {
 
   it('renders the label if provided', () => {
     const wrapper = mount(TextArea, {
-      props: { label: 'Описание', modelValue: '' },
+      props: { label: 'Describe', modelValue: '' },
     })
     const label = wrapper.find('label')
     expect(label.exists()).toBe(true)
-    expect(label.text()).toBe('Описание')
+    expect(label.text()).toBe('Describe')
   })
 
   it('updates the value via v-model', async () => {
@@ -45,7 +45,7 @@ describe('TextArea.vue', () => {
     const wrapper = mount(TextArea, {
       props: { modelValue: '', validation },
     })
-    const error = wrapper.find('.ui-textarea__error-text')
+    const error = wrapper.find('.base-field__error-text')
     expect(error.exists()).toBe(true)
     expect(error.text()).toBe('Required field')
   })
