@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import type { BaseValidation } from '@vuelidate/core'
 
-export function useField<T extends string | number = string>(
+export function useField<T extends string>(
   props: { modelValue: T; validation?: BaseValidation },
   emit: (e: 'update:modelValue', value: T) => void
 ) {
