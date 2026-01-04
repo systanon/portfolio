@@ -1,8 +1,9 @@
+import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
 import TextArea from '@/components/ui/fields/UiTextarea.vue'
 import type { BaseValidation } from '@vuelidate/core'
-import { ref } from 'vue'
+import { createValidationMock } from '@/tests/utils/createValidationMock'
 
 describe('TextArea.vue', () => {
   it('renders the textarea with the passed value', () => {
@@ -36,25 +37,25 @@ describe('TextArea.vue', () => {
     expect(model.value).toBe('New text')
   })
 
-  it('displays validation errors', () => {
-    const validation = {
-      $errors: [{ $message: 'Required field' }],
-      $error: true,
-    } as unknown as BaseValidation
+  it('displays validation errors', async () => {
+    const { validation, setErrors } = createValidationMock()
 
     const wrapper = mount(TextArea, {
       props: { modelValue: '', validation },
     })
+
+    setErrors(['Required field'])
+
+    await wrapper.vm.$nextTick()
+
     const error = wrapper.find('.base-field__error-text')
     expect(error.exists()).toBe(true)
     expect(error.text()).toBe('Required field')
   })
 
   it('does not display errors when there are none', () => {
-    const validation = {
-      $errors: [],
-      $error: false,
-    } as unknown as BaseValidation
+    const { validation } = createValidationMock()
+
     const wrapper = mount(TextArea, {
       props: { modelValue: '', validation },
     })
@@ -62,18 +63,13 @@ describe('TextArea.vue', () => {
     expect(error.exists()).toBe(false)
   })
 
-  it('calls $touch on blur', async () => {
-    const $touch = vi.fn()
-    const validation = {
-      $touch,
-      $errors: [],
-      $error: false,
-    } as unknown as BaseValidation
+  it('emits blur event', async () => {
+    const { validation } = createValidationMock()
+
     const wrapper = mount(TextArea, {
       props: { modelValue: '', validation },
     })
-    const textarea = wrapper.find('textarea')
-    await textarea.trigger('blur')
-    expect($touch).toHaveBeenCalled()
+    await wrapper.find('textarea').trigger('blur')
+    expect(wrapper.emitted('blur')).toBeTruthy()
   })
 })
