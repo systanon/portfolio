@@ -11,7 +11,7 @@
           'ui-textarea__field',
           { 'ui-textarea__field--error': $v?.$error },
         ]"
-        @blur="$v?.$touch()"
+        @blur="emit('blur')"
       />
     </template>
   </BaseField>
@@ -30,9 +30,12 @@ interface Props {
   validation?: BaseValidation
 }
 
+defineOptions({ name: 'UiTextarea' })
+
 const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
+  (e: 'blur'): void
 }>()
 
 const { modelValueProxy, $v } = useField(props, emit)
@@ -44,10 +47,10 @@ const { modelValueProxy, $v } = useField(props, emit)
   display: flex;
   flex-direction: column;
   color: var(--text-color-secondary);
-  padding-bottom: 1.2rem;
+  padding-bottom: rem(18);
 
   &__field {
-    padding: 1rem;
+    padding: rem(16);
     border: 1px solid $border-color;
     border-radius: 6px;
     font-size: rem(18);
