@@ -1,6 +1,6 @@
 <template>
   <section class="page-sign-in">
-    <form class="page-sign-in__form" @submit.prevent="submitHandler">
+    <form class="page-sign-in__form" @submit.prevent="submit">
       <h2 class="page-sign-in__form-title">Sign in</h2>
       <UiInput
         v-model="email"
@@ -42,40 +42,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
-import useVuelidate from '@vuelidate/core'
 import AppLink from '@/components/AppLink.vue'
-import { useValidationRules } from '@/composables/useValidationRules'
+import { useSignInForm } from '@/composables/useSignInForm'
 
-const email = ref('')
-const password = ref('')
-
-const { emailRules, passwordRules } = useValidationRules()
-
-const rules = {
-  password: passwordRules,
-  email: emailRules,
-}
-const v$ = useVuelidate(rules, { password, email })
-
-const submitHandler = async () => {
-  const isValid = await v$.value.$validate()
-  if (!isValid) return
-  const payload = {
-    email: email.value,
-    password: password.value,
-  }
-
-  try {
-    const response = await application.signIn(payload)
-    console.log('Login success:', response)
-  } catch (error) {
-    console.error('Login failed:', error)
-  }
-}
+const { email, password, v$, submit } = useSignInForm()
 </script>
 
 <style scoped lang="scss">
