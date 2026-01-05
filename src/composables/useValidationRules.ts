@@ -10,7 +10,7 @@ export function useValidationRules() {
 
   const passwordRules = {
     required: helpers.withMessage('Password is required', required),
-    minLength: helpers.withMessage('Minimum 6 characters', minLength(8)),
+    minLength: helpers.withMessage('Minimum 8 characters', minLength(8)),
     maxLength: helpers.withMessage('Maximum 50 charecters', maxLength(50))
   }
 
