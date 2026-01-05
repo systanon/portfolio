@@ -7,6 +7,8 @@
         label="Email"
         placeholder="Enter email"
         :validation="v$.email"
+        autocomplete="email"
+        @blur="v$.email.$touch"
       />
       <UiInput
         v-model="password"
@@ -14,6 +16,8 @@
         type="password"
         placeholder="Enter your password"
         :validation="v$.password"
+        autocomplete="current-password"
+        @blur="v$.password.$touch"
       />
       <div class="page-sign-in__redirect">
         <AppLink

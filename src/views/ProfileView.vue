@@ -23,6 +23,7 @@
           :iconName="field.isEditing.value ? 'close-square' : 'edit'"
           :disabled="!field.isEditing.value"
           @iconClick="field.isEditing.value ? cancelEdit(key) : toggleEdit(key)"
+          @blur="v$[key].$touch"
         />
         <div class="page-profile__fields-actions">
           <UiButtonIcon

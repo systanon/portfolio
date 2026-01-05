@@ -44,11 +44,13 @@
             type="text"
             placeholder="Title"
             :validation="v$.title"
+            @blur="v$.title.$touch"
           />
           <UiTextarea
             v-model="todo.description"
             placeholder="Description"
             :validation="v$.description"
+            @blur="v$.description.$touch"
           />
         </div>
       </template>
@@ -66,11 +68,13 @@
             type="text"
             placeholder="Title"
             :validation="v$.title"
+            @blur="v$.title.$touch"
           />
           <UiTextarea
             v-model="todo.description"
             placeholder="Description"
             :validation="v$.description"
+            @blur="v$.description.$touch"
           />
         </div>
       </template>
