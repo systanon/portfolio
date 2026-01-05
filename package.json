@@ -8,7 +8,8 @@
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky"
   },
   "dependencies": {
     "@vuelidate/core": "^2.0.3",
@@ -30,6 +31,7 @@
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
+    "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "sass-embedded": "^1.89.1",
     "typescript": "~5.7.2",
