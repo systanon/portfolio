@@ -10,7 +10,7 @@
         :disabled="disabled"
         :class="{ 'ui-input__field--error': $v?.$error }"
         class="ui-input__field"
-        @blur="$v?.$touch()"
+        @blur="emit('blur')"
       />
 
       <UiButtonIcon
@@ -39,10 +39,13 @@ interface Props {
   validation?: BaseValidation
 }
 
+defineOptions({ name: 'UiInput' })
+
 const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
   (e: 'iconClick'): void
+  (e: 'blur'): void
 }>()
 
 const { modelValueProxy, $v } = useField(props, emit)
@@ -50,9 +53,9 @@ const { modelValueProxy, $v } = useField(props, emit)
 
 <style scoped lang="scss">
 .ui-input__field {
-  padding: 1rem 2.25rem 1rem 1rem;
+  padding: rem(16) rem(36) rem(16) rem(16);
   border: 1px solid $border-color;
-  border-radius: 6px;
+  border-radius: rem(6);
   font-size: rem(18);
   width: 100%;
 

@@ -8,11 +8,11 @@
       <slot :id="id" />
     </div>
 
-    <p v-show="$v?.$error" class="base-field__error">
+    <p v-show="validation?.$error" class="base-field__error">
       <span
         class="base-field__error-text"
-        v-for="error in errorMessages"
-        :key="error"
+        v-for="(error, index) in errorMessages"
+        :key="error + index"
       >
         {{ error }}
       </span>
@@ -30,18 +30,15 @@ interface Props {
   validation?: BaseValidation
 }
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false, name: 'BaseField' })
 
-const id = computed(() => uuidv4())
+const id = uuidv4()
 
-const props = defineProps<Props>()
+const { validation } = defineProps<Props>()
 
-const $v = props.validation
-
-const errorMessages = computed(() => {
-  if (!$v || !$v.$errors) return []
-  return $v.$errors.map((err) => unref(err.$message))
-})
+const errorMessages = computed(
+  () => validation?.$errors?.map((err) => unref(err.$message)) ?? []
+)
 </script>
 
 <style scoped lang="scss">
@@ -49,10 +46,10 @@ const errorMessages = computed(() => {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding-bottom: 1.2rem;
+  padding-bottom: rem(20);
 
   &__label {
-    margin-bottom: 0.25rem;
+    margin-bottom: rem(4);
     font-weight: 500;
     color: var(--text-color-secondary);
   }
@@ -66,7 +63,7 @@ const errorMessages = computed(() => {
     position: absolute;
     bottom: 0;
     left: 0;
-    font-size: 0.875rem;
+    font-size: rem(14);
 
     &-text {
       color: $error-color;

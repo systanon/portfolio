@@ -8,6 +8,7 @@
         label="Password"
         placeholder="Enter your password"
         :validation="v$.password"
+        @blur="v$.password.$touch"
       />
       <UiInput
         v-model="confirmPassword"
@@ -15,6 +16,7 @@
         type="password"
         placeholder="Confirm your password"
         :validation="v$.confirmPassword"
+        @blur="v$.confirmPassword.$touch"
       />
       <UiButton type="submit" label="Submit" />
     </form>

@@ -7,6 +7,7 @@
         label="Email"
         placeholder="Enter email"
         :validation="v$.email"
+        @blur="v$.email.$touch"
       />
       <UiButton type="submit" label="Submit" />
     </form>
