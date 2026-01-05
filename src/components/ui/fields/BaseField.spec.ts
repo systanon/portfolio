@@ -77,7 +77,6 @@ describe('BaseField', () => {
 
     expect(wrapper.find('.base-field__error').isVisible()).toBe(false)
 
-    // update validation state
     setErrors(['Required'])
     await wrapper.vm.$nextTick()
 

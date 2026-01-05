@@ -1,8 +1,7 @@
 import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import TextArea from '@/components/ui/fields/UiTextarea.vue'
-import type { BaseValidation } from '@vuelidate/core'
 import { createValidationMock } from '@/tests/utils/createValidationMock'
 
 describe('TextArea.vue', () => {
