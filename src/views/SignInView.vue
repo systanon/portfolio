@@ -103,7 +103,7 @@ const submitHandler = async () => {
     display: flex;
     flex-direction: column;
     gap: rem(20);
-    text-align: end;
+    align-items: flex-end;
     padding-bottom: rem(15);
   }
 }
