@@ -1,15 +1,7 @@
 <template>
-  <div ref="todo" :class="['todo-item', { _checked: todo.completed }]">
+  <div :class="['todo-item', { _checked: todo.completed }]">
     <div class="todo-item__checked">
-      <UiCheckbox
-        :modelValue="todo.completed"
-        @change="
-          $emit('completeHandler', {
-            id: todo.id,
-            payload: { completed: !todo.completed },
-          })
-        "
-      />
+      <UiCheckbox :modelValue="todo.completed" @change="onToggleComplete" />
     </div>
     <div class="todo-item__info">
       <h2 class="todo-item__title">
@@ -24,19 +16,26 @@
       <UiButtonIcon
         class="todo-item__menu-open"
         iconName="arrow-up-left"
+        :btnHover="false"
+        iconHover
         @click="toggleMenu"
+        style="--icon-hover-primary: var(--icon-hover-secondary)"
       />
       <div v-if="menuOpen" class="todo-item__menu-actions">
         <UiButtonIcon
           class="todo-item__menu-item"
-          style="--i: 2"
+          style="--i: 2; --icon-hover-primary: var(--icon-hover-secondary)"
           iconName="edit"
+          :btnHover="false"
+          iconHover
           @click="$emit('editHandler', todo)"
         />
         <UiButtonIcon
           class="todo-item__menu-item"
-          style="--i: 1"
+          style="--i: 1; --icon-hover-primary: var(--icon-hover-secondary)"
           iconName="trash"
+          :btnHover="false"
+          iconHover
           @click="$emit('deleteHandler', todo)"
         />
       </div>
@@ -50,12 +49,35 @@ import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import { ref, type Ref } from 'vue'
 import UiCheckbox from './ui/fields/UiCheckbox.vue'
-defineProps<{
+
+defineOptions({
+  name: 'TodoItem',
+})
+
+const props = defineProps<{
   todo: Todo
 }>()
 
+const emit = defineEmits<{
+  (
+    e: 'completeHandler',
+    data: { id: number; payload: { completed: boolean } }
+  ): void
+  (e: 'detailTodo', id: number): void
+  (e: 'editHandler', todo: Todo): void
+  (e: 'deleteHandler', todo: Todo): void
+}>()
+
 const menuOpen: Ref<boolean> = ref(false)
+
 const toggleMenu = () => (menuOpen.value = !menuOpen.value)
+
+const onToggleComplete = () => {
+  emit('completeHandler', {
+    id: props.todo.id,
+    payload: { completed: !props.todo.completed },
+  })
+}
 </script>
 
 <style scoped lang="scss">
@@ -99,10 +121,48 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
     position: absolute;
     bottom: 0;
     right: 0;
+
     &-open {
       position: relative;
-      z-index: 2;
+      z-index: 3;
     }
+
+    &-actions {
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: $bg-menu-tertiary;
+      z-index: 1;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-item {
+      --count: 2;
+      --index: var(--i);
+      --radius: 85px;
+      --start-angle: -176deg;
+      --spread: 88deg;
+
+      position: absolute;
+      --angle: calc(
+        var(--start-angle) + (var(--spread) / (var(--count) - 1)) *
+          (var(--index) - 1)
+      );
+
+      transform: rotate(var(--angle)) translate(var(--radius))
+        rotate(calc(var(--angle) * -1));
+
+      transition: transform 0.3s ease;
+      z-index: 10;
+    }
+
     &:before {
       content: '';
       position: absolute;
@@ -115,28 +175,6 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
       transform: translate(-50%, -50%);
       z-index: 2;
     }
-    &-actions {
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      z-index: 1;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: $bg-menu-tertiary;
-      border-radius: 50%;
-    }
-    &-item {
-      --angle: calc(var(--i) * 150deg);
-      position: absolute;
-      top: 18%;
-      left: 16%;
-      transform: rotate(var(--angle)) translate(2rem)
-        rotate(calc(var(--angle) * -1));
-      transition: transform 0.3s ease;
-      z-index: 10;
-    }
   }
 
   &._checked {
@@ -144,7 +182,12 @@ const toggleMenu = () => (menuOpen.value = !menuOpen.value)
   }
 
   :deep(.ui-icon) {
-    color: $icon-color-primary;
+    color: var(--icon-color-secondary);
+  }
+  :deep(._icon-hover) {
+    &:hover {
+      color: var(--icon-hover-secondary);
+    }
   }
 }
 
