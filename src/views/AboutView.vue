@@ -24,49 +24,22 @@
     </div>
   </section>
 
-  <UIModal ref="cvModalRef" title="Download CV" class="about-page__modal">
-    <template #default>
-      <div class="about-page__modal-form update-todo-form">
-        <UiInput
-          v-model="statistic.company_name"
-          type="text"
-          placeholder="Company name"
-          :validation="v$.company_name"
-          @blur="v$.company_name.$touch"
-        />
-        <UiInput
-          v-model="statistic.contact_name"
-          type="text"
-          placeholder="Contact name"
-          :validation="v$.contact_name"
-          @blur="v$.contact_name.$touch"
-        />
-        <UiInput
-          v-model="statistic.email"
-          type="text"
-          placeholder="Email"
-          :validation="v$.email"
-          @blur="v$.email.$touch"
-        />
-      </div>
-    </template>
+  <UIModal ref="cvModalRef" title="Download CV">
+    <CvForm ref="cvFormRef" />
     <template #actions="{ close }">
       <UiButton @click="close" label="Cancel" />
-      <UiButton @click="sendStatistic" label="Submit" />
+      <UiButton @click="submitForm" label="Submit" />
     </template>
   </UIModal>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 
 import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
-import { useValidationRules } from '@/composables/useValidationRules'
-import useVuelidate from '@vuelidate/core'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
-import UiInput from '@/components/ui/fields/UiInput.vue'
+import CvForm from '@/components/forms/CvForm.vue'
 import { application } from '@/application'
-import type { StatisticDTO } from '@/types/statistic'
 import { AppError } from '@/types/app-errors'
 
 defineOptions({
@@ -74,47 +47,20 @@ defineOptions({
 })
 
 const cvModalRef = ref<IModalOpen | null>(null)
+const cvFormRef = ref()
 
-const { emailRules, contactNameRules, companyNameRules } = useValidationRules()
+const submitForm = async () => {
+  const data = await cvFormRef.value?.validateAndGet()
+  if (!data) return
 
-const statistic = reactive<StatisticDTO>({
-  company_name: '',
-  contact_name: '',
-  email: '',
-})
-
-const rules = {
-  company_name: contactNameRules,
-  contact_name: companyNameRules,
-  email: emailRules,
-}
-
-const v$ = useVuelidate(rules, statistic)
-
-const resetStatistic = () => {
-  Object.assign(statistic, {
-    company_name: '',
-    contact_name: '',
-    email: '',
-  })
-}
-
-const sendStatistic = async () => {
-  const isValid = await v$.value.$validate()
-  if (!isValid) return
-  const res = await application.saveStatistic(statistic)
+  const res = await application.saveStatistic(data)
   if (!(res instanceof AppError)) {
     cvModalRef.value?.confirm(true)
-    resetStatistic()
-    v$.value.$reset()
   }
 }
+
 const openForm = async () => {
-  const confirm = await cvModalRef.value?.open()
-  if (!confirm) {
-    resetStatistic()
-    v$.value.$reset()
-  }
+  await cvModalRef.value?.open()
 }
 </script>
 
