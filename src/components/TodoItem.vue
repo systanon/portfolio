@@ -12,7 +12,7 @@
         <UiButton label="More detail" @click="$emit('detailTodo', todo.id)" />
       </div>
     </div>
-    <div class="todo-item__menu">
+    <div ref="menuRef" class="todo-item__menu">
       <UiButtonIcon
         class="todo-item__menu-open"
         iconName="arrow-up-left"
@@ -49,6 +49,7 @@ import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import { ref, type Ref } from 'vue'
 import UiCheckbox from './ui/fields/UiCheckbox.vue'
+import { onClickOutside } from '@vueuse/core'
 
 defineOptions({
   name: 'TodoItem',
@@ -70,6 +71,8 @@ const emit = defineEmits<{
 
 const menuOpen: Ref<boolean> = ref(false)
 
+const menuRef = ref<HTMLElement | null>(null)
+
 const toggleMenu = () => (menuOpen.value = !menuOpen.value)
 
 const onToggleComplete = () => {
@@ -78,6 +81,8 @@ const onToggleComplete = () => {
     payload: { completed: !props.todo.completed },
   })
 }
+
+onClickOutside(menuRef, () => (menuOpen.value = false))
 </script>
 
 <style scoped lang="scss">
