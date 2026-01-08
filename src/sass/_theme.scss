@@ -1,9 +1,18 @@
 :root {
+  --bg-primary: rgba(3, 4, 12, 0.6);
+
   --text-color-primary: #fcc743;
   --text-active-primary: #f09f08;
   --text-color-secondary: #ffffff;
   --text-color-tertiary: #79B8E1;
-  --bg-primary: rgba(3, 4, 12, 0.6);
+
+  --icon-color-primary: #fcc743;
+  --icon-color-secondary: #ffffff;
+  --icon-hover-primary: #79B8E1;
+  --icon-hover-secondary: #fcc743;
+
+  --btn-bg-color-primary: #fcc743;
+
   --todo-checked: #afedf8;
   --success: #16a34a;
   --error: #dc2626;
