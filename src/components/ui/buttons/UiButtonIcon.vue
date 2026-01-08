@@ -1,33 +1,44 @@
 <template>
-  <button :disabled="disabled" class="ui-button-icon">
+  <button
+    :disabled="disabled"
+    :class="[
+      'ui-button-icon',
+      { '_icon-hover': iconHover, '_btn-hover': btnHover },
+    ]"
+  >
     <slot name="prepend"></slot>
-    <UIIcon :name="iconName" />
+    <UIIcon :name="iconName" :size="iconSize" />
     <slot name="append"></slot>
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
 import UIIcon from '@/components/ui/icons/UiIcon.vue'
+import type { IconSize } from '@/components/ui/icons/UiIcon.vue'
 
-export default defineComponent({
-  components: { UIIcon },
+defineOptions({
   name: 'UiButtonIcon',
-  props: {
-    value: {
-      type: [Boolean, String, Number],
-      default: false,
-    },
-    iconName: {
-      type: String,
-      required: true,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-  },
 })
+
+defineSlots<{
+  prepend(): any
+  append(): any
+}>()
+
+withDefaults(
+  defineProps<{
+    iconName: string
+    disabled?: boolean
+    iconSize?: IconSize
+    iconHover?: boolean
+    btnHover?: boolean
+  }>(),
+  {
+    disabled: false,
+    iconHover: false,
+    btnHover: true,
+  }
+)
 </script>
 
 <style lang="scss" scoped>
@@ -42,12 +53,21 @@ export default defineComponent({
   font-size: rem(18);
   border-radius: rem(6);
   gap: rem(10);
-  &:hover {
-    box-shadow: var(--btn-shadow);
+  &._btn-hover {
+    &:hover {
+      box-shadow: var(--btn-shadow);
+    }
   }
   &:disabled {
     pointer-events: none;
     opacity: $disabled-opacity;
+  }
+  &._icon-hover {
+    &:hover {
+      :deep(.ui-icon) {
+        color: var(--icon-hover-primary);
+      }
+    }
   }
 }
 </style>
