@@ -8,4 +8,5 @@ export const socialLinks: SocialLink[] = [
     label: 'LinkedIn',
   },
   { icon: 'whatsapp', href: 'https://wa.me/48510835237', label: 'WhatsApp' },
+  { icon: 'github', href: 'https://github.com/systanon', label: 'GitHub' },
 ]
