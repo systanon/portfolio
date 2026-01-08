@@ -1,93 +1,38 @@
 <template>
-  <div class="home-page container">
+  <div class="home-page">
     <h1 class="home-page__title" :style="{ zIndex: zIndex }">
       Serhii Tustanovskyi
     </h1>
     <h2 class="home-page__sub-title">Frontend Developer (Vue.js)</h2>
-    <div class="home-page__description">
-      <p class="home-page__description-text">
-        I have been working since 2020, specializing in Vue.js. I build complex,
-        high-performance web applications with a strong focus on UI/UX,
-        scalability, and clean architecture. Experienced in crypto platforms,
-        reusable component systems, and cross-browser compatibility.
-      </p>
-      <UiButtonIcon @click="openForm" iconName="download">
-        <template #prepend> <span>Download CV</span> </template>
+
+    <AppLink
+      class="home-page__action"
+      :to="{ name: 'About' }"
+      inactive-class="link-secondary"
+      active-class="link-secondary--active"
+    >
+      <UiButtonIcon
+        class="home-page__action-btn"
+        iconName="right-arrow-long"
+        style="--icon-color-primary: var(--icon-color-secondary)"
+      >
+        <template #prepend> <span>More About Me</span> </template>
       </UiButtonIcon>
-    </div>
+    </AppLink>
   </div>
-  <UIModal ref="cvModalRef" title="Download CV" class="home-page__modal">
-    <template #default>
-      <div class="page-todo__modal-form update-todo-form">
-        <UiInput
-          v-model="statistic.company_name"
-          type="text"
-          placeholder="Company name"
-          :validation="v$.company_name"
-          @blur="v$.company_name.$touch"
-        />
-        <UiInput
-          v-model="statistic.contact_name"
-          type="text"
-          placeholder="Contact name"
-          :validation="v$.contact_name"
-          @blur="v$.contact_name.$touch"
-        />
-        <UiInput
-          v-model="statistic.email"
-          type="text"
-          placeholder="Email"
-          :validation="v$.email"
-          @blur="v$.email.$touch"
-        />
-      </div>
-    </template>
-    <template #actions="{ close }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="sendStatistic" label="Submit" />
-    </template>
-  </UIModal>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, reactive } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
-import { useValidationRules } from '@/composables/useValidationRules'
-import useVuelidate from '@vuelidate/core'
-import UiButton from '@/components/ui/buttons/UiButton.vue'
+import AppLink from '@/components/AppLink.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
-import UiInput from '@/components/ui/fields/UiInput.vue'
-import { application } from '@/application'
-import type { StatisticDTO } from '@/types/statistic'
-import { AppError } from '@/types/app-errors'
 
-const cvModalRef = ref<IModalOpen | null>(null)
-
-const { emailRules, contactNameRules, companyNameRules } = useValidationRules()
-
-const DEFAULT_Z_INDEX = -4
-const statistic = reactive<StatisticDTO>({
-  company_name: '',
-  contact_name: '',
-  email: '',
+defineOptions({
+  name: 'HomeView',
 })
 
-const rules = {
-  company_name: contactNameRules,
-  contact_name: companyNameRules,
-  email: emailRules,
-}
-
-const v$ = useVuelidate(rules, statistic)
-
-const resetStatistic = () => {
-  Object.assign(statistic, {
-    company_name: '',
-    contact_name: '',
-    email: '',
-  })
-}
+const DEFAULT_Z_INDEX = -4
 
 const zIndex = ref<number>(DEFAULT_Z_INDEX)
 let timeoutId: ReturnType<typeof setTimeout> | null = null
@@ -98,24 +43,6 @@ const handleMouseMove = (): void => {
   timeoutId = setTimeout(() => {
     zIndex.value = DEFAULT_Z_INDEX
   }, 500)
-}
-
-const sendStatistic = async () => {
-  const isValid = await v$.value.$validate()
-  if (!isValid) return
-  const res = await application.saveStatistic(statistic)
-  if (!(res instanceof AppError)) {
-    cvModalRef.value?.confirm(true)
-    resetStatistic()
-    v$.value.$reset()
-  }
-}
-const openForm = async () => {
-  const confirm = await cvModalRef.value?.open()
-  if (!confirm) {
-    resetStatistic()
-    v$.value.$reset()
-  }
 }
 
 onMounted(() => {
@@ -134,7 +61,6 @@ onUnmounted(() => {
   &__title {
     color: var(--text-color-primary);
     text-shadow: $text-shadow;
-
     position: relative;
   }
   &__sub-title {
@@ -155,6 +81,9 @@ onUnmounted(() => {
       line-height: rem(35);
       font-size: rem(18);
     }
+  }
+  &__action-btn {
+    background-color: var(--btn-bg-color-primary);
   }
 }
 
