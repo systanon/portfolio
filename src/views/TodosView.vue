@@ -131,6 +131,10 @@ import { useInjectWindowResize } from '@/composables/useWindowResize'
 import type { RouteName } from '@/types/router'
 import { useValidationRules } from '@/composables/useValidationRules'
 
+defineOptions({
+  name: 'TodosView',
+})
+
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 const deleteModalRef = ref<IModalOpen | null>(null)
 const editModalRef = ref<IModalOpen | null>(null)
@@ -153,7 +157,7 @@ const rules = {
   description: descriptionRules,
 }
 
-const detailHandler = (id: string) => {
+const detailHandler = (id: number) => {
   router.push({
     name: 'TodoDetail' satisfies RouteName,
     params: { id },
@@ -298,7 +302,7 @@ onMounted(() => {
     background-color: $bg-menu-secondary;
     border-radius: rem(6);
     :deep(.ui-icon) {
-      color: $icon-color-primary;
+      color: var(--icon-color-secondary);
     }
     &-text {
       padding-right: 1rem;
