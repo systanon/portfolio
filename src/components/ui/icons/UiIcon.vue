@@ -1,30 +1,61 @@
 <template>
-  <svg class="ui-icon">
-    <use :xlink:href="localHref" height="100%" width="100%"></use>
+  <svg
+    :class="['ui-icon', sizeClass]"
+    :width="props.width"
+    :height="props.height"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <use :href="localHref" height="100%" width="100%" />
   </svg>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-const DEFAULT_ICON_NAME = 'default'
-export default defineComponent({
+<script lang="ts" setup>
+import { computed } from 'vue'
+
+defineOptions({
   name: 'UIIcon',
-  props: {
-    href: { type: String },
-    name: { type: String },
-  },
-  computed: {
-    localHref() {
-      return this.href || `#${this.name || DEFAULT_ICON_NAME}`
-    },
-  },
 })
+
+export type IconSize = 'small' | 'medium' | 'large'
+
+type UiIcon = {
+  href?: string
+  name?: string
+  size?: IconSize
+  width?: number | string
+  height?: number | string
+}
+
+const props = withDefaults(defineProps<UiIcon>(), {
+  size: 'large',
+  name: 'default',
+})
+const localHref = computed(() => props.href || `#${props.name}`)
+
+const sizeClass = computed(() =>
+  props.width && props.height ? null : `_${props.size}`
+)
 </script>
+
 <style lang="scss" scoped>
 .ui-icon {
-  height: rem(22);
-  width: rem(22);
-  color: var(--text-color-primary);
+  color: var(--icon-color-primary);
   fill: currentColor;
+
+  &._small {
+    width: rem(16);
+    height: rem(16);
+  }
+
+  &._medium {
+    width: rem(24);
+    height: rem(24);
+  }
+
+  &._large {
+    width: rem(32);
+    height: rem(32);
+  }
 }
 </style>
