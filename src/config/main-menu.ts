@@ -35,6 +35,14 @@ export const mainMenu: NavigationMenu = [
     showMode: 'authorized',
   },
   {
+    path: '/About',
+    text: 'About',
+    i18n_key: 'about',
+    routeName: 'About',
+    icon: '',
+    showMode: 'all',
+  },
+  {
     path: '/notes',
     text: 'Notations',
     i18n_key: 'notations',
@@ -67,8 +75,8 @@ export const mapperMainMenu = {
 
 export const byAuthorized =
   (isLogged: boolean) =>
-  (menuItem: NavigationMenuItem): boolean => {
-    const { showMode = 'all' } = menuItem
-    if (showMode === 'all') return true
-    return mapperMainMenu[showMode] === isLogged
-  }
+    (menuItem: NavigationMenuItem): boolean => {
+      const { showMode = 'all' } = menuItem
+      if (showMode === 'all') return true
+      return mapperMainMenu[showMode] === isLogged
+    }

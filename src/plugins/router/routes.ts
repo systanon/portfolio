@@ -53,6 +53,12 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { accessMode: 'only-for-unauthorized' },
         component: () => import('@/views/ResetPasswordView.vue'),
       },
+      {
+        path: 'about',
+        name: 'About',
+        meta: { accessMode: 'public' },
+        component: () => import('@/views/AboutView.vue'),
+      },
     ],
   },
   {
