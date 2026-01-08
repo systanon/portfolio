@@ -9,7 +9,9 @@
     <Comets v-if="showCommets" />
     <AppHeader />
     <main class="default-layout__main">
-      <router-view />
+      <div class="container">
+        <router-view />
+      </div>
     </main>
     <HomeFooter :x="offsetX" :y="offsetY" />
   </section>
@@ -21,6 +23,10 @@ import AppHeader from '@/components/AppHeader.vue'
 import Comets from '@/components/Comets.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { delay } from '@/helpers/delay'
+
+defineOptions({
+  name: 'DefaultLayout',
+})
 
 const offsetX = ref(0)
 const offsetY = ref(0)
