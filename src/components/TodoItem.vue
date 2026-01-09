@@ -9,7 +9,7 @@
       </h2>
       <p class="todo-item__description">{{ todo.description }}</p>
       <div class="todo-item__actions">
-        <UiButton label="More detail" @click="$emit('detailTodo', todo.id)" />
+        <UiButton label="More detail" @click="$emit('detail', todo.id)" />
       </div>
     </div>
     <div ref="menuRef" class="todo-item__menu">
@@ -28,7 +28,7 @@
           iconName="edit"
           :btnHover="false"
           iconHover
-          @click="$emit('editHandler', todo)"
+          @click="$emit('edit', todo)"
         />
         <UiButtonIcon
           class="todo-item__menu-item"
@@ -36,7 +36,7 @@
           iconName="trash"
           :btnHover="false"
           iconHover
-          @click="$emit('deleteHandler', todo)"
+          @click="$emit('delete', todo)"
         />
       </div>
     </div>
@@ -60,13 +60,10 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (
-    e: 'completeHandler',
-    data: { id: number; payload: { completed: boolean } }
-  ): void
-  (e: 'detailTodo', id: number): void
-  (e: 'editHandler', todo: Todo): void
-  (e: 'deleteHandler', todo: Todo): void
+  (e: 'toggle', data: { id: number; payload: { completed: boolean } }): void
+  (e: 'detail', id: number): void
+  (e: 'edit', todo: Todo): void
+  (e: 'delete', todo: Todo): void
 }>()
 
 const menuOpen: Ref<boolean> = ref(false)
@@ -76,7 +73,7 @@ const menuRef = ref<HTMLElement | null>(null)
 const toggleMenu = () => (menuOpen.value = !menuOpen.value)
 
 const onToggleComplete = () => {
-  emit('completeHandler', {
+  emit('toggle', {
     id: props.todo.id,
     payload: { completed: !props.todo.completed },
   })
