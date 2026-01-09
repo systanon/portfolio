@@ -4,7 +4,7 @@
     <UiButtonIcon
       class="page-todo__create"
       iconName="plus"
-      @click="createHandler"
+      @click="openCreateForm"
     >
       <template #prepend>
         <span class="page-todo__create-text"> Create todo </span>
@@ -16,10 +16,10 @@
         v-for="[id, todo] of [...todosMap.entries()]"
         :key="id"
         :todo="todo"
-        @editHandler="editHandler"
-        @deleteHandler="deleteHandler"
-        @completeHandler="completeHandler"
-        @detailTodo="detailHandler"
+        @edit="openEditForm"
+        @delete="deleteHandler"
+        @toggle="completeHandler"
+        @detail="detailHandler"
       />
       <p v-if="!todos.length">Epmty todos</p>
     </section>
@@ -35,54 +35,27 @@
         <UiButton @click="confirm" label="Delete todo" />
       </template>
     </UIModal>
-    <UIModal ref="editModalRef" title="Update todo" class="page-todo__modal">
-      <template #default>
-        <div class="page-todo__modal-form update-todo-form">
-          <h3>Edit todo</h3>
-          <UiInput
-            v-model="todo.title"
-            type="text"
-            placeholder="Title"
-            :validation="v$.title"
-            @blur="v$.title.$touch"
-          />
-          <UiTextarea
-            v-model="todo.description"
-            placeholder="Description"
-            :validation="v$.description"
-            @blur="v$.description.$touch"
-          />
-        </div>
-      </template>
+    <UIModal ref="editModalRef" title="Update Todo">
+      <TodoForm
+        ref="editFormRef"
+        :title="editingTodo?.title"
+        :description="editingTodo?.description"
+      />
       <template #actions="{ close }">
         <UiButton @click="close" label="Cancel" />
         <UiButton @click="updateTodo" label="Update todo" />
       </template>
     </UIModal>
-    <UIModal ref="createModalRef" title="Create Todo" class="page-todo__modal">
-      <template #default>
-        <div class="page-todo__modal-form update-todo-form">
-          <h3>Create todo</h3>
-          <UiInput
-            v-model="todo.title"
-            type="text"
-            placeholder="Title"
-            :validation="v$.title"
-            @blur="v$.title.$touch"
-          />
-          <UiTextarea
-            v-model="todo.description"
-            placeholder="Description"
-            :validation="v$.description"
-            @blur="v$.description.$touch"
-          />
-        </div>
-      </template>
+
+    <UIModal ref="createModalRef" title="Create Todo">
+      <TodoForm ref="createFormRef" />
+
       <template #actions="{ close }">
         <UiButton @click="close" label="Cancel" />
         <UiButton @click="createTodo" label="Create todo" />
       </template>
     </UIModal>
+
     <UiPaginationMobile
       v-if="isMobile || isTablet"
       v-model:page="pagination.page"
@@ -105,8 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed, watch } from 'vue'
-import useVuelidate from '@vuelidate/core'
+import { onMounted, ref, computed, watch } from 'vue'
 import { APP_CONFIG } from '@/constants'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -115,47 +87,34 @@ import TodoItem from '@/components/TodoItem.vue'
 import { usePagination } from '@/hooks/pagination'
 import UIPagination from '@/components/ui/UiPagination.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
-import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
+import TodoForm from '@/components/forms/TodoForm.vue'
 
 import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
-import {
-  type UpdateTodoDTO,
-  type ReplaceTodoDTO,
-  type Todo,
-} from '../types/todo'
-import UiTextarea from '@/components/ui/fields/UiTextarea.vue'
+import { type Todo } from '../types/todo'
 import { AppError } from '@/types/app-errors'
 import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
 import type { RouteName } from '@/types/router'
-import { useValidationRules } from '@/composables/useValidationRules'
 
 defineOptions({
   name: 'TodosView',
 })
 
+const createFormRef = ref()
+const editFormRef = ref()
+const editingTodo = ref<Todo | undefined>(undefined)
+
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
+
 const deleteModalRef = ref<IModalOpen | null>(null)
 const editModalRef = ref<IModalOpen | null>(null)
 const createModalRef = ref<IModalOpen | null>(null)
+
 const { isMobile, isTablet } = useInjectWindowResize()
 
 const route = useRoute()
 const router = useRouter()
-
-const todo = reactive({
-  title: '',
-  description: '',
-  completed: false,
-} as ReplaceTodoDTO)
-
-const { titleRules, descriptionRules } = useValidationRules()
-
-const rules = {
-  title: titleRules,
-  description: descriptionRules,
-}
 
 const detailHandler = (id: number) => {
   router.push({
@@ -164,9 +123,8 @@ const detailHandler = (id: number) => {
   })
 }
 
-const v$ = useVuelidate(rules, todo)
-
 const todoStore = useTodoStore()
+
 const {
   pagination,
   firstPage,
@@ -187,6 +145,39 @@ const requestParams = computed(() => {
   }
 })
 
+const openEditForm = async (todo: Todo) => {
+  editingTodo.value = todo
+  await editModalRef.value?.open()
+  editingTodo.value = undefined
+}
+
+const openCreateForm = () => {
+  createModalRef.value?.open()
+}
+
+const createTodo = async () => {
+  const modal = createModalRef.value
+  const data = await createFormRef.value?.submit()
+  if (!data) return
+
+  const res = await create(data)
+  if (!(res instanceof AppError)) getAll(requestParams.value)
+
+  modal?.confirm(true)
+}
+
+const updateTodo = async () => {
+  const modal = editModalRef.value
+  const data = await editFormRef.value?.submit()
+  const id = editingTodo?.value?.id
+  if (!data && !id) return
+
+  const res = await update(Number(id), data)
+  if (!(res instanceof AppError)) getAll(requestParams.value)
+
+  modal?.confirm(true)
+}
+
 const deleteHandler = async (todo: Todo) => {
   const { id } = todo
   const modal = deleteModalRef.value
@@ -196,27 +187,6 @@ const deleteHandler = async (todo: Todo) => {
     if (res instanceof AppError) return
     getAll(requestParams.value)
   }
-}
-
-const editHandler = async (_todo: Todo) => {
-  fillInputs(_todo)
-  router.replace({ query: { ...route.query, id: _todo.id } })
-  const modal = editModalRef.value
-  await modal?.open()
-  const { id, ...restQuery } = route.query
-  router.replace({ query: restQuery })
-  clearInputs()
-  v$.value.$reset()
-}
-const updateTodo = async () => {
-  const id = route.query.id
-  const modal = editModalRef.value
-  const isValid = await v$.value.$validate()
-  if (!isValid || !id) return
-
-  const res = await update(Number(id), todo)
-  if (!(res instanceof AppError)) getAll(requestParams.value)
-  modal?.confirm(true)
 }
 
 const parsePouterQuery = () => {
@@ -230,23 +200,6 @@ const saveRouterQuery = () => {
   router.replace({ query })
 }
 
-const createHandler = async () => {
-  const modal = createModalRef.value
-  await modal?.open()
-  clearInputs()
-  v$.value.$reset()
-}
-
-const createTodo = async () => {
-  const modal = createModalRef.value
-  const isValid = await v$.value.$validate()
-  if (!isValid) return
-
-  const res = await create(todo)
-  if (!(res instanceof AppError)) getAll(requestParams.value)
-  modal?.confirm(true)
-}
-
 const completeHandler = ({
   id,
   payload,
@@ -257,18 +210,6 @@ const completeHandler = ({
   completedToggler(id, payload)
 }
 
-const clearInputs = () => {
-  todo.title = ''
-  todo.description = ''
-  todo.completed = false
-}
-
-const fillInputs = (_todo: UpdateTodoDTO) => {
-  todo.title = _todo.title ?? ''
-  todo.description = _todo.description ?? ''
-  todo.completed = _todo.completed ?? false
-}
-
 watch(
   pages,
   (pages) => {
@@ -277,6 +218,7 @@ watch(
   },
   { immediate: true }
 )
+
 watch(requestParams, (params) => {
   getAll(params)
   saveRouterQuery()
