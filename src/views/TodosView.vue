@@ -13,15 +13,15 @@
 
     <section class="page-todo__todos">
       <TodoItem
-        v-for="[id, todo] of [...todosMap.entries()]"
-        :key="id"
+        v-for="todo of todosList"
+        :key="todo.id"
         :todo="todo"
         @edit="openEditForm"
         @delete="deleteHandler"
         @toggle="completeHandler"
         @detail="detailHandler"
       />
-      <p v-if="!todos.length">Epmty todos</p>
+      <p v-if="!todos.length">Empty todos</p>
     </section>
 
     <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, watch } from 'vue'
+import { onMounted, ref, computed, watch, watchEffect } from 'vue'
 import { APP_CONFIG } from '@/constants'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -145,6 +145,10 @@ const requestParams = computed(() => {
   }
 })
 
+const todosList = computed(() => {
+  return Array.from(todosMap.value.values())
+})
+
 const openEditForm = async (todo: Todo) => {
   editingTodo.value = todo
   await editModalRef.value?.open()
@@ -155,27 +159,30 @@ const openCreateForm = () => {
   createModalRef.value?.open()
 }
 
+const submitWithModal = async (
+  modal: IModalOpen | null,
+  action: () => Promise<unknown>
+) => {
+  const res = await action()
+  if (!(res instanceof AppError)) {
+    await getAll(requestParams.value)
+    modal?.confirm(true)
+  }
+}
+
 const createTodo = async () => {
-  const modal = createModalRef.value
   const data = await createFormRef.value?.submit()
   if (!data) return
 
-  const res = await create(data)
-  if (!(res instanceof AppError)) getAll(requestParams.value)
-
-  modal?.confirm(true)
+  await submitWithModal(createModalRef.value, () => create(data))
 }
 
 const updateTodo = async () => {
-  const modal = editModalRef.value
   const data = await editFormRef.value?.submit()
   const id = editingTodo?.value?.id
   if (!data && !id) return
 
-  const res = await update(Number(id), data)
-  if (!(res instanceof AppError)) getAll(requestParams.value)
-
-  modal?.confirm(true)
+  await submitWithModal(editModalRef.value, () => update(id as number, data))
 }
 
 const deleteHandler = async (todo: Todo) => {
@@ -210,23 +217,23 @@ const completeHandler = ({
   completedToggler(id, payload)
 }
 
+watchEffect(() => {
+  if (pages.value) {
+    setPages(pages.value)
+  }
+})
+
 watch(
-  pages,
-  (pages) => {
-    if (!pages) return
-    setPages(pages)
+  requestParams,
+  (params) => {
+    getAll(params)
+    saveRouterQuery()
   },
   { immediate: true }
 )
 
-watch(requestParams, (params) => {
-  getAll(params)
-  saveRouterQuery()
-})
-
 onMounted(() => {
   parseRouterQuery()
-  getAll(requestParams.value)
 })
 </script>
 
