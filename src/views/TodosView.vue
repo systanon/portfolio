@@ -189,7 +189,7 @@ const deleteHandler = async (todo: Todo) => {
   }
 }
 
-const parsePouterQuery = () => {
+const parseRouterQuery = () => {
   const { page, perPage } = route.query
   pagination.page = Number(page) || DEFAULT_PAGE
   pagination.perPage = Number(perPage) || DEFAULT_PAGE_SIZE
@@ -225,7 +225,7 @@ watch(requestParams, (params) => {
 })
 
 onMounted(() => {
-  parsePouterQuery()
+  parseRouterQuery()
   getAll(requestParams.value)
 })
 </script>
