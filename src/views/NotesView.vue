@@ -15,7 +15,7 @@
         @deleteHandler="deleteHandler"
       />
 
-      <p v-if="!notes.length">Epmty notes</p>
+      <p v-if="!notes.length">Empty notes</p>
     </section>
 
     <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, reactive, computed, watch } from 'vue'
+import { onMounted, ref, reactive, computed, watch, watchEffect } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { APP_CONFIG } from '@/constants'
 import { useRoute, useRouter } from 'vue-router'
@@ -223,14 +223,12 @@ const fillInputs = (_note: UpdateNoteDTO) => {
   note.description = _note.description ?? ''
 }
 
-watch(
-  pages,
-  (pages) => {
-    if (!pages) return
-    setPages(pages)
-  },
-  { immediate: true }
-)
+watchEffect(() => {
+  if (pages.value) {
+    setPages(pages.value)
+  }
+})
+
 watch(
   requestParams,
   (params) => {
@@ -242,7 +240,6 @@ watch(
 
 onMounted(() => {
   parsePouterQuery()
-  getAll(requestParams.value)
 })
 </script>
 
@@ -271,26 +268,6 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-  }
-}
-
-@include media-query('large-desktop') {
-  .page-todo {
-    display: grid;
-    gap: 30px;
-    grid-template-columns: repeat(12, 1fr);
-    &__title {
-      grid-column: 1/ -1;
-    }
-    &__create {
-      grid-column: 1/ -1;
-    }
-    &__todos {
-      grid-column: 2/ 12;
-    }
-    &__pagination {
-      grid-column: 1/ -1;
-    }
   }
 }
 </style>
