@@ -21,7 +21,7 @@
         @toggle="completeHandler"
         @detail="detailHandler"
       />
-      <p v-if="!todos.length">Empty todos</p>
+      <p v-if="!todosList.length">Empty todos</p>
     </section>
 
     <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
@@ -134,7 +134,7 @@ const {
   btnPage,
   setPages,
 } = usePagination(DEFAULT_PAGE_SIZE)
-const { todos, todosMap, pages } = storeToRefs(todoStore)
+const { todosMap, pages } = storeToRefs(todoStore)
 const { getAll, update, create, remove, completedToggler } = todoStore
 
 const requestParams = computed(() => {

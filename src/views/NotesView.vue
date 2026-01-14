@@ -8,14 +8,14 @@
     />
     <section class="page-note__notes">
       <NoteItem
-        v-for="[id, note] of [...notesMap.entries()]"
-        :key="id"
+        v-for="note of notesList"
+        :key="note.id"
         :note="note"
         @editHandler="editHandler"
         @deleteHandler="deleteHandler"
       />
 
-      <p v-if="!notes.length">Empty notes</p>
+      <p v-if="!notesList.length">Empty notes</p>
     </section>
 
     <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
@@ -147,7 +147,7 @@ const {
   btnPage,
   setPages,
 } = usePagination(DEFAULT_PAGE_SIZE)
-const { notes, notesMap, pages } = storeToRefs(notesStore)
+const { notesMap, pages } = storeToRefs(notesStore)
 const { getAll, update, create, remove } = notesStore
 
 const requestParams = computed(() => {
@@ -156,6 +156,10 @@ const requestParams = computed(() => {
     perPage,
     page,
   }
+})
+
+const notesList = computed(() => {
+  return Array.from(notesMap.value.values())
 })
 
 const deleteHandler = async (note: Note) => {
