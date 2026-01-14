@@ -36,7 +36,7 @@
       </template>
     </UIModal>
     <UIModal ref="editModalRef" title="Update Todo">
-      <TodoForm
+      <ItemForm
         ref="editFormRef"
         :title="editingTodo?.title"
         :description="editingTodo?.description"
@@ -48,7 +48,7 @@
     </UIModal>
 
     <UIModal ref="createModalRef" title="Create Todo">
-      <TodoForm ref="createFormRef" />
+      <ItemForm ref="createFormRef" />
 
       <template #actions="{ close }">
         <UiButton @click="close" label="Cancel" />
@@ -88,7 +88,7 @@ import { usePagination } from '@/hooks/pagination'
 import UIPagination from '@/components/ui/UiPagination.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
-import TodoForm from '@/components/forms/TodoForm.vue'
+import ItemForm from '@/components/forms/ItemForm.vue'
 
 import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { type Todo } from '../types/todo'
