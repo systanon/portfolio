@@ -11,8 +11,8 @@
         v-for="note of notesList"
         :key="note.id"
         :note="note"
-        @editHandler="openEditForm"
-        @deleteHandler="deleteHandler"
+        @edit="openEditForm"
+        @delete="deleteHandler"
       />
 
       <p v-if="!notesList.length">Empty notes</p>
@@ -159,7 +159,7 @@ const deleteHandler = async (note: Note) => {
 const updateNote = async () => {
   const data = await editFormRef.value?.submit()
   const id = editingNote?.value?.id
-  if (!data && !id) return
+  if (!data || !id) return
 
   await submitWithModal(editModalRef.value, () => update(id as number, data))
 }
