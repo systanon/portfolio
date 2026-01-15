@@ -4,14 +4,12 @@
       v-model="localTodo.title"
       placeholder="Title"
       :validation="v$.title"
-      @blur="v$.title.$touch"
     />
 
     <UiTextarea
       v-model="localTodo.description"
       placeholder="Description"
       :validation="v$.description"
-      @blur="v$.description.$touch"
     />
   </div>
 </template>
