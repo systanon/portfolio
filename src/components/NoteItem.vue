@@ -4,24 +4,32 @@
       <h2 class="note-item__title">{{ note.title }}</h2>
       <p class="note-item__description">{{ note.description }}</p>
     </div>
-    <div class="note-item__menu">
+    <div ref="menuRef" :class="['note-item__menu', { _open: menuOpen }]">
       <UiButtonIcon
-        class="note-item__menu-open"
+        :class="['note-item__menu-btn', { _open: menuOpen }]"
         iconName="arrow-up-left"
+        :btnHover="false"
+        iconHover
+        style="--icon-hover-primary: var(--icon-hover-secondary)"
         @click="toggleMenu"
       />
-      <div v-if="menuOpen" class="note-item__menu-actions">
+
+      <div class="note-item__menu-actions">
         <UiButtonIcon
           class="note-item__menu-item"
-          style="--i: 2"
           iconName="edit"
-          @click="$emit('editHandler', note)"
+          :btnHover="false"
+          iconHover
+          style="--icon-hover-primary: var(--icon-hover-secondary)"
+          @click="$emit('edit', note)"
         />
         <UiButtonIcon
           class="note-item__menu-item"
-          style="--i: 1"
           iconName="trash"
-          @click="$emit('deleteHandler', note)"
+          :btnHover="false"
+          iconHover
+          style="--icon-hover-primary: var(--icon-hover-secondary)"
+          @click="$emit('delete', note)"
         />
       </div>
     </div>
@@ -32,75 +40,81 @@
 import type { Note } from '@/types/notes'
 import { ref, type Ref } from 'vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
+import { onClickOutside } from '@vueuse/core'
+
 defineProps<{
   note: Note
 }>()
 
+const emit = defineEmits<{
+  (e: 'edit', todo: Note): void
+  (e: 'delete', todo: Note): void
+}>()
+
 const menuOpen: Ref<boolean> = ref(false)
+const menuRef = ref<HTMLElement | null>(null)
+
 const toggleMenu = () => (menuOpen.value = !menuOpen.value)
+onClickOutside(menuRef, () => (menuOpen.value = false))
 </script>
 
 <style scoped lang="scss">
 .note-item {
   position: relative;
-  padding: rem(15) rem(30) rem(15) rem(15);
-  border-radius: 1rem;
+  padding: rem(15) rem(60) rem(15) rem(15);
+  border-radius: rem(16);
   border: var(--todo-checked) solid 1px;
   display: flex;
-  gap: 1rem;
-  width: 30rem;
-  height: 10rem;
+  gap: rem(16);
+  width: 100%;
+  height: rem(250);
   background-color: var(--bg-primary);
   color: var(--text-color-secondary);
   overflow: hidden;
+
   &__info {
     flex: 1 1;
   }
+
   &__menu {
     position: absolute;
-    bottom: 0;
+    top: 0;
     right: 0;
-    &-open {
-      position: relative;
-      z-index: 2;
+    height: 100%;
+    transform: translateX(70%);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: rem(50);
+    background-color: var(--bg-tertiary);
+    &-btn {
+      :deep(.ui-icon) {
+        transition: transform 0.3s ease;
+        transform: rotate(-45deg);
+      }
+      &._open {
+        :deep(.ui-icon) {
+          transform: rotate(135deg);
+        }
+      }
     }
-    &:before {
-      content: '';
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      border-radius: 50%;
-      background: $bg-menu-secondary;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 2;
+    &._open {
+      transform: translateX(0);
     }
+
     &-actions {
-      position: absolute;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      z-index: 1;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: $bg-menu-tertiary;
-      border-radius: 50%;
-    }
-    &-item {
-      --angle: calc(var(--i) * 150deg);
-      position: absolute;
-      top: 18%;
-      left: 16%;
-      transform: rotate(var(--angle)) translate(2rem)
-        rotate(calc(var(--angle) * -1));
-      transition: transform 0.3s ease;
-      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: rem(16);
     }
   }
   :deep(.ui-icon) {
-    color: $icon-color-primary;
+    color: var(--icon-color-secondary);
+  }
+  :deep(._icon-hover) {
+    &:hover {
+      color: var(--icon-hover-secondary);
+    }
   }
 }
 </style>

@@ -30,12 +30,14 @@ export function useValidationRules() {
     required: helpers.withMessage('Title is required', required),
     maxLength: helpers.withMessage('To much characters', maxLength(100)),
     minLength: helpers.withMessage('Minimum 3 characters', minLength(3)),
+    $autoDirty: true
   }
 
   const descriptionRules = {
     required: helpers.withMessage('Description is required', required),
     maxLength: helpers.withMessage('To much characters', maxLength(100)),
     minLength: helpers.withMessage('Minimum 3 characters', minLength(3)),
+    $autoDirty: true
   }
 
   const confirmPasswordRules = (password: Ref<string>) => ({

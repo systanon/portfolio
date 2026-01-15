@@ -4,6 +4,8 @@ export type DBEntity = {
   updated_at: string
 }
 
+export type TodoDTO = Pick<Todo, 'title' | 'description'>
+
 export type CreateTodoDTO = {
   title: string
   description: string
