@@ -180,7 +180,7 @@ const createTodo = async () => {
 const updateTodo = async () => {
   const data = await editFormRef.value?.submit()
   const id = editingTodo?.value?.id
-  if (!data && !id) return
+  if (!data || !id) return
 
   await submitWithModal(editModalRef.value, () => update(id as number, data))
 }
