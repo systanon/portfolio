@@ -4,6 +4,7 @@
     <UiButtonIcon
       class="page-note__create"
       iconName="plus"
+      btn-hover
       @click="openCreateForm"
     />
     <section class="page-note__notes">
@@ -207,26 +208,34 @@ onMounted(() => {
   height: 100%;
   display: grid;
   grid-template-rows: auto auto 1fr 0.5fr;
+
   &__title {
     text-align: center;
+    padding-bottom: rem(60);
   }
+
   &__create {
     margin: 0 auto;
+    background-color: $bg-menu-secondary;
+    border-radius: rem(6);
   }
+
   &__notes {
-    display: flex;
-    flex-wrap: wrap;
+    padding-top: rem(60);
+    display: grid;
     gap: rem(30);
-    justify-content: center;
-    align-content: baseline;
-    height: 100%;
-    overflow-y: auto;
   }
 
   &__modal-form {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: rem(8);
+  }
+}
+
+@include media-query('tablet') {
+  .page-note__notes {
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>
