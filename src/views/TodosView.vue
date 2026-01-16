@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, watchEffect } from 'vue'
+import { onMounted, ref, computed, watch, watchEffect, onUnmounted } from 'vue'
 import { APP_CONFIG } from '@/constants'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -96,6 +96,7 @@ import { AppError } from '@/types/app-errors'
 import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
 import type { RouteName } from '@/types/router'
+import { todosWSService } from '@/application'
 
 defineOptions({
   name: 'TodosView',
@@ -135,7 +136,7 @@ const {
   setPages,
 } = usePagination(DEFAULT_PAGE_SIZE)
 const { todosMap, pages } = storeToRefs(todoStore)
-const { getAll, update, create, remove, completedToggler } = todoStore
+const { getAll, update, create, remove, connectWS, disconnectWS } = todoStore
 
 const requestParams = computed(() => {
   const { perPage, page } = pagination
@@ -165,7 +166,6 @@ const submitWithModal = async (
 ) => {
   const res = await action()
   if (!(res instanceof AppError)) {
-    await getAll(requestParams.value)
     modal?.confirm(true)
   }
 }
@@ -192,7 +192,6 @@ const deleteHandler = async (todo: Todo) => {
   if (res) {
     const res = await remove(id)
     if (res instanceof AppError) return
-    getAll(requestParams.value)
   }
 }
 
@@ -214,7 +213,7 @@ const completeHandler = ({
   id: number
   payload: { completed: boolean }
 }) => {
-  completedToggler(id, payload)
+  update(id, payload)
 }
 
 watchEffect(() => {
@@ -234,6 +233,11 @@ watch(
 
 onMounted(() => {
   parseRouterQuery()
+  connectWS(todosWSService)
+})
+
+onUnmounted(() => {
+  disconnectWS()
 })
 </script>
 
