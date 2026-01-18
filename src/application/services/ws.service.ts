@@ -52,6 +52,20 @@ export class WSService {
     this.ws.send(JSON.stringify(message))
   }
 
+  waitForConnection(): Promise<void> {
+    if (this.ws.readyState === WebSocket.OPEN) {
+      return Promise.resolve()
+    }
+
+    return new Promise(resolve => {
+      const onOpen = () => {
+        this.ws.removeEventListener('open', onOpen)
+        resolve()
+      }
+
+      this.ws.addEventListener('open', onOpen)
+    })
+  }
 
   auth(event: string, user_id: number) {
     if (this.ws.readyState !== WebSocket.OPEN) {

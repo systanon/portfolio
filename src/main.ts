@@ -37,6 +37,9 @@ application.on('redirect', (routeName) => {
 
 application.on('logged', async (user_id: number) => {
   router.checkAccessCurrentRoute()
+
+  await wSService.waitForConnection()
+
   wSService.auth('auth', user_id)
 })
 
