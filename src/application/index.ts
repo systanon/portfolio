@@ -1,4 +1,5 @@
 import { HTTPClient, type ResponseWithRequest } from '../lib/http.client'
+import { WSService } from '@/application/services/ws.service'
 
 import { TodoService } from './services/todo.service'
 import { NotesService } from './services/notes.service'
@@ -14,6 +15,9 @@ export const httpClient = new HTTPClient({
     'Content-Type': 'application/json',
   },
 })
+
+const socket = new WebSocket(import.meta.env.VITE_APP_WS_API)
+export const wSService = new WSService(socket)
 
 export const notificationService = new NotificationService()
 export const todoService = new TodoService(httpClient, notificationService)
