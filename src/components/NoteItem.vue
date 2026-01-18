@@ -21,7 +21,7 @@
           :btnHover="false"
           iconHover
           style="--icon-hover-primary: var(--icon-hover-secondary)"
-          @click="$emit('edit', note)"
+          @click="emit('edit', note)"
         />
         <UiButtonIcon
           class="note-item__menu-item"
@@ -29,7 +29,7 @@
           :btnHover="false"
           iconHover
           style="--icon-hover-primary: var(--icon-hover-secondary)"
-          @click="$emit('delete', note)"
+          @click="emit('delete', note)"
         />
       </div>
     </div>
