@@ -3,7 +3,7 @@ import FloatingVue from 'floating-vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import { router } from './plugins/router'
-import { application } from './application'
+import { application, wSService } from './application'
 
 import '@/sass/_theme.scss'
 import 'floating-vue/dist/style.css'
@@ -35,6 +35,9 @@ application.on('redirect', (routeName) => {
   router.push({ name: routeName })
 })
 
-application.on('logged', router.checkAccessCurrentRoute)
+application.on('logged', async (user_id: number) => {
+  router.checkAccessCurrentRoute()
+  wSService.auth('auth', user_id)
+})
 
 app.mount('#app')

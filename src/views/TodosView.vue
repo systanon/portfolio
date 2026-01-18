@@ -96,7 +96,7 @@ import { AppError } from '@/types/app-errors'
 import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
 import type { RouteName } from '@/types/router'
-import { todosWSService } from '@/application'
+import { wSService } from '@/application'
 
 defineOptions({
   name: 'TodosView',
@@ -136,7 +136,9 @@ const {
   setPages,
 } = usePagination(DEFAULT_PAGE_SIZE)
 const { todosMap, pages } = storeToRefs(todoStore)
-const { getAll, update, create, remove, connectWS, disconnectWS } = todoStore
+const { getAll, update, create, remove, messageHandler } = todoStore
+
+const unsubscribe = wSService.subscribe('todos', messageHandler)
 
 const requestParams = computed(() => {
   const { perPage, page } = pagination
@@ -162,7 +164,7 @@ const openCreateForm = () => {
 
 const submitWithModal = async (
   modal: IModalOpen | null,
-  action: () => Promise<unknown>
+  action: () => Promise<unknown>,
 ) => {
   const res = await action()
   if (!(res instanceof AppError)) {
@@ -228,16 +230,15 @@ watch(
     getAll(params)
     saveRouterQuery()
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 onMounted(() => {
   parseRouterQuery()
-  connectWS(todosWSService)
 })
 
 onUnmounted(() => {
-  disconnectWS()
+  unsubscribe()
 })
 </script>
 

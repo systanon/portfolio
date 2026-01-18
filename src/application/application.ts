@@ -169,7 +169,7 @@ export class Application<
       this.#ee.emit('unlogged')
     } else {
       this.#profile.value = res
-      this.#ee.emit('logged')
+      this.#ee.emit('logged', res.id)
     }
     this.resolveProfileLoading?.()
 
