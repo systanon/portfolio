@@ -16,8 +16,7 @@ export const httpClient = new HTTPClient({
   },
 })
 
-const socket = new WebSocket(import.meta.env.VITE_APP_WS_API)
-export const wSService = new WSService(socket)
+export const wSService = new WSService(import.meta.env.VITE_APP_WS_API)
 
 export const notificationService = new NotificationService()
 export const todoService = new TodoService(httpClient, notificationService)

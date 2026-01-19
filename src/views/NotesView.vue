@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, watchEffect } from 'vue'
+import { onMounted, ref, computed, watch, watchEffect, onUnmounted } from 'vue'
 import { APP_CONFIG } from '@/constants'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -87,6 +87,7 @@ import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { type Note } from '../types/notes'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
 import { AppError } from '@/types/app-errors'
+import { wSService } from '@/application'
 
 const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
 
@@ -115,7 +116,9 @@ const {
   setPages,
 } = usePagination(DEFAULT_PAGE_SIZE)
 const { notesMap, pages } = storeToRefs(notesStore)
-const { getAll, update, create, remove } = notesStore
+const { getAll, update, create, remove, messageHandler } = notesStore
+
+const unsubscribe = wSService.subscribe('notes', messageHandler)
 
 const requestParams = computed(() => {
   const { perPage, page } = pagination
@@ -141,11 +144,10 @@ const openCreateForm = () => {
 
 const submitWithModal = async (
   modal: IModalOpen | null,
-  action: () => Promise<unknown>
+  action: () => Promise<unknown>,
 ) => {
   const res = await action()
   if (!(res instanceof AppError)) {
-    await getAll(requestParams.value)
     modal?.confirm(true)
   }
 }
@@ -195,11 +197,15 @@ watch(
     getAll(params)
     saveRouterQuery()
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 onMounted(() => {
   parsePouterQuery()
+})
+
+onUnmounted(() => {
+  unsubscribe()
 })
 </script>
 
