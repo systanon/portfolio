@@ -29,7 +29,11 @@ app.use(FloatingVue)
 
 application.run()
 
-application.on('unlogged', router.checkAccessCurrentRoute)
+application.on('unlogged', async () => {
+  router.checkAccessCurrentRoute()
+  await wSService.wsConnecting
+  wSService.unauth()
+})
 
 application.on('redirect', (routeName) => {
   router.push({ name: routeName })
@@ -38,9 +42,9 @@ application.on('redirect', (routeName) => {
 application.on('logged', async (user_id: number) => {
   router.checkAccessCurrentRoute()
 
-  await wSService.waitForConnection()
+  await wSService.wsConnecting
 
-  wSService.auth('auth', user_id)
+  wSService.auth(user_id)
 })
 
 app.mount('#app')
