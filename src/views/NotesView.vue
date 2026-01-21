@@ -185,23 +185,23 @@ const saveRouterQuery = () => {
   router.replace({ query })
 }
 
-watchEffect(() => {
-  if (pages.value) {
-    setPages(pages.value)
-  }
-})
-
 watch(
-  requestParams,
-  (params) => {
-    getAll(params)
-    saveRouterQuery()
+  pages,
+  (pages) => {
+    if (!pages) return
+    setPages(pages)
   },
   { immediate: true },
 )
 
+watch(requestParams, (params) => {
+  getAll(params)
+  saveRouterQuery()
+})
+
 onMounted(() => {
   parsePouterQuery()
+  getAll(requestParams.value)
 })
 
 onUnmounted(() => {
