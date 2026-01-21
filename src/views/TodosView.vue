@@ -235,6 +235,10 @@ onMounted(() => {
   parseRouterQuery()
   getAll(requestParams.value)
 })
+
+onUnmounted(() => {
+  unsubscribe()
+})
 </script>
 
 <style scoped lang="scss">
