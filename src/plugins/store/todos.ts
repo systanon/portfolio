@@ -48,9 +48,10 @@ export const useTodoStore = defineStore('todos', () => {
   }
 
   function _update(
-    data: any,
+    data: Todo,
   ): void {
-    todosMap.value.set(data.id, data)
+    const oldTodo = todosMap.value.get(data.id)
+    oldTodo && todosMap.value.set(data.id, Object.assign(oldTodo, data))
   }
 
   function _create(
