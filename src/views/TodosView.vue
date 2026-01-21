@@ -218,27 +218,22 @@ const completeHandler = ({
   update(id, payload)
 }
 
-watchEffect(() => {
-  if (pages.value) {
-    setPages(pages.value)
-  }
-})
-
 watch(
-  requestParams,
-  (params) => {
-    getAll(params)
-    saveRouterQuery()
+  pages,
+  (pages) => {
+    if (!pages) return
+    setPages(pages)
   },
   { immediate: true },
 )
+watch(requestParams, (params) => {
+  getAll(params)
+  saveRouterQuery()
+})
 
 onMounted(() => {
   parseRouterQuery()
-})
-
-onUnmounted(() => {
-  unsubscribe()
+  getAll(requestParams.value)
 })
 </script>
 
