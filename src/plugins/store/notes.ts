@@ -47,9 +47,10 @@ export const useNotesStore = defineStore('notes', () => {
   }
 
   function _update(
-    data: any,
+    data: Note,
   ): void {
-    notesMap.value.set(data.id, data)
+    const oldNote = notesMap.value.get(data.id)
+    oldNote && notesMap.value.set(data.id, Object.assign(oldNote, data))
   }
 
   function _create(
