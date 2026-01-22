@@ -70,13 +70,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, watchEffect, onUnmounted } from 'vue'
-import { APP_CONFIG } from '@/constants'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useNotesStore } from '@/plugins/store/notes'
 import NoteItem from '@/components/NoteItem.vue'
-import { usePagination } from '@/hooks/pagination'
 import UIPagination from '@/components/ui/UiPagination.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
@@ -87,9 +84,7 @@ import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { type Note } from '../types/notes'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
 import { AppError } from '@/types/app-errors'
-import { wSService } from '@/application'
-
-const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
+import { usePageItem } from '@/composables/usePageItem'
 
 const createFormRef = ref()
 const editFormRef = ref()
@@ -102,31 +97,12 @@ const editingNote = ref<Note | undefined>(undefined)
 
 const { isMobile, isTablet } = useInjectWindowResize()
 
-const route = useRoute()
-const router = useRouter()
-
 const notesStore = useNotesStore()
-const {
-  pagination,
-  firstPage,
-  prevPage,
-  nextPage,
-  latestPage,
-  btnPage,
-  setPages,
-} = usePagination(DEFAULT_PAGE_SIZE)
 const { notesMap, pages } = storeToRefs(notesStore)
 const { getAll, update, create, remove, messageHandler } = notesStore
 
-const unsubscribe = wSService.subscribe('notes', messageHandler)
-
-const requestParams = computed(() => {
-  const { perPage, page } = pagination
-  return {
-    perPage,
-    page,
-  }
-})
+const { pagination, firstPage, prevPage, nextPage, latestPage, btnPage } =
+  usePageItem(getAll, pages, 'notes', messageHandler)
 
 const notesList = computed(() => {
   return Array.from(notesMap.value.values())
@@ -173,51 +149,17 @@ const createNote = async () => {
 
   await submitWithModal(createModalRef.value, () => create(data))
 }
-
-const parsePouterQuery = () => {
-  const { page, perPage } = route.query
-  pagination.page = Number(page) || DEFAULT_PAGE
-  pagination.perPage = Number(perPage) || DEFAULT_PAGE_SIZE
-}
-
-const saveRouterQuery = () => {
-  const query = { ...route.query, ...requestParams.value }
-  router.replace({ query })
-}
-
-watch(
-  pages,
-  (pages) => {
-    if (!pages) return
-    setPages(pages)
-  },
-  { immediate: true },
-)
-
-watch(requestParams, (params) => {
-  getAll(params)
-  saveRouterQuery()
-})
-
-onMounted(() => {
-  parsePouterQuery()
-  getAll(requestParams.value)
-})
-
-onUnmounted(() => {
-  unsubscribe()
-})
 </script>
 
 <style scoped lang="scss">
 .page-note {
   height: 100%;
-  display: grid;
-  grid-template-rows: auto auto 1fr 0.5fr;
+  display: flex;
+  flex-direction: column;
+  gap: rem(32);
 
   &__title {
     text-align: center;
-    padding-bottom: rem(60);
   }
 
   &__create {

@@ -19,7 +19,7 @@
         @edit="openEditForm"
         @delete="deleteHandler"
         @toggle="completeHandler"
-        @detail="detailHandler"
+        @detail="details"
       />
       <p v-if="!todosList.length">Empty todos</p>
     </section>
@@ -78,13 +78,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, watchEffect, onUnmounted } from 'vue'
-import { APP_CONFIG } from '@/constants'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTodoStore } from '@/plugins/store/todos'
 import TodoItem from '@/components/TodoItem.vue'
-import { usePagination } from '@/hooks/pagination'
 import UIPagination from '@/components/ui/UiPagination.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
@@ -95,8 +92,7 @@ import { type Todo } from '../types/todo'
 import { AppError } from '@/types/app-errors'
 import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
-import type { RouteName } from '@/types/router'
-import { wSService } from '@/application'
+import { usePageItem } from '@/composables/usePageItem'
 
 defineOptions({
   name: 'TodosView',
@@ -106,25 +102,16 @@ const createFormRef = ref()
 const editFormRef = ref()
 const editingTodo = ref<Todo | undefined>(undefined)
 
-const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
-
 const deleteModalRef = ref<IModalOpen | null>(null)
 const editModalRef = ref<IModalOpen | null>(null)
 const createModalRef = ref<IModalOpen | null>(null)
 
 const { isMobile, isTablet } = useInjectWindowResize()
 
-const route = useRoute()
-const router = useRouter()
-
-const detailHandler = (id: number) => {
-  router.push({
-    name: 'TodoDetail' satisfies RouteName,
-    params: { id },
-  })
-}
-
 const todoStore = useTodoStore()
+
+const { todosMap, pages } = storeToRefs(todoStore)
+const { getAll, update, create, remove, messageHandler } = todoStore
 
 const {
   pagination,
@@ -133,20 +120,9 @@ const {
   nextPage,
   latestPage,
   btnPage,
-  setPages,
-} = usePagination(DEFAULT_PAGE_SIZE)
-const { todosMap, pages } = storeToRefs(todoStore)
-const { getAll, update, create, remove, messageHandler } = todoStore
-
-const unsubscribe = wSService.subscribe('todos', messageHandler)
-
-const requestParams = computed(() => {
-  const { perPage, page } = pagination
-  return {
-    perPage,
-    page,
-  }
-})
+  details,
+  submitWithModal,
+} = usePageItem(getAll, pages, 'todos', messageHandler)
 
 const todosList = computed(() => {
   return Array.from(todosMap.value.values())
@@ -160,16 +136,6 @@ const openEditForm = async (todo: Todo) => {
 
 const openCreateForm = () => {
   createModalRef.value?.open()
-}
-
-const submitWithModal = async (
-  modal: IModalOpen | null,
-  action: () => Promise<unknown>,
-) => {
-  const res = await action()
-  if (!(res instanceof AppError)) {
-    modal?.confirm(true)
-  }
 }
 
 const createTodo = async () => {
@@ -197,17 +163,6 @@ const deleteHandler = async (todo: Todo) => {
   }
 }
 
-const parseRouterQuery = () => {
-  const { page, perPage } = route.query
-  pagination.page = Number(page) || DEFAULT_PAGE
-  pagination.perPage = Number(perPage) || DEFAULT_PAGE_SIZE
-}
-
-const saveRouterQuery = () => {
-  const query = { ...route.query, ...requestParams.value }
-  router.replace({ query })
-}
-
 const completeHandler = ({
   id,
   payload,
@@ -217,36 +172,15 @@ const completeHandler = ({
 }) => {
   update(id, payload)
 }
-
-watch(
-  pages,
-  (pages) => {
-    if (!pages) return
-    setPages(pages)
-  },
-  { immediate: true },
-)
-watch(requestParams, (params) => {
-  getAll(params)
-  saveRouterQuery()
-})
-
-onMounted(() => {
-  parseRouterQuery()
-  getAll(requestParams.value)
-})
-
-onUnmounted(() => {
-  unsubscribe()
-})
 </script>
 
 <style scoped lang="scss">
 .page-todo {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: rem(32);
   height: 100%;
+
   &__title {
     text-align: center;
   }
