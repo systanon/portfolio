@@ -13,7 +13,7 @@
 
     <section class="page-todo__todos">
       <TodoItem
-        v-for="todo of todosList"
+        v-for="todo of rows"
         :key="todo.id"
         :todo="todo"
         @edit="openEditForm"
@@ -21,7 +21,7 @@
         @toggle="completeHandler"
         @detail="details"
       />
-      <p v-if="!todosList.length">Empty todos</p>
+      <p v-if="!rows.length">Empty todos</p>
     </section>
 
     <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTodoStore } from '@/plugins/store/todos'
 import TodoItem from '@/components/TodoItem.vue'
@@ -110,7 +110,7 @@ const { isMobile, isTablet } = useInjectWindowResize()
 
 const todoStore = useTodoStore()
 
-const { todosMap, pages } = storeToRefs(todoStore)
+const { pages, rows } = storeToRefs(todoStore)
 const { getAll, update, create, remove, messageHandler } = todoStore
 
 const {
@@ -123,10 +123,6 @@ const {
   details,
   submitWithModal,
 } = usePageItem(getAll, pages, 'todos', messageHandler)
-
-const todosList = computed(() => {
-  return Array.from(todosMap.value.values())
-})
 
 const openEditForm = async (todo: Todo) => {
   editingTodo.value = todo
