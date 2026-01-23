@@ -21,6 +21,9 @@ export function usePageItem(
   const { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } = APP_CONFIG
   const unsubscribe = wSService.subscribe(topic, wsCb)
 
+  const page = Number(route.query.page) || DEFAULT_PAGE
+  const perPage = Number(route.query.perPage) || DEFAULT_PAGE_SIZE
+
   const {
     pagination,
     firstPage,
@@ -29,7 +32,7 @@ export function usePageItem(
     latestPage,
     btnPage,
     setPages,
-  } = usePagination(DEFAULT_PAGE_SIZE)
+  } = usePagination(perPage, page)
 
   const details = (id: number) => {
     router.push({
@@ -53,11 +56,6 @@ export function usePageItem(
     return { perPage, page }
   })
 
-  const parseQuery = () => {
-    pagination.page = Number(route.query.page) || DEFAULT_PAGE
-    pagination.perPage = Number(route.query.perPage) || DEFAULT_PAGE_SIZE
-  }
-
   const saveQuery = () => {
     router.replace({
       query: { ...route.query, ...requestParams.value },
@@ -79,15 +77,14 @@ export function usePageItem(
   })
 
   onMounted(() => {
-    parseQuery()
     getAll(requestParams.value)
+    saveQuery()
   })
 
   onUnmounted(() => {
     unsubscribe()
   })
   return {
-    parseQuery,
     details,
     pagination,
     firstPage,
