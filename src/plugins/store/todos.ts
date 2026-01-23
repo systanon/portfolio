@@ -12,7 +12,8 @@ export const useTodoStore = defineStore('todos', () => {
   const rows: Ref<Todo[]> = ref([])
   const todosMap = ref(new Map<number, Todo>())
   const total = ref<number>(0)
-  const pages = ref<number>(1)
+  const pages = ref<number>(0)
+  let currentPage = 0
 
   const application = inject('application') as Application
 
@@ -43,11 +44,12 @@ export const useTodoStore = defineStore('todos', () => {
       })
       total.value = _total
       pages.value = _pages
+      currentPage = params.page ?? 1
     } catch (error) {
       rows.value = []
       todosMap.value = new Map()
       total.value = 0
-      pages.value = 1
+      pages.value = 0
       application.notify('error', errorMsg(error))
     }
   }
@@ -65,9 +67,11 @@ export const useTodoStore = defineStore('todos', () => {
   function _create(
     todo: Todo,
   ): void {
-    rows.value.unshift(todo)
     todosMap.value.set(todo.id, todo)
-
+    if (currentPage === 1) {
+      rows.value.unshift(todo)
+    }
+    total.value++
   }
 
   function _delete(
