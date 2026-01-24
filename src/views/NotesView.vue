@@ -9,14 +9,14 @@
     />
     <section class="page-note__notes">
       <NoteItem
-        v-for="note of notesList"
+        v-for="note of rows"
         :key="note.id"
         :note="note"
         @edit="openEditForm"
         @delete="deleteHandler"
       />
 
-      <p v-if="!notesList.length">Empty notes</p>
+      <p v-if="!rows.length">Empty notes</p>
     </section>
 
     <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useNotesStore } from '@/plugins/store/notes'
 import NoteItem from '@/components/NoteItem.vue'
@@ -98,15 +98,11 @@ const editingNote = ref<Note | undefined>(undefined)
 const { isMobile, isTablet } = useInjectWindowResize()
 
 const notesStore = useNotesStore()
-const { notesMap, pages } = storeToRefs(notesStore)
+const { rows, pages } = storeToRefs(notesStore)
 const { getAll, update, create, remove, messageHandler } = notesStore
 
 const { pagination, firstPage, prevPage, nextPage, latestPage, btnPage } =
   usePageItem(getAll, pages, 'notes', messageHandler)
-
-const notesList = computed(() => {
-  return Array.from(notesMap.value.values())
-})
 
 const openEditForm = async (todo: Note) => {
   editingNote.value = todo
