@@ -1,4 +1,4 @@
-import { inject, ref } from 'vue'
+import { inject, ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import { AppError } from '@/types/app-errors'
@@ -9,9 +9,11 @@ import type { Application } from '@/application/application'
 import type { WSMessage } from '@/application/services/ws.service'
 
 export const useTodoStore = defineStore('todos', () => {
+  const rows: Ref<Todo[]> = ref([])
   const todosMap = ref(new Map<number, Todo>())
   const total = ref<number>(0)
-  const pages = ref<number>(1)
+  const pages = ref<number>(0)
+  let currentPage = 0
 
   const application = inject('application') as Application
 
@@ -36,34 +38,51 @@ export const useTodoStore = defineStore('todos', () => {
         total: _total,
         pages: _pages,
       } = await application.getAllTodos(params)
-      todosMap.value = new Map(data.map((todo) => [todo.id, todo]))
+      rows.value = data.map(todo => {
+        todosMap.value.set(todo.id, todo)
+        return todo
+      })
       total.value = _total
       pages.value = _pages
+      currentPage = params.page ?? 1
     } catch (error) {
+      rows.value = []
       todosMap.value = new Map()
       total.value = 0
-      pages.value = 1
+      pages.value = 0
       application.notify('error', errorMsg(error))
     }
   }
 
   function _update(
-    data: Todo,
+    todo: Todo,
   ): void {
-    const oldTodo = todosMap.value.get(data.id)
-    oldTodo && todosMap.value.set(data.id, Object.assign(oldTodo, data))
+    const _todo = todosMap.value.get(todo.id)
+    if (!_todo) {
+      return
+    }
+    Object.assign(_todo, todo)
   }
 
   function _create(
-    data: any,
+    todo: Todo,
   ): void {
-    todosMap.value.set(data.id, data)
+    todosMap.value.set(todo.id, todo)
+    if (currentPage === 1) {
+      rows.value.unshift(todo)
+    }
+    total.value++
   }
 
   function _delete(
     id: number,
   ): void {
-    todosMap.value.delete(id)
+    const _todo = todosMap.value.get(id)
+    if (!_todo) {
+      return
+    }
+    rows.value = rows.value.filter(({ id }) => id !== _todo.id)
+    todosMap.value.delete(_todo.id)
   }
 
   async function create(payload: CreateTodoDTO): Promise<AppError | void> {
@@ -98,6 +117,7 @@ export const useTodoStore = defineStore('todos', () => {
     remove,
     total,
     pages,
+    rows,
     messageHandler,
   }
 })
