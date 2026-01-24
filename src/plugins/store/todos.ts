@@ -10,7 +10,7 @@ import type { WSMessage } from '@/application/services/ws.service'
 
 export const useTodoStore = defineStore('todos', () => {
   const rows: Ref<Todo[]> = ref([])
-  const todosMap = ref(new Map<number, Todo>())
+  const indexID = ref(new Map<number, Todo>())
   const total = ref<number>(0)
   const pages = ref<number>(0)
   let currentPage = 0
@@ -39,7 +39,7 @@ export const useTodoStore = defineStore('todos', () => {
         pages: _pages,
       } = await application.getAllTodos(params)
       rows.value = data.map(todo => {
-        todosMap.value.set(todo.id, todo)
+        indexID.value.set(todo.id, todo)
         return todo
       })
       total.value = _total
@@ -47,7 +47,7 @@ export const useTodoStore = defineStore('todos', () => {
       currentPage = params.page ?? 1
     } catch (error) {
       rows.value = []
-      todosMap.value = new Map()
+      indexID.value = new Map()
       total.value = 0
       pages.value = 0
       application.notify('error', errorMsg(error))
@@ -57,7 +57,7 @@ export const useTodoStore = defineStore('todos', () => {
   function _update(
     todo: Todo,
   ): void {
-    const _todo = todosMap.value.get(todo.id)
+    const _todo = indexID.value.get(todo.id)
     if (!_todo) {
       return
     }
@@ -67,7 +67,7 @@ export const useTodoStore = defineStore('todos', () => {
   function _create(
     todo: Todo,
   ): void {
-    todosMap.value.set(todo.id, todo)
+    indexID.value.set(todo.id, todo)
     if (currentPage === 1) {
       rows.value.unshift(todo)
     }
@@ -77,12 +77,12 @@ export const useTodoStore = defineStore('todos', () => {
   function _delete(
     id: number,
   ): void {
-    const _todo = todosMap.value.get(id)
+    const _todo = indexID.value.get(id)
     if (!_todo) {
       return
     }
     rows.value = rows.value.filter(({ id }) => id !== _todo.id)
-    todosMap.value.delete(_todo.id)
+    indexID.value.delete(_todo.id)
   }
 
   async function create(payload: CreateTodoDTO): Promise<AppError | void> {
@@ -111,7 +111,7 @@ export const useTodoStore = defineStore('todos', () => {
 
   return {
     getAll,
-    todosMap,
+    indexID,
     update,
     create,
     remove,
