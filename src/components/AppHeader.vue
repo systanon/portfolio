@@ -11,8 +11,10 @@ const { isTablet, isMobile } = useInjectWindowResize()
   <header class="app-header">
     <div class="container">
       <div class="app-header__wrapper">
-        <Logo />
-        <NavigationMenuMobile v-if="isMobile || isTablet" />
+        <template v-if="isMobile || isTablet">
+          <Logo />
+          <NavigationMenuMobile />
+        </template>
         <NavigationMenu v-else />
       </div>
     </div>
