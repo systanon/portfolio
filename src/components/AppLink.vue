@@ -1,3 +1,9 @@
+<template>
+  <a :href="href" @click="navigate" :class="classes">
+    <slot />
+  </a>
+</template>
+
 <script setup>
 import { computed } from 'vue'
 import { RouterLink, useLink } from 'vue-router'
@@ -29,11 +35,6 @@ const classes = computed(() => {
 })
 </script>
 
-<template>
-  <a :href="href" @click="navigate" :class="classes">
-    <slot />
-  </a>
-</template>
 <style lang="scss" scoped>
 .link {
   color: var(--text-color-secondary);
