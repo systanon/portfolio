@@ -3,6 +3,7 @@ import { APP_CONFIG } from '@/constants'
 import { useRoute, useRouter } from 'vue-router'
 import type { RouteName } from '@/types/router'
 import { usePagination } from '@/hooks/pagination'
+import { useLoading } from '@/composables/useLoading'
 import { AppError } from '@/types/app-errors'
 import type { IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { wSService } from '@/application'
@@ -33,6 +34,8 @@ export function usePageItem(
     btnPage,
     setPages,
   } = usePagination(perPage, page)
+
+  const { loading } = useLoading()
 
   const details = (id: number) => {
     router.push({
@@ -93,6 +96,7 @@ export function usePageItem(
     latestPage,
     btnPage,
     setPages,
-    submitWithModal
+    submitWithModal,
+    loading
   }
 }
