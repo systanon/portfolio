@@ -7,66 +7,67 @@
       btn-hover
       @click="openCreateForm"
     />
-    <section class="page-note__notes">
-      <NoteItem
-        v-for="note of rows"
-        :key="note.id"
-        :note="note"
-        @edit="openEditForm"
-        @delete="deleteHandler"
+    <template v-if="!loading">
+      <section class="page-note__notes">
+        <NoteItem
+          v-for="note of rows"
+          :key="note.id"
+          :note="note"
+          @edit="openEditForm"
+          @delete="deleteHandler"
+        />
+
+        <p v-if="!rows.length">Empty notes</p>
+      </section>
+
+      <UiPaginationMobile
+        v-if="isMobile || isTablet"
+        v-model:page="pagination.page"
+        v-model:pages="pagination.pages"
+        @prev-page="prevPage"
+        @next-page="nextPage"
       />
-
-      <p v-if="!rows.length">Empty notes</p>
-    </section>
-
-    <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
-      <template #default>
-        <div class="page-note__modal-form delete-note-form">
-          <h3>Are you sure you want to delete a note?</h3>
-        </div>
-      </template>
-      <template #actions="{ close, confirm }">
-        <UiButton @click="close" label="Cancel" />
-        <UiButton @click="confirm" label="Delete note" />
-      </template>
-    </UIModal>
-    <UIModal ref="editModalRef" title="Update note" class="page-note__modal">
-      <ItemForm
-        ref="editFormRef"
-        :title="editingNote?.title"
-        :description="editingNote?.description"
+      <UIPagination
+        class="page-note__pagination"
+        v-model:page="pagination.page"
+        v-model:pages="pagination.pages"
+        @first-page="firstPage"
+        @prev-page="prevPage"
+        @next-page="nextPage"
+        @latest-page="latestPage"
+        @btn-page="btnPage"
       />
-      <template #actions="{ close }">
-        <UiButton @click="close" label="Cancel" />
-        <UiButton @click="updateNote" label="Update todo" />
-      </template>
-    </UIModal>
-    <UIModal ref="createModalRef" title="Create Note" class="page-note__modal">
-      <ItemForm ref="createFormRef" />
-      <template #actions="{ close }">
-        <UiButton @click="close" label="Cancel" />
-        <UiButton @click="createNote" label="Create note" />
-      </template>
-    </UIModal>
-
-    <UiPaginationMobile
-      v-if="isMobile || isTablet"
-      v-model:page="pagination.page"
-      v-model:pages="pagination.pages"
-      @prev-page="prevPage"
-      @next-page="nextPage"
-    />
-    <UIPagination
-      class="page-note__pagination"
-      v-model:page="pagination.page"
-      v-model:pages="pagination.pages"
-      @first-page="firstPage"
-      @prev-page="prevPage"
-      @next-page="nextPage"
-      @latest-page="latestPage"
-      @btn-page="btnPage"
-    />
+    </template>
   </section>
+  <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
+    <template #default>
+      <div class="page-note__modal-form delete-note-form">
+        <h3>Are you sure you want to delete a note?</h3>
+      </div>
+    </template>
+    <template #actions="{ close, confirm }">
+      <UiButton @click="close" label="Cancel" />
+      <UiButton @click="confirm" label="Delete note" />
+    </template>
+  </UIModal>
+  <UIModal ref="editModalRef" title="Update note" class="page-note__modal">
+    <ItemForm
+      ref="editFormRef"
+      :title="editingNote?.title"
+      :description="editingNote?.description"
+    />
+    <template #actions="{ close }">
+      <UiButton @click="close" label="Cancel" />
+      <UiButton @click="updateNote" label="Update todo" />
+    </template>
+  </UIModal>
+  <UIModal ref="createModalRef" title="Create Note" class="page-note__modal">
+    <ItemForm ref="createFormRef" />
+    <template #actions="{ close }">
+      <UiButton @click="close" label="Cancel" />
+      <UiButton @click="createNote" label="Create note" />
+    </template>
+  </UIModal>
 </template>
 
 <script setup lang="ts">
@@ -83,7 +84,6 @@ import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { type Note } from '../types/notes'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
-import { AppError } from '@/types/app-errors'
 import { usePageItem } from '@/composables/usePageItem'
 
 const createFormRef = ref()
@@ -101,8 +101,16 @@ const notesStore = useNotesStore()
 const { rows, pages } = storeToRefs(notesStore)
 const { getAll, update, create, remove, messageHandler } = notesStore
 
-const { pagination, firstPage, prevPage, nextPage, latestPage, btnPage } =
-  usePageItem(getAll, pages, 'notes', messageHandler)
+const {
+  pagination,
+  firstPage,
+  prevPage,
+  nextPage,
+  latestPage,
+  btnPage,
+  loading,
+  submitWithModal,
+} = usePageItem(getAll, pages, 'notes', messageHandler)
 
 const openEditForm = async (todo: Note) => {
   editingNote.value = todo
@@ -112,16 +120,6 @@ const openEditForm = async (todo: Note) => {
 
 const openCreateForm = () => {
   createModalRef.value?.open()
-}
-
-const submitWithModal = async (
-  modal: IModalOpen | null,
-  action: () => Promise<unknown>,
-) => {
-  const res = await action()
-  if (!(res instanceof AppError)) {
-    modal?.confirm(true)
-  }
 }
 
 const deleteHandler = async (note: Note) => {

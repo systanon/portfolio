@@ -221,9 +221,12 @@ export class Application<
     params: GetAllParams
   ): Promise<PaginateResult<Todo>> {
     try {
+      this.#loading.value = true
       return await this.#todoService.getAll(params)
     } catch (error) {
       return Promise.reject(error)
+    } finally {
+      this.#loading.value = false
     }
   }
 
@@ -257,9 +260,12 @@ export class Application<
     params: GetAllParams
   ): Promise<PaginateResult<Note>> {
     try {
+      this.#loading.value = true
       return await this.#noteService.getAll(params)
     } catch (error) {
       return Promise.reject(error)
+    } finally {
+      this.#loading.value = false
     }
   }
 

@@ -1,8 +1,8 @@
 <template>
   <svg
     :class="['ui-icon', sizeClass]"
-    :width="props.width"
-    :height="props.height"
+    :width="width"
+    :height="height"
     aria-hidden="true"
     focusable="false"
   >
@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<UiIcon>(), {
 const localHref = computed(() => props.href || `#${props.name}`)
 
 const sizeClass = computed(() =>
-  props.width && props.height ? null : `_${props.size}`
+  props.width && props.height ? null : `_${props.size}`,
 )
 </script>
 

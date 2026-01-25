@@ -10,71 +10,71 @@
         <span class="page-todo__create-text"> Create todo </span>
       </template>
     </UiButtonIcon>
+    <template v-if="!loading">
+      <section class="page-todo__todos">
+        <TodoItem
+          v-for="todo of rows"
+          :key="todo.id"
+          :todo="todo"
+          @edit="openEditForm"
+          @delete="deleteHandler"
+          @toggle="completeHandler"
+          @detail="details"
+        />
+        <p v-if="!rows.length">Empty todos</p>
+      </section>
 
-    <section class="page-todo__todos">
-      <TodoItem
-        v-for="todo of rows"
-        :key="todo.id"
-        :todo="todo"
-        @edit="openEditForm"
-        @delete="deleteHandler"
-        @toggle="completeHandler"
-        @detail="details"
+      <UiPaginationMobile
+        v-if="isMobile || isTablet"
+        v-model:page="pagination.page"
+        v-model:pages="pagination.pages"
+        @prev-page="prevPage"
+        @next-page="nextPage"
       />
-      <p v-if="!rows.length">Empty todos</p>
-    </section>
-
-    <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
-      <template #default>
-        <div class="page-todo__modal-form delete-todo-form">
-          <h3>Are you sure you want to delete todo?</h3>
-        </div>
-      </template>
-      <template #actions="{ close, confirm }">
-        <UiButton @click="close" label="Cancel" />
-        <UiButton @click="confirm" label="Delete todo" />
-      </template>
-    </UIModal>
-    <UIModal ref="editModalRef" title="Update Todo">
-      <ItemForm
-        ref="editFormRef"
-        :title="editingTodo?.title"
-        :description="editingTodo?.description"
+      <UIPagination
+        v-else
+        class="page-todo__pagination"
+        v-model:page="pagination.page"
+        v-model:pages="pagination.pages"
+        @first-page="firstPage"
+        @prev-page="prevPage"
+        @next-page="nextPage"
+        @latest-page="latestPage"
+        @btn-page="btnPage"
       />
-      <template #actions="{ close }">
-        <UiButton @click="close" label="Cancel" />
-        <UiButton @click="updateTodo" label="Update todo" />
-      </template>
-    </UIModal>
-
-    <UIModal ref="createModalRef" title="Create Todo">
-      <ItemForm ref="createFormRef" />
-
-      <template #actions="{ close }">
-        <UiButton @click="close" label="Cancel" />
-        <UiButton @click="createTodo" label="Create todo" />
-      </template>
-    </UIModal>
-
-    <UiPaginationMobile
-      v-if="isMobile || isTablet"
-      v-model:page="pagination.page"
-      v-model:pages="pagination.pages"
-      @prev-page="prevPage"
-      @next-page="nextPage"
-    />
-    <UIPagination
-      v-else
-      class="page-todo__pagination"
-      v-model:page="pagination.page"
-      v-model:pages="pagination.pages"
-      @first-page="firstPage"
-      @prev-page="prevPage"
-      @next-page="nextPage"
-      @latest-page="latestPage"
-      @btn-page="btnPage"
-    />
+    </template>
   </section>
+  <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
+    <template #default>
+      <div class="page-todo__modal-form delete-todo-form">
+        <h3>Are you sure you want to delete todo?</h3>
+      </div>
+    </template>
+    <template #actions="{ close, confirm }">
+      <UiButton @click="close" label="Cancel" />
+      <UiButton @click="confirm" label="Delete todo" />
+    </template>
+  </UIModal>
+  <UIModal ref="editModalRef" title="Update Todo">
+    <ItemForm
+      ref="editFormRef"
+      :title="editingTodo?.title"
+      :description="editingTodo?.description"
+    />
+    <template #actions="{ close }">
+      <UiButton @click="close" label="Cancel" />
+      <UiButton @click="updateTodo" label="Update todo" />
+    </template>
+  </UIModal>
+
+  <UIModal ref="createModalRef" title="Create Todo">
+    <ItemForm ref="createFormRef" />
+
+    <template #actions="{ close }">
+      <UiButton @click="close" label="Cancel" />
+      <UiButton @click="createTodo" label="Create todo" />
+    </template>
+  </UIModal>
 </template>
 
 <script setup lang="ts">
@@ -122,6 +122,7 @@ const {
   btnPage,
   details,
   submitWithModal,
+  loading,
 } = usePageItem(getAll, pages, 'todos', messageHandler)
 
 const openEditForm = async (todo: Todo) => {
