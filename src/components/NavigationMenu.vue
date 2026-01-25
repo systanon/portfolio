@@ -1,45 +1,64 @@
 <template>
   <nav class="navigation-menu">
-    <AppLink
-      v-for="{ path, text, routeName } in navigationList"
-      :key="path"
-      :to="{ name: routeName }"
-      inactive-class="link"
-      exactActiveClass="link--active"
-    >
-      {{ text }}
-    </AppLink>
+    <div class="navigation-menu__items _left">
+      <AppLink
+        v-for="{ path, text, routeName } in left"
+        :key="path"
+        :to="{ name: routeName }"
+        inactive-class="link"
+        exactActiveClass="link--active"
+      >
+        {{ text }}
+      </AppLink>
+    </div>
+    <Logo />
+    <div class="navigation-menu__items _right">
+      <AppLink
+        v-for="{ path, text, routeName } in right"
+        :key="path"
+        :to="{ name: routeName }"
+        inactive-class="link"
+        exactActiveClass="link--active"
+      >
+        {{ text }}
+      </AppLink>
+    </div>
   </nav>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { byAuthorized, mainMenu, type NavigationMenu } from '@/config/main-menu'
-import { application } from '@/application'
-import UiButton from './ui/buttons/UiButton.vue'
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { byAuthorized, rightSide, leftSide } from '@/config/main-menu'
+import { useLogged } from '@/composables/useLogged'
 import AppLink from './AppLink.vue'
+import Logo from './Logo.vue'
 
-export default defineComponent({
-  name: 'NavigationMenu',
-  components: { UiButton, AppLink },
-  computed: {
-    isLogged() {
-      return application.isLogged
-    },
-    navigationList(): NavigationMenu {
-      return mainMenu.filter(byAuthorized(this.isLogged))
-    },
-  },
+const { isLogged } = useLogged()
+
+const right = computed(() => {
+  return rightSide.filter(byAuthorized(isLogged.value))
+})
+
+const left = computed(() => {
+  return leftSide.filter(byAuthorized(isLogged.value))
 })
 </script>
 <style scoped lang="scss">
 .navigation-menu {
-  display: flex;
-  align-content: center;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: rem(25);
-  margin: 0;
-  padding: 0;
+  width: 100%;
+
+  &__items {
+    display: flex;
+    gap: rem(25);
+  }
+  & ._left {
+    justify-content: flex-start;
+  }
+  & ._right {
+    justify-content: flex-end;
+  }
 }
 </style>
