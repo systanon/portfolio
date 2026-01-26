@@ -1,51 +1,36 @@
 <template>
-  <div
-    class="app-footer"
-    :style="{
-      '--x': `${x * 20}px`,
-      '--y': `${y * 20}px`,
-    }"
-  >
+  <div class="app-footer">
     <MainFooter />
   </div>
 </template>
 
 <script setup lang="ts">
 import MainFooter from './MainFooter.vue'
-
-defineProps<{
-  x: number
-  y: number
-}>()
 </script>
 
 <style lang="scss" scoped>
 .app-footer {
   position: relative;
   &:before {
-    background-image: url('@/assets/home-img/layer 1.png');
+    background-image: url('@/assets/home-img/moon-planet.png');
     content: '';
     position: fixed;
-    background-size: cover;
-    object-fit: contain;
+    background-repeat: no-repeat;
     background-position: center;
     width: 100%;
     height: 100%;
     left: 0;
-    bottom: 0;
+    top: 0;
+    transform: translateY(30%);
     z-index: -4;
   }
 }
-@include media-query('desktop') {
+
+@media screen and (min-width: 1921px) {
   .app-footer {
     &:before {
-      width: 140%;
-      height: 100%;
-      left: -15%;
-      bottom: -25%;
-      transform: translate(var(--x), var(--y));
-      transition: transform 0.1s ease-out;
-      will-change: transform;
+      background-size: cover;
+      background-repeat: no-repeat;
     }
   }
 }
