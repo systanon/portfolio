@@ -13,7 +13,7 @@
         <router-view />
       </div>
     </main>
-    <HomeFooter :x="offsetX" :y="offsetY" />
+    <HomeFooter />
   </section>
 </template>
 
@@ -73,7 +73,7 @@ onUnmounted(() => {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('@/assets/home-img/layer 4.png');
+    background-image: url('@/assets/home-img/space.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
