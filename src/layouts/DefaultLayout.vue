@@ -82,36 +82,31 @@ onUnmounted(() => {
 
   &::after {
     content: '';
+    top: 17%;
+    left: 50%;
     position: absolute;
-    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: rem(800);
+    max-height: rem(800);
     background-image: url('@/assets/home-img/earth.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    transform: translateX(-50%);
     z-index: -5;
-    top: -50%;
   }
 }
-@include media-query('tablet') {
-  .default-layout::after {
-    top: 15%;
-  }
-}
+
 @include media-query('desktop') {
   .default-layout {
     overflow: hidden;
 
     &::after {
-      top: 10%;
-      transform: translate(var(--x), var(--y));
+      transform: translate(var(--x), var(--y)) translateX(-50%);
       transition: transform 0.1s ease-out;
       will-change: transform;
     }
-  }
-}
-@include media-query('large-desktop') {
-  .default-layout::after {
-    top: 0%;
   }
 }
 </style>
