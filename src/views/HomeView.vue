@@ -1,9 +1,9 @@
 <template>
   <div class="home-page">
+    <h2 class="home-page__sub-title">Frontend Developer (Vue.js)</h2>
     <h1 class="home-page__title" :style="{ zIndex: zIndex }">
       Serhii Tustanovskyi
     </h1>
-    <h2 class="home-page__sub-title">Frontend Developer (Vue.js)</h2>
 
     <AppLink
       class="home-page__action"
@@ -60,13 +60,12 @@ onUnmounted(() => {
   text-align: center;
   &__title {
     color: var(--text-color-primary);
-    text-shadow: $text-shadow;
     position: relative;
   }
   &__sub-title {
-    color: var(--text-color-primary);
-    text-shadow: $text-shadow;
-    padding-bottom: rem(80);
+    padding-top: rem(43);
+    padding-bottom: rem(25);
+    color: var(--text-color-secondary);
   }
   &__description {
     background-color: var(--bg-primary);
@@ -90,10 +89,10 @@ onUnmounted(() => {
 @include media-query('tablet') {
   .home-page {
     &__title {
-      font-size: rem(150);
+      font-size: rem(110);
     }
     &__sub-title {
-      font-size: rem(50);
+      font-size: rem(45);
     }
   }
 }
