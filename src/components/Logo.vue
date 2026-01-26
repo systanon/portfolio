@@ -1,6 +1,6 @@
 <template>
   <AppLink :to="{ name: 'Home' }">
-    <UiIcon name="logo" :width="rem(80)" :height="rem(80)" />
+    <UiIcon name="logo" :width="rem(109)" :height="rem(97)" />
   </AppLink>
 </template>
 
