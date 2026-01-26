@@ -6,7 +6,7 @@
       '--y': `${offsetY * 10}px`,
     }"
   >
-    <Comets v-if="showCommets" />
+    <Comets v-if="showComets" />
     <AppHeader />
     <main class="default-layout__main">
       <div class="container">
@@ -30,7 +30,7 @@ defineOptions({
 
 const offsetX = ref(0)
 const offsetY = ref(0)
-const showCommets = ref(false)
+const showComets = ref(false)
 let frame: number | null = null
 
 function handleMouseMove(event: MouseEvent) {
@@ -42,14 +42,14 @@ function handleMouseMove(event: MouseEvent) {
   })
 }
 
-const showCommetsHandler = async () => {
+const showCometsHandler = async () => {
   await delay(2000)
-  showCommets.value = true
+  showComets.value = true
 }
 
 onMounted(() => {
   window.addEventListener('mousemove', handleMouseMove)
-  showCommetsHandler()
+  showCometsHandler()
 })
 
 onUnmounted(() => {
@@ -84,7 +84,7 @@ onUnmounted(() => {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('@/assets/home-img/layer 3.png');
+    background-image: url('@/assets/home-img/earth.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
