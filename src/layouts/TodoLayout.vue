@@ -30,7 +30,7 @@ import MainFooter from '@/components/MainFooter.vue'
   &:before {
     content: '';
     position: fixed;
-    background-image: url('@/assets/home-img/layer 4.png');
+    background-image: url('@/assets/home-img/space.png');
     background-size: cover;
     background-position: center;
     width: 100%;
