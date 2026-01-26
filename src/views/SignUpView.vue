@@ -89,19 +89,16 @@ const submitHandler = async () => {
 <style scoped lang="scss">
 .page-sign-up {
   display: flex;
-  min-height: 0;
   justify-content: center;
   margin-top: rem(80);
   &__form {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    scrollbar-gutter: stable both-edges;
     gap: 1rem;
     background-color: var(--bg-primary);
     padding: 2rem;
     border-radius: 1rem;
-    width: rem(400);
+    width: 100%;
     max-width: rem(400);
     &-title {
       text-align: center;

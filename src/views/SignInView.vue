@@ -53,19 +53,16 @@ const { email, password, v$, submit } = useSignInForm()
 <style scoped lang="scss">
 .page-sign-in {
   display: flex;
-  min-height: 0;
   justify-content: center;
   margin-top: 6rem;
   &__form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    overflow-y: auto;
-    scrollbar-gutter: stable both-edges;
     background-color: var(--bg-primary);
     padding: 2rem;
     border-radius: 1rem;
-    width: rem(400);
+    width: 100%;
     max-width: rem(400);
     &-title {
       text-align: center;
