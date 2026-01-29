@@ -14,8 +14,10 @@
           :key="index"
           class="pulse-item"
           :icon-name="tech.icon"
+          :isHover="isLast(index)"
           :width="tech.width"
           :height="tech.height"
+          @click="isLast(index) && router.push({ name: 'About' })"
         >
           <h2>
             {{ tech.text }}
@@ -37,6 +39,7 @@ import { ref, onMounted, onUnmounted, type ComponentPublicInstance } from 'vue'
 import Card from '@/components/Card.vue'
 import UiIcon from '@/components/ui/icons/UiIcon.vue'
 import { gsap } from 'gsap'
+import { useRouter } from 'vue-router'
 
 defineOptions({
   name: 'HomeView',
@@ -75,6 +78,7 @@ const techStack: Tech[] = [
     hasIcon: true,
   },
 ]
+const router = useRouter()
 
 const items = ref<ComponentPublicInstance[]>([])
 
@@ -89,6 +93,10 @@ const handleMouseMove = (): void => {
   timeoutId = setTimeout(() => {
     zIndex.value = DEFAULT_Z_INDEX
   }, 500)
+}
+
+const isLast = (index: number) => {
+  return index === techStack.length - 1
 }
 
 const cardPulse = () => {

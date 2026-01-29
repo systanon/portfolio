@@ -1,5 +1,5 @@
 <template>
-  <div class="card-component">
+  <div :class="['card-component', { _hoverable: isHover }]">
     <UiIcon
       :name="iconName"
       color="secondary"
@@ -17,6 +17,7 @@ defineProps<{
   iconName: string
   width: number
   height: number
+  isHover?: boolean
 }>()
 </script>
 
@@ -31,5 +32,19 @@ defineProps<{
   flex: 1;
   padding: rem(55);
   gap: rem(30);
+  &._hoverable {
+    cursor: pointer;
+
+    &:hover {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0) 0%,
+          rgba(255, 195, 0, 0.2) 100%
+        ),
+        rgba(10, 11, 9, 0.6);
+    }
+    backdrop-filter: blur(5.9px);
+  }
 }
 </style>
