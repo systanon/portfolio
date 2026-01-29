@@ -12,6 +12,7 @@
         iconHover
         style="--icon-hover-primary: var(--icon-hover-secondary)"
         @click="toggleMenu"
+        iconColor="tertiary"
       />
 
       <div class="note-item__menu-actions">
@@ -20,6 +21,7 @@
           iconName="edit"
           :btnHover="false"
           iconHover
+          iconColor="tertiary"
           style="--icon-hover-primary: var(--icon-hover-secondary)"
           @click="emit('edit', note)"
         />
@@ -29,6 +31,7 @@
           :btnHover="false"
           iconHover
           style="--icon-hover-primary: var(--icon-hover-secondary)"
+          iconColor="tertiary"
           @click="emit('delete', note)"
         />
       </div>
@@ -107,9 +110,6 @@ onClickOutside(menuRef, () => (menuOpen.value = false))
       flex-direction: column;
       gap: rem(16);
     }
-  }
-  :deep(.ui-icon) {
-    color: var(--icon-color-secondary);
   }
   :deep(._icon-hover) {
     &:hover {

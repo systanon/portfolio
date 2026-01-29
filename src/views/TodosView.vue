@@ -4,6 +4,7 @@
     <UiButtonIcon
       class="page-todo__create"
       iconName="plus"
+      iconColor="tertiary"
       @click="openCreateForm"
     >
       <template #prepend>
@@ -185,9 +186,6 @@ const completeHandler = ({
     margin: 0 auto;
     background-color: $bg-menu-secondary;
     border-radius: rem(6);
-    :deep(.ui-icon) {
-      color: var(--icon-color-secondary);
-    }
     &-text {
       padding-right: 1rem;
       font-size: 1.5rem;
