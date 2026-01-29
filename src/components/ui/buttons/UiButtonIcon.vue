@@ -7,14 +7,14 @@
     ]"
   >
     <slot name="prepend"></slot>
-    <UIIcon :name="iconName" :size="iconSize" />
+    <UIIcon :name="iconName" :size="iconSize" :color="iconColor" />
     <slot name="append"></slot>
   </button>
 </template>
 
 <script lang="ts" setup>
 import UIIcon from '@/components/ui/icons/UiIcon.vue'
-import type { IconSize } from '@/components/ui/icons/UiIcon.vue'
+import type { IconColor, IconSize } from '@/components/ui/icons/UiIcon.vue'
 
 defineOptions({
   name: 'UiButtonIcon',
@@ -32,12 +32,13 @@ withDefaults(
     iconSize?: IconSize
     iconHover?: boolean
     btnHover?: boolean
+    iconColor?: IconColor
   }>(),
   {
     disabled: false,
     iconHover: false,
     btnHover: true,
-  }
+  },
 )
 </script>
 

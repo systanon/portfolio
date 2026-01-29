@@ -19,6 +19,7 @@
         :btnHover="false"
         iconHover
         @click="toggleMenu"
+        iconColor="tertiary"
         style="--icon-hover-primary: var(--icon-hover-secondary)"
       />
       <div v-if="menuOpen" class="todo-item__menu-actions">
@@ -27,6 +28,7 @@
           style="--i: 2; --icon-hover-primary: var(--icon-hover-secondary)"
           iconName="edit"
           :btnHover="false"
+          iconColor="tertiary"
           iconHover
           @click="$emit('edit', todo)"
         />
@@ -35,6 +37,7 @@
           style="--i: 1; --icon-hover-primary: var(--icon-hover-secondary)"
           iconName="trash"
           :btnHover="false"
+          iconColor="tertiary"
           iconHover
           @click="$emit('delete', todo)"
         />
@@ -183,9 +186,6 @@ onClickOutside(menuRef, () => (menuOpen.value = false))
     border-color: var(--todo-checked);
   }
 
-  :deep(.ui-icon) {
-    color: var(--icon-color-secondary);
-  }
   :deep(._icon-hover) {
     &:hover {
       color: var(--icon-hover-secondary);

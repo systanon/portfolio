@@ -1,6 +1,6 @@
 <template>
   <svg
-    :class="['ui-icon', sizeClass]"
+    :class="['ui-icon', sizeClass, colorClass]"
     :width="width"
     :height="height"
     aria-hidden="true"
@@ -18,6 +18,7 @@ defineOptions({
 })
 
 export type IconSize = 'small' | 'medium' | 'large'
+export type IconColor = 'primary' | 'secondary' | 'tertiary'
 
 type UiIcon = {
   href?: string
@@ -25,23 +26,38 @@ type UiIcon = {
   size?: IconSize
   width?: number | string
   height?: number | string
+  color?: IconColor
 }
 
 const props = withDefaults(defineProps<UiIcon>(), {
   size: 'large',
   name: 'default',
+  color: 'primary',
 })
 const localHref = computed(() => props.href || `#${props.name}`)
 
 const sizeClass = computed(() =>
   props.width && props.height ? null : `_${props.size}`,
 )
+const colorClass = computed(() => `_${props.color}-color`)
 </script>
 
 <style lang="scss" scoped>
 .ui-icon {
-  color: var(--icon-color-primary);
-  fill: currentColor;
+  &._primary-color {
+    color: var(--icon-color-primary);
+    fill: currentColor;
+  }
+
+  &._secondary-color {
+    color: var(--icon-color-secondary);
+    fill: currentColor;
+  }
+
+  &._tertiary-color {
+    color: var(--icon-color-tertiary);
+    fill: currentColor;
+  }
 
   &._small {
     width: rem(16);
