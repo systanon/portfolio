@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import { router } from './plugins/router'
 import { application, wSService } from './application'
+import gsap from '@/plugins/gsap'
 
 import '@/sass/_theme.scss'
 import 'floating-vue/dist/style.css'
@@ -18,7 +19,6 @@ if ('serviceWorker' in navigator) {
 
 const app = createApp(App)
 
-
 app.provide('application', application)
 
 app.use(createPinia())
@@ -26,6 +26,8 @@ app.use(createPinia())
 app.use(router)
 
 app.use(FloatingVue)
+
+app.use(gsap)
 
 application.run()
 

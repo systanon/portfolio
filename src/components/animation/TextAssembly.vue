@@ -6,7 +6,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, type ComponentPublicInstance } from 'vue'
-import gsap from 'gsap'
+import { useGsap } from '@/composables/useGsap'
+
+const gsap = useGsap()
 
 const props = defineProps<{
   text: string
