@@ -1,57 +1,27 @@
 <template>
   <div class="home-page">
-    <h2 class="home-page__sub-title">Frontend Developer (Vue.js)</h2>
-    <h1 class="home-page__title" :style="{ zIndex: zIndex }">
-      Serhii Tustanovskyi
+    <h2 class="home-page__sub-title">
+      <TextAssembly text="Frontend Developer (Vue.js)" />
+    </h2>
+    <h1 class="home-page__title">
+      <TextSoftReveal text="Serhii Tustanovskyi" />
     </h1>
 
     <section class="home-page__tech">
       <h2 class="home-page__tech-title">My common stack</h2>
-      <div class="home-page__tech-info">
-        <Card
-          ref="items"
-          v-for="(tech, index) in techStack"
-          :key="index"
-          class="pulse-item"
-          :icon-name="tech.icon"
-          :isHover="isLast(index)"
-          :width="tech.width"
-          :height="tech.height"
-          @click="isLast(index) && router.push({ name: 'About' })"
-        >
-          <h2>
-            {{ tech.text }}
-            <UiIcon
-              v-if="tech.hasIcon"
-              name="arrow"
-              color="tertiary"
-              size="medium"
-            />
-          </h2>
-        </Card>
-      </div>
+      <CardListPulse :techList="techList" />
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, type ComponentPublicInstance } from 'vue'
-import Card from '@/components/Card.vue'
-import UiIcon from '@/components/ui/icons/UiIcon.vue'
-import { gsap } from 'gsap'
-import { useRouter } from 'vue-router'
+import CardListPulse, {
+  type Tech,
+} from '@/components/animation/CardListPulse.vue'
+import TextAssembly from '@/components/animation/TextAssembly.vue'
+import TextSoftReveal from '@/components/animation/TextSoftReveal.vue'
 
-defineOptions({
-  name: 'HomeView',
-})
-type Tech = {
-  icon: string
-  text: string
-  width: number
-  height: number
-  hasIcon?: boolean
-}
-const techStack: Tech[] = [
+const techList: Tech[] = [
   {
     icon: 'vue-logo',
     text: 'Vue.js',
@@ -78,73 +48,16 @@ const techStack: Tech[] = [
     hasIcon: true,
   },
 ]
-const router = useRouter()
-
-const items = ref<ComponentPublicInstance[]>([])
-
-const DEFAULT_Z_INDEX = -4
-
-const zIndex = ref<number>(DEFAULT_Z_INDEX)
-let timeoutId: ReturnType<typeof setTimeout> | null = null
-
-const handleMouseMove = (): void => {
-  zIndex.value = 10
-  if (timeoutId !== null) clearTimeout(timeoutId)
-  timeoutId = setTimeout(() => {
-    zIndex.value = DEFAULT_Z_INDEX
-  }, 500)
-}
-
-const isLast = (index: number) => {
-  return index === techStack.length - 1
-}
-
-const cardPulse = () => {
-  const pulseTimes = 3
-  const delay = 2
-  const tl = gsap.timeline({
-    repeat: -1,
-  })
-  items.value.forEach((card: ComponentPublicInstance) => {
-    const el = card.$el
-    const pulseTimeline = gsap.timeline()
-    pulseTimeline
-      .to(el, {
-        scale: 1.1,
-      })
-      .to(el, {
-        boxShadow: '0px 0px 41px 11px rgba(62, 203, 252, 0.5)',
-        duration: 0.3,
-        ease: 'power1.inOut',
-        repeat: pulseTimes * 2 - 1,
-        yoyo: true,
-      })
-      .to(el, {
-        scale: 1,
-        ease: 'power1.inOut',
-      })
-    tl.add(pulseTimeline, `+=${delay}`)
-  })
-}
-
-onMounted(() => {
-  cardPulse()
-  window.addEventListener('mousemove', handleMouseMove)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('mousemove', handleMouseMove)
-  if (timeoutId !== null) clearTimeout(timeoutId)
-})
 </script>
 
 <style scoped lang="scss">
 .home-page {
   text-align: center;
   &__title {
-    color: var(--text-color-primary);
-    position: relative;
     padding-bottom: rem(100);
+    & * {
+      color: var(--text-color-primary);
+    }
   }
   &__sub-title {
     padding-top: rem(43);
@@ -170,12 +83,6 @@ onUnmounted(() => {
   }
   &__tech-title {
     padding-bottom: rem(70);
-  }
-  &__tech-info {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: rem(15);
   }
 }
 @include media-query('tablet') {
