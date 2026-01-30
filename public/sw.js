@@ -1,4 +1,4 @@
-const CACHE_NAME = 'app-cache-v3'
+const CACHE_NAME = 'app-cache-v3.1'
 
 const CACHE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.svg']
 

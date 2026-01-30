@@ -180,6 +180,7 @@ const completeHandler = ({
   height: 100%;
 
   &__title {
+    padding-top: rem(43);
     text-align: center;
   }
   &__create {
