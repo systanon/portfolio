@@ -73,7 +73,7 @@ onUnmounted(() => {
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('@/assets/home-img/space.png');
+    background-image: url('@/assets/home-img/space.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
