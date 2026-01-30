@@ -5,8 +5,10 @@
 </template>
 
 <script lang="ts" setup>
-import { gsap } from 'gsap'
 import { onMounted, ref, type ComponentPublicInstance } from 'vue'
+import { useGsap } from '@/composables/useGsap'
+
+const gsap = useGsap()
 
 defineProps<{
   text: string

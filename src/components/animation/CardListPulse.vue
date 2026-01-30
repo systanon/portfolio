@@ -25,11 +25,13 @@
 </template>
 
 <script setup lang="ts">
-import Card from '@/components/Card.vue'
-import UiIcon from '@/components/ui/icons/UiIcon.vue'
-import { gsap } from 'gsap'
 import { onMounted, ref, type ComponentPublicInstance } from 'vue'
 import { useRouter } from 'vue-router'
+import Card from '@/components/Card.vue'
+import UiIcon from '@/components/ui/icons/UiIcon.vue'
+import { useGsap } from '@/composables/useGsap'
+
+const gsap = useGsap()
 
 export type Tech = {
   icon: string
