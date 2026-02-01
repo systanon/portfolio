@@ -185,12 +185,6 @@ const completeHandler = ({
   }
   &__create {
     margin: 0 auto;
-    background-color: $bg-menu-secondary;
-    border-radius: rem(6);
-    &-text {
-      padding-right: 1rem;
-      font-size: 1.5rem;
-    }
   }
 
   &__todos {

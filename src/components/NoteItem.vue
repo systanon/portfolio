@@ -8,9 +8,7 @@
       <UiButtonIcon
         :class="['note-item__menu-btn', { _open: menuOpen }]"
         iconName="arrow-up-left"
-        :btnHover="false"
-        iconHover
-        style="--icon-hover-primary: var(--icon-hover-secondary)"
+        :withBorder="false"
         @click="toggleMenu"
         iconColor="tertiary"
       />
@@ -19,18 +17,14 @@
         <UiButtonIcon
           class="note-item__menu-item"
           iconName="edit"
-          :btnHover="false"
-          iconHover
+          :withBorder="false"
           iconColor="tertiary"
-          style="--icon-hover-primary: var(--icon-hover-secondary)"
           @click="emit('edit', note)"
         />
         <UiButtonIcon
           class="note-item__menu-item"
           iconName="trash"
-          :btnHover="false"
-          iconHover
-          style="--icon-hover-primary: var(--icon-hover-secondary)"
+          :withBorder="false"
           iconColor="tertiary"
           @click="emit('delete', note)"
         />

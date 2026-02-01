@@ -16,29 +16,25 @@
       <UiButtonIcon
         class="todo-item__menu-open"
         iconName="arrow-up-left"
-        :btnHover="false"
-        iconHover
+        :withBorder="false"
         @click="toggleMenu"
         iconColor="tertiary"
-        style="--icon-hover-primary: var(--icon-hover-secondary)"
       />
       <div v-if="menuOpen" class="todo-item__menu-actions">
         <UiButtonIcon
           class="todo-item__menu-item"
           style="--i: 2; --icon-hover-primary: var(--icon-hover-secondary)"
           iconName="edit"
-          :btnHover="false"
+          :withBorder="false"
           iconColor="tertiary"
-          iconHover
           @click="$emit('edit', todo)"
         />
         <UiButtonIcon
           class="todo-item__menu-item"
           style="--i: 1; --icon-hover-primary: var(--icon-hover-secondary)"
           iconName="trash"
-          :btnHover="false"
+          :withBorder="false"
           iconColor="tertiary"
-          iconHover
           @click="$emit('delete', todo)"
         />
       </div>

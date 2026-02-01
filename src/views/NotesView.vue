@@ -4,7 +4,6 @@
     <UiButtonIcon
       class="page-note__create"
       iconName="plus"
-      btn-hover
       @click="openCreateForm"
     />
     <template v-if="!loading">
@@ -28,6 +27,7 @@
         @next-page="nextPage"
       />
       <UIPagination
+        v-else
         class="page-note__pagination"
         v-model:page="pagination.page"
         v-model:pages="pagination.pages"
@@ -58,7 +58,7 @@
     />
     <template #actions="{ close }">
       <UiButton @click="close" label="Cancel" />
-      <UiButton @click="updateNote" label="Update todo" />
+      <UiButton @click="updateNote" label="Update note" />
     </template>
   </UIModal>
   <UIModal ref="createModalRef" title="Create Note" class="page-note__modal">
@@ -112,8 +112,8 @@ const {
   submitWithModal,
 } = usePageItem(getAll, pages, 'notes', messageHandler)
 
-const openEditForm = async (todo: Note) => {
-  editingNote.value = todo
+const openEditForm = async (note: Note) => {
+  editingNote.value = note
   await editModalRef.value?.open()
   editingNote.value = undefined
 }
@@ -158,8 +158,6 @@ const createNote = async () => {
 
   &__create {
     margin: 0 auto;
-    background-color: $bg-menu-secondary;
-    border-radius: rem(6);
   }
 
   &__notes {
