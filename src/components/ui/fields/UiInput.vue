@@ -15,9 +15,10 @@
 
       <UiButtonIcon
         v-if="iconName"
+        class="ui-input__icon"
         :iconName="iconName"
         @click="$emit('iconClick')"
-        class="ui-input__icon"
+        :withBorder="false"
       />
     </template>
   </BaseField>
