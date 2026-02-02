@@ -14,6 +14,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useGsap } from '@/composables/useGsap'
+import { calculateTarget } from '@/utils/calculateTarget'
+
+const MAX_COMETS = 3
+const DELAYED_CALL = 2
 
 type Comet = {
   id: number
@@ -26,10 +30,9 @@ type Comet = {
 const gsap = useGsap()
 const comets = ref<Comet[]>([])
 const cometRefs = new Map<number, HTMLElement>()
+let spawnTween: gsap.core.Tween | null = null
 
 let cometId = 0
-let cometInterval: ReturnType<typeof setInterval> | null = null
-const MAX_COMETS = 3
 
 const spawnComet = () => {
   if (comets.value.length >= MAX_COMETS) return
@@ -50,7 +53,9 @@ const animateComet = (comet: Comet) => {
   const element = cometRefs.get(comet.id)
   if (!element) return
 
+  const { angle, startX, startY } = comet
   const tail = element.querySelector<HTMLElement>('.comets-field__tail')
+  const { x, y } = calculateTarget(startX, startY, angle)
 
   gsap.set(element, {
     x: comet.startX,
@@ -75,16 +80,11 @@ const animateComet = (comet: Comet) => {
     },
   })
 
-  const distance = 800 + Math.random() * 200
-  const rad = (comet.angle * Math.PI) / 180
-  const targetX = comet.startX + Math.cos(rad) * distance
-  const targetY = comet.startY + Math.sin(rad) * distance
-
   tl.to(
     element,
     {
-      x: targetX,
-      y: targetY,
+      x,
+      y,
       duration: comet.duration,
       ease: 'power1.in',
     },
@@ -105,12 +105,19 @@ const animateComet = (comet: Comet) => {
   }
 }
 
+const scheduleSpawn = () => {
+  spawnTween = gsap.delayedCall(DELAYED_CALL, () => {
+    spawnComet()
+    scheduleSpawn()
+  })
+}
+
 onMounted(() => {
-  cometInterval = setInterval(spawnComet, 1600)
+  scheduleSpawn()
 })
 
 onUnmounted(() => {
-  if (cometInterval) clearInterval(cometInterval)
+  spawnTween?.kill()
 })
 </script>
 
