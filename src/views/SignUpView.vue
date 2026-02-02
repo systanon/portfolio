@@ -37,6 +37,7 @@
           :to="{ name: 'SignIn' }"
           inactive-class="link-secondary"
           active-class="link-secondary--active"
+          @navigate="(navigate) => navigate()"
           >Sign In</AppLink
         >
       </div>

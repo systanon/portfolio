@@ -25,6 +25,7 @@
           inactive-class="link-secondary"
           active-class="link-secondary--active"
           :to="{ name: 'ForgotPassword' }"
+          @navigate="(navigate) => navigate()"
         >
           Forgot password?</AppLink
         >
@@ -33,6 +34,7 @@
           :to="{ name: 'ResendEmailVerification' }"
           inactive-class="link-secondary"
           active-class="link-secondary--active"
+          @navigate="(navigate) => navigate()"
           >Resend verification email?</AppLink
         >
       </div>

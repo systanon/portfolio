@@ -1,5 +1,5 @@
 <template>
-  <AppLink :to="{ name: 'Home' }">
+  <AppLink :to="{ name: 'Home' }" @navigate="(navigate) => navigate()">
     <UiIcon name="logo" :width="rem(109)" :height="rem(97)" />
   </AppLink>
 </template>
