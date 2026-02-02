@@ -7,6 +7,7 @@
         :to="{ name: routeName }"
         inactive-class="link"
         exactActiveClass="link--active"
+        @navigate="onLinkNavigate"
       >
         {{ text }}
       </AppLink>
@@ -19,6 +20,7 @@
         :to="{ name: routeName }"
         inactive-class="link"
         exactActiveClass="link--active"
+        @navigate="onLinkNavigate"
       >
         {{ text }}
       </AppLink>
@@ -42,6 +44,10 @@ const right = computed(() => {
 const left = computed(() => {
   return leftSide.filter(byAuthorized(isLogged.value))
 })
+
+const onLinkNavigate = (navigate: () => void) => {
+  navigate()
+}
 </script>
 <style scoped lang="scss">
 .navigation-menu {

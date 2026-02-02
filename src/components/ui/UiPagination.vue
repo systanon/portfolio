@@ -4,14 +4,16 @@
       @click="$emit('firstPage')"
       :disabled="page <= 1"
       iconName="left-arrow"
+      :withBorder="false"
       class="ui-pagination__arrows arrow-left"
     />
 
     <UiButton
       v-if="pages > VISIBLE_PAGES"
-      :class="['ui-pagination__buttons', { _active: page === 1 }]"
+      label="1"
+      class="ui-pagination__buttons"
+      :active="page === 1"
       @click="$emit('btnPage', 1)"
-      :label="'1'"
     />
 
     <span
@@ -23,9 +25,10 @@
     <UiButton
       v-for="_page in visiblePages"
       :key="_page"
-      :class="['ui-pagination__buttons', { _active: page === _page }]"
+      class="ui-pagination__buttons"
+      :active="page === _page"
       @click="$emit('btnPage', _page)"
-      :label="`${_page}`"
+      :label="_page"
     />
 
     <span
@@ -37,14 +40,16 @@
 
     <UiButton
       v-if="pages > VISIBLE_PAGES"
-      :class="['ui-pagination__buttons', { _active: page === pages }]"
+      class="ui-pagination__buttons"
+      :active="page === pages"
+      :label="pages"
       @click="$emit('btnPage', pages)"
-      :label="`${pages}`"
     />
 
     <UiButtonIcon
       @click="$emit('latestPage')"
       :disabled="page >= pages"
+      :withBorder="false"
       class="ui-pagination__arrows arrow-right"
       iconName="right-arrow"
     />
@@ -95,28 +100,13 @@ const visiblePages = computed(() => {
   display: flex;
   justify-content: center;
   text-align: center;
-  gap: 1rem;
+  gap: rem(16);
   padding: rem(30) 0;
-  &__buttons {
-    &._active {
-      :deep(.ui-button__content) {
-        color: var(--active-primary);
-      }
-    }
-  }
   &__dots {
     display: flex;
     flex-direction: column;
     justify-content: center;
     font-size: rem(40);
-    color: var(--text-active-primary);
-  }
-  :deep(.ui-button__content) {
-    font-size: 1.5rem;
-    color: var(--text-active-primary);
-  }
-  :deep(.ui-button) {
-    min-width: 2.5rem;
   }
 }
 </style>

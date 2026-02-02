@@ -4,6 +4,7 @@
       @click="$emit('prevPage')"
       :disabled="page <= 1"
       iconName="left-arrow"
+      :withBorder="false"
       class="ui-pagination-mobile__arrow"
     />
 
@@ -13,6 +14,7 @@
       @click="$emit('nextPage')"
       :disabled="page >= pages"
       iconName="right-arrow"
+      :withBorder="false"
       class="ui-pagination-mobile__arrow"
     />
   </div>
@@ -41,20 +43,11 @@ withDefaults(defineProps<Pagination>(), {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: rem(16);
   padding: rem(20) 0;
 
   &__info {
-    font-size: 1.2rem;
-    font-weight: 500;
     color: var(--text-active-primary);
-  }
-
-  &__arrow {
-    :deep(.ui-button__content) {
-      font-size: 1.5rem;
-      color: var(--text-active-primary);
-    }
   }
 }
 </style>

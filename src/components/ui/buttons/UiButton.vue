@@ -1,51 +1,57 @@
 <template>
-  <button :disabled="disabled" class="ui-button" :type="type">
+  <button
+    :disabled="disabled"
+    :class="['ui-button', { _active: active }]"
+    :type="type"
+  >
     <slot name="prepend"></slot>
-    <span class="ui-button__content">
-      <slot name="default">
-        {{ label }}
-      </slot>
-    </span>
+    <slot name="default">
+      {{ label }}
+    </slot>
     <slot name="append"></slot>
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent, type PropType } from 'vue'
+<script lang="ts" setup>
+export type ButtonType = 'button' | 'submit' | 'reset'
 
-export default defineComponent({
-  name: 'UiButton',
-  props: {
-    label: {
-      type: String,
-      default: '',
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    type: {
-      type: String as PropType<'button' | 'submit' | 'reset'>,
-      default: 'button',
-    },
+withDefaults(
+  defineProps<{
+    label?: string | number
+    disabled?: boolean
+    type?: ButtonType
+    active?: boolean
+  }>(),
+  {
+    label: '',
+    disabled: false,
+    type: 'button',
+    active: false,
   },
-})
+)
 </script>
 
 <style lang="scss" scoped>
 .ui-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
-  border: none;
   color: var(--text-color-secondary);
-  text-align: center;
+  border: 1px solid var(--border-color);
   cursor: pointer;
-  position: relative;
-  padding: rem(18);
+  padding: 0 rem(18);
   border-radius: rem(6);
-  transition: box-shadow 0.4s ease;
   font-size: rem(18);
-  &:hover {
-    box-shadow: var(--btn-shadow);
+  height: rem(60);
+  min-width: rem(60);
+
+  &._active {
+    color: var(--text-color-primary);
+    box-shadow: inset 0 0 0 1px var(--border-hover-color);
+  }
+  &:hover:not(._active) {
+    box-shadow: inset 0 0 0 1px var(--border-hover-color);
   }
   &:disabled {
     opacity: $disabled-opacity;

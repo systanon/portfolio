@@ -1,10 +1,7 @@
 <template>
   <button
     :disabled="disabled"
-    :class="[
-      'ui-button-icon',
-      { '_icon-hover': iconHover, '_btn-hover': btnHover },
-    ]"
+    :class="['ui-button-icon', { _bordered: withBorder }]"
   >
     <slot name="prepend"></slot>
     <UIIcon :name="iconName" :size="iconSize" :color="iconColor" />
@@ -30,40 +27,41 @@ withDefaults(
     iconName: string
     disabled?: boolean
     iconSize?: IconSize
-    iconHover?: boolean
-    btnHover?: boolean
+    withBorder?: boolean
     iconColor?: IconColor
   }>(),
   {
     disabled: false,
-    iconHover: false,
-    btnHover: true,
+    withBorder: true,
   },
 )
 </script>
 
 <style lang="scss" scoped>
 .ui-button-icon {
-  padding: rem(16);
-  border: none;
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text-color-secondary);
   cursor: pointer;
-  position: relative;
-  background-color: transparent;
-  font-size: rem(18);
+  padding: 0 rem(18);
   border-radius: rem(6);
-  gap: rem(10);
-  &._btn-hover {
+  font-size: rem(18);
+  height: rem(60);
+  min-width: rem(60);
+  gap: rem(15);
+  &._bordered {
+    border: 1px solid var(--border-color);
     &:hover {
-      box-shadow: var(--btn-shadow);
+      box-shadow: inset 0 0 0 1px var(--border-hover-color);
     }
   }
   &:disabled {
     pointer-events: none;
     opacity: $disabled-opacity;
   }
-  &._icon-hover {
+  &:not(._bordered) {
     &:hover {
       :deep(.ui-icon) {
         color: var(--icon-hover-primary);

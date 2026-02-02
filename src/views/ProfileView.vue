@@ -33,6 +33,7 @@
               field.value.value === field.originalValue
             "
             @click="submitField(key)"
+            :withBorder="false"
             iconName="save"
           />
         </div>
