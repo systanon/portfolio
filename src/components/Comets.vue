@@ -4,141 +4,144 @@
       v-for="comet in comets"
       :key="comet.id"
       class="comets-field__comet"
-      :style="{
-        '--angle': comet.angle + 'deg',
-        left: comet.left + 'px',
-        top: comet.top + 'px',
-        animationDelay: comet.delay + 's',
-        animationDuration: comet.duration + 's',
-        transform: `rotate(${comet.angle}deg)`,
-      }"
-    />
+      :ref="(el) => cometRefs.set(comet.id, el as HTMLElement)"
+    >
+      <div class="comets-field__tail"></div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useGsap } from '@/composables/useGsap'
 
 type Comet = {
   id: number
-  top: number
-  left: number
-  delay: number
-  duration: number
+  startX: number
+  startY: number
   angle: number
+  duration: number
 }
-let frame: number | null = null
 
-let timeoutId: ReturnType<typeof setTimeout> | null = null
-
+const gsap = useGsap()
 const comets = ref<Comet[]>([])
+const cometRefs = new Map<number, HTMLElement>()
+
 let cometId = 0
 let cometInterval: ReturnType<typeof setInterval> | null = null
+const MAX_COMETS = 3
 
 const spawnComet = () => {
+  if (comets.value.length >= MAX_COMETS) return
+
   const id = cometId++
-  const left = Math.random() * window.innerWidth * 0.7
-  const top = -100
-  const delay = Math.random() * 0.5
-  const duration = 3 + Math.random() * 2
-  const angle = 35 + Math.random() * 10
+  const startX = Math.random() * window.innerWidth * 0.8
+  const startY = -50
+  const angle = 30 + Math.random() * 30
+  const duration = 2 + Math.random() * 2
 
-  comets.value.push({ id, top, left, delay, duration, angle })
+  const comet: Comet = { id, startX, startY, angle, duration }
+  comets.value.push(comet)
 
-  setTimeout(() => {
-    comets.value = comets.value.filter((c) => c.id !== id)
-  }, (delay + duration) * 1000)
+  requestAnimationFrame(() => animateComet(comet))
 }
 
-const spawnCometRAF = () => {
-  if (frame) return
-  frame = requestAnimationFrame(() => {
-    spawnComet()
-    frame = null
+const animateComet = (comet: Comet) => {
+  const element = cometRefs.get(comet.id)
+  if (!element) return
+
+  const tail = element.querySelector<HTMLElement>('.comets-field__tail')
+
+  gsap.set(element, {
+    x: comet.startX,
+    y: comet.startY,
+    rotation: comet.angle,
   })
+
+  if (tail) {
+    gsap.set(tail, {
+      width: 0,
+      opacity: 0.8,
+      scaleX: 1,
+      transformOrigin: 'right center',
+      xPercent: -100,
+    })
+  }
+
+  const tl = gsap.timeline({
+    onComplete: () => {
+      comets.value = comets.value.filter((c) => c.id !== comet.id)
+      cometRefs.delete(comet.id)
+    },
+  })
+
+  const distance = 800 + Math.random() * 200
+  const rad = (comet.angle * Math.PI) / 180
+  const targetX = comet.startX + Math.cos(rad) * distance
+  const targetY = comet.startY + Math.sin(rad) * distance
+
+  tl.to(
+    element,
+    {
+      x: targetX,
+      y: targetY,
+      duration: comet.duration,
+      ease: 'power1.in',
+    },
+    0,
+  )
+
+  if (tail) {
+    tl.to(
+      tail,
+      {
+        width: 150 + Math.random() * 100,
+        opacity: 0,
+        duration: comet.duration,
+        ease: 'power1.in',
+      },
+      0,
+    )
+  }
 }
 
 onMounted(() => {
-  cometInterval = setInterval(spawnCometRAF, 1800)
+  cometInterval = setInterval(spawnComet, 1600)
 })
 
 onUnmounted(() => {
-  if (timeoutId !== null) clearTimeout(timeoutId)
-  if (cometInterval !== null) clearInterval(cometInterval)
+  if (cometInterval) clearInterval(cometInterval)
 })
 </script>
 
 <style scoped lang="scss">
 .comets-field {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   pointer-events: none;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
   z-index: -5;
+
   &__comet {
     position: absolute;
-    width: 8px;
-    height: 8px;
-    background: radial-gradient(circle, white 0%, rgba(255, 255, 255, 0) 70%);
+    width: 4px;
+    height: 4px;
+    background: #fff;
     border-radius: 50%;
-    box-shadow: 0 0 15px 6px rgba(255, 255, 255, 0.7);
-    filter: drop-shadow(0 0 6px white);
-    opacity: 0.9;
-    animation-name: comet-fly;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 60px;
-      height: 4px;
-      background: linear-gradient(
-        to left,
-        rgba(255, 255, 255, 0.8),
-        rgba(255, 255, 255, 0)
-      );
-      filter: blur(3px);
-      border-radius: 2px;
-
-      transform: translate(-100%, -50%);
-      transform-origin: left center;
-
-      animation-name: tail-grow-fade;
-      animation-timing-function: ease-out;
-      animation-fill-mode: forwards;
-      animation-duration: inherit;
-      animation-delay: inherit;
-    }
+    box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.8);
   }
-}
 
-@keyframes comet-fly {
-  0% {
-    transform: translate(0, 0) rotate(var(--angle));
-    opacity: 1;
-    box-shadow: 0 0 15px 8px rgba(255, 255, 255, 0.7);
-  }
-  100% {
-    transform: translate(400px, 900px) rotate(var(--angle));
-    opacity: 0;
-    box-shadow: 0 0 6px 3px rgba(255, 255, 255, 0.2);
-  }
-}
-
-@keyframes tail-grow-fade {
-  0% {
-    opacity: 1;
-    width: 50px;
-  }
-  100% {
-    opacity: 0;
-    width: 150px;
+  &__tail {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.9)
+    );
+    pointer-events: none;
   }
 }
 </style>
