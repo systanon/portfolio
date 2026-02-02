@@ -1,28 +1,31 @@
 <template>
-  <a :href="href" @click="navigate" :class="classes">
+  <a :href="href" @click.prevent="emit('navigate', navigate)" :class="classes">
     <slot />
   </a>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
-import { RouterLink, useLink } from 'vue-router'
+import { useLink, type RouterLinkProps } from 'vue-router'
 
-const props = defineProps({
-  ...RouterLink.props,
-  inactiveClass: {
-    type: String,
-    default: '',
+const props = withDefaults(
+  defineProps<
+    RouterLinkProps & {
+      inactiveClass?: string
+      activeClass?: string
+      exactActiveClass?: string
+    }
+  >(),
+  {
+    inactiveClass: '',
+    activeClass: 'is-active',
+    exactActiveClass: 'is-exact-active',
   },
-  activeClass: {
-    type: String,
-    default: 'is-active',
-  },
-  exactActiveClass: {
-    type: String,
-    default: 'is-exact-active',
-  },
-})
+)
+
+const emit = defineEmits<{
+  (e: 'navigate', navigate: () => void): void
+}>()
 
 const { navigate, href, isActive, isExactActive } = useLink(props)
 
