@@ -6,7 +6,7 @@
       '--y': `${offsetY * 10}px`,
     }"
   >
-    <Comets v-if="showComets" />
+    <Comets />
     <AppHeader />
     <main class="default-layout__main">
       <div class="container">
@@ -22,7 +22,6 @@ import HomeFooter from '@/components/HomeFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import Comets from '@/components/Comets.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
-import { delay } from '@/helpers/delay'
 
 defineOptions({
   name: 'DefaultLayout',
@@ -30,7 +29,6 @@ defineOptions({
 
 const offsetX = ref(0)
 const offsetY = ref(0)
-const showComets = ref(false)
 let frame: number | null = null
 
 function handleMouseMove(event: MouseEvent) {
@@ -42,14 +40,8 @@ function handleMouseMove(event: MouseEvent) {
   })
 }
 
-const showCometsHandler = async () => {
-  await delay(2000)
-  showComets.value = true
-}
-
 onMounted(() => {
   window.addEventListener('mousemove', handleMouseMove)
-  showCometsHandler()
 })
 
 onUnmounted(() => {
