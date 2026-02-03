@@ -22,7 +22,10 @@ export const notificationService = new NotificationService()
 export const todoService = new TodoService(httpClient, notificationService)
 export const authService = new AuthService(httpClient)
 export const notesService = new NotesService(httpClient)
-export const statisticService = new StatisticService(httpClient, notificationService)
+export const statisticService = new StatisticService(
+  httpClient,
+  notificationService,
+)
 httpClient.interceptors.request.use(
   (request) => {
     if (request.credentials === 'include') {
@@ -31,7 +34,7 @@ httpClient.interceptors.request.use(
       if (newToken) {
         newHeaders.set('Authorization', newToken)
       }
-      ; (request as any).headers = newHeaders
+      ;(request as any).headers = newHeaders
       return request
     }
     return request
@@ -39,7 +42,7 @@ httpClient.interceptors.request.use(
   async (reason) => {
     return Promise.reject(reason)
   },
-  { runWhen: () => true }
+  { runWhen: () => true },
 )
 httpClient.interceptors.response.use(
   async (response) => {
@@ -60,9 +63,12 @@ httpClient.interceptors.response.use(
 
     try {
       await authService.refresh()
-        ; (originalRequest as any).data.retry = true
+      ;(originalRequest as any).data.retry = true
 
-      return await httpClient.do(originalRequest.resource, originalRequest)
+      return await httpClient.do(originalRequest.url, {
+        ...originalRequest,
+        params: undefined,
+      })
     } catch (e) {
       return response
     }
@@ -70,11 +76,17 @@ httpClient.interceptors.response.use(
   async (reason) => {
     return Promise.reject(reason)
   },
-  { runWhen: () => true }
+  { runWhen: () => true },
 )
 
 export const createApplication = (): Application =>
-  new Application(todoService, authService, notesService, notificationService, statisticService)
+  new Application(
+    todoService,
+    authService,
+    notesService,
+    notificationService,
+    statisticService,
+  )
 
 // Here only for Pinia
 export const application = createApplication()

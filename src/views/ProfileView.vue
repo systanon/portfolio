@@ -23,7 +23,6 @@
           :iconName="field.isEditing.value ? 'close-square' : 'edit'"
           :disabled="!field.isEditing.value"
           @iconClick="field.isEditing.value ? cancelEdit(key) : toggleEdit(key)"
-          @blur="v$[key].$touch"
         />
         <div class="page-profile__fields-actions">
           <UiButtonIcon
@@ -209,6 +208,7 @@ const signOutHandler = async () => {
   margin: 0 rem(-15);
   padding: rem(15);
   &__title {
+    padding-top: rem(43);
     text-align: center;
   }
   &__avatar {

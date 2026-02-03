@@ -8,7 +8,6 @@
         placeholder="Enter email"
         autocomplete="email"
         :validation="v$.email"
-        @blur="v$.email.$touch"
       />
       <UiInput
         v-model="password"
@@ -17,7 +16,6 @@
         placeholder="Enter your password"
         :validation="v$.password"
         autocomplete="new-password"
-        @blur="v$.password.$touch"
       />
       <UiInput
         v-model="confirmPassword"
@@ -26,7 +24,6 @@
         placeholder="Confirm your password"
         autocomplete="new-password"
         :validation="v$.confirmPassword"
-        @blur="v$.confirmPassword.$touch"
       />
       <div class="page-sign-up__redirect">
         <span class="page-sign-up__redirect-text"
