@@ -10,6 +10,7 @@
       <UiButtonIcon
         class="notification-messages__item-action"
         icon-name="close-square"
+        :with-border="false"
         @click="notifications.delete(id)"
       />
     </div>
@@ -27,7 +28,8 @@ const notifications = application.notifications
 .notification-messages {
   position: fixed;
   top: rem(16);
-  right: rem(16);
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 105;
   display: flex;
   flex-direction: column;
