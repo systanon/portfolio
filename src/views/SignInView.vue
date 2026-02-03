@@ -8,7 +8,6 @@
         placeholder="Enter email"
         :validation="v$.email"
         autocomplete="email"
-        @blur="v$.email.$touch"
       />
       <UiInput
         v-model="password"
@@ -17,7 +16,6 @@
         placeholder="Enter your password"
         :validation="v$.password"
         autocomplete="current-password"
-        @blur="v$.password.$touch"
       />
       <div class="page-sign-in__redirect">
         <AppLink
@@ -28,14 +26,6 @@
           @navigate="(navigate) => navigate()"
         >
           Forgot password?</AppLink
-        >
-        <AppLink
-          class="page-sign-in__redirect-link"
-          :to="{ name: 'ResendEmailVerification' }"
-          inactive-class="link-secondary"
-          active-class="link-secondary--active"
-          @navigate="(navigate) => navigate()"
-          >Resend verification email?</AppLink
         >
       </div>
       <UiButton type="submit" label="Submit" />

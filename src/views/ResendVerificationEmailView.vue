@@ -7,7 +7,6 @@
         label="Email"
         placeholder="Enter email"
         :validation="v$.email"
-        @blur="v$.email.$touch"
       />
       <UiButton type="submit" label="Submit" />
     </form>
@@ -19,23 +18,15 @@ import { ref } from 'vue'
 import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
-
+import { useValidationRules } from '@/composables/useValidationRules'
 import useVuelidate from '@vuelidate/core'
-import {
-  required,
-  helpers,
-  maxLength,
-  email as emailValidation,
-} from '@vuelidate/validators'
 
 const email = ref<string>('')
 
+const { emailRules } = useValidationRules()
+
 const rules = {
-  email: {
-    required: helpers.withMessage('Email is required', required),
-    maxLength: helpers.withMessage('To much characters', maxLength(50)),
-    emailValidation: helpers.withMessage('invalid email', emailValidation),
-  },
+  email: emailRules,
 }
 
 const v$ = useVuelidate(rules, {
@@ -64,10 +55,10 @@ const submitHandler = async () => {
   &__form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: rem(15);
     background-color: var(--bg-primary);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: rem(30);
+    border-radius: rem(15);
     width: rem(500);
     max-width: rem(500);
   }

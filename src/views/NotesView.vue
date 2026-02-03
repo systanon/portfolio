@@ -153,6 +153,7 @@ const createNote = async () => {
   gap: rem(32);
 
   &__title {
+    padding-top: rem(43);
     text-align: center;
   }
 

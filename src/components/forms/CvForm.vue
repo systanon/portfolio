@@ -3,19 +3,16 @@
     v-model="statistic.company_name"
     placeholder="Company name"
     :validation="v$.company_name"
-    @blur="v$.company_name.$touch"
   />
   <UiInput
     v-model="statistic.contact_name"
     placeholder="Contact name"
     :validation="v$.contact_name"
-    @blur="v$.contact_name.$touch"
   />
   <UiInput
     v-model="statistic.email"
     placeholder="Email"
     :validation="v$.email"
-    @blur="v$.email.$touch"
   />
 </template>
 
