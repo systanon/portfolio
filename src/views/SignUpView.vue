@@ -75,12 +75,7 @@ const submitHandler = async () => {
     password: password.value,
   }
 
-  try {
-    const response = await application.signUp(payload)
-    console.log('Registration success:', response)
-  } catch (error) {
-    console.error('Registration failed:', error)
-  }
+  application.signUp(payload)
 }
 </script>
 

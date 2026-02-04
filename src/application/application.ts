@@ -38,7 +38,7 @@ import type { StatisticDTO } from '@/types/statistic'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
-  EventContext extends any = any
+  EventContext extends any = any,
 > {
   #ee: EventEmitter = new EventEmitter()
   #todoService: TodoService
@@ -56,7 +56,7 @@ export class Application<
     authService: AuthService,
     notesService: NotesService,
     notificationService: NotificationService,
-    statisticService: StatisticService
+    statisticService: StatisticService,
   ) {
     this.#todoService = todoService
     this.#authService = authService
@@ -87,7 +87,7 @@ export class Application<
   public on<T extends EventEmitter.EventNames<EventTypes>>(
     event: T,
     fn: EventEmitter.EventListener<EventTypes, T>,
-    context?: EventContext
+    context?: EventContext,
   ): EventEmitter {
     return this.#ee.on(event, fn, context)
   }
@@ -96,7 +96,7 @@ export class Application<
     event: T,
     fn?: EventEmitter.EventListener<EventTypes, T>,
     context?: EventContext,
-    once?: boolean
+    once?: boolean,
   ): EventEmitter {
     return this.#ee.off(event, fn, context, once)
   }
@@ -104,11 +104,11 @@ export class Application<
   public async signUp(dto: SignUpDto): Promise<void | AppError> {
     this.#loading.value = true
     const res = await this.#authService.registration(dto)
+    this.#loading.value = false
     if (res instanceof AppError) {
       this.#notificationService.notify('error', res.message)
       return res
     }
-    this.#loading.value = false
     this.#notificationService.notify('success', res.message)
   }
 
@@ -157,7 +157,7 @@ export class Application<
   public async getProfile(): Promise<UserProfile | AppError | AppSilentError> {
     this.#loading.value = true
     this.profileLoading = new Promise<void>(
-      (resolve) => (this.resolveProfileLoading = resolve)
+      (resolve) => (this.resolveProfileLoading = resolve),
     )
     const res = await this.#authService.getProfile()
     if (res instanceof AppError) {
@@ -179,7 +179,7 @@ export class Application<
   }
 
   public async updateProfileInfo(
-    dto: UserProfileUpdateInfo
+    dto: UserProfileUpdateInfo,
   ): Promise<AppError | string> {
     return await this.#authService.updateProfile(dto)
   }
@@ -218,7 +218,7 @@ export class Application<
   }
 
   public async getAllTodos(
-    params: GetAllParams
+    params: GetAllParams,
   ): Promise<PaginateResult<Todo>> {
     try {
       this.#loading.value = true
@@ -237,7 +237,7 @@ export class Application<
 
   public async replaceTodo(
     id: ID,
-    dto: ReplaceTodoDTO
+    dto: ReplaceTodoDTO,
   ): Promise<Todo | AppError> {
     const res = await this.#todoService.replace(id, dto)
     return res
@@ -245,7 +245,7 @@ export class Application<
 
   public async updateTodo(
     id: ID,
-    dto: UpdateTodoDTO
+    dto: UpdateTodoDTO,
   ): Promise<Todo | AppError> {
     const res = await this.#todoService.update(id, dto)
     return res
@@ -257,7 +257,7 @@ export class Application<
   }
 
   public async getAllNotes(
-    params: GetAllParams
+    params: GetAllParams,
   ): Promise<PaginateResult<Note>> {
     try {
       this.#loading.value = true
@@ -281,7 +281,7 @@ export class Application<
 
   public async replaceNote(
     id: ID,
-    dto: ReplaceNoteDTO
+    dto: ReplaceNoteDTO,
   ): Promise<Note | AppError> {
     const res = await this.#noteService.replace(id, dto)
     return res
@@ -289,7 +289,7 @@ export class Application<
 
   public async updateNote(
     id: ID,
-    dto: UpdateNoteDTO
+    dto: UpdateNoteDTO,
   ): Promise<Note | AppError> {
     const res = await this.#noteService.update(id, dto)
     return res
@@ -300,10 +300,7 @@ export class Application<
     return res
   }
 
-
-  public async saveStatistic(
-    dto: StatisticDTO
-  ): Promise<any | AppError> {
+  public async saveStatistic(dto: StatisticDTO): Promise<any | AppError> {
     const res = await this.statisticService.save(dto)
     return res
   }
