@@ -1,6 +1,12 @@
 import { errorMsg } from '@/helpers/formatErrorMsg'
 import type { HTTPClient } from '@/lib/http.client'
-import { AppError, AppSilentError, type APIError } from '@/types/app-errors'
+import {
+  AppError,
+  AppRateLimitError,
+  AppSilentError,
+  isHttpError,
+  type APIError,
+} from '@/types/app-errors'
 import type {
   AuthResponse,
   ConfirmQuery,
@@ -57,8 +63,8 @@ export class AuthService {
     }
   }
   async resendConfirmEmail(
-    dto: ResendConfirmEmailDto
-  ): Promise<SuccessResponse | AppError> {
+    dto: ResendConfirmEmailDto,
+  ): Promise<SuccessResponse | AppError | AppRateLimitError> {
     const url = API_URL.auth.resendEmail
     const body = JSON.stringify(dto)
     try {
@@ -69,12 +75,17 @@ export class AuthService {
         url,
       })
       return result
-    } catch (error) {
+    } catch (error: unknown) {
+      if (isHttpError(error)) {
+        if (error.status === 429) {
+          return new AppRateLimitError(errorMsg(error), error.data.retryAfter)
+        }
+      }
       return new AppError(errorMsg(error))
     }
   }
   async forgotPassword(
-    dto: ForgotPasswordDto
+    dto: ForgotPasswordDto,
   ): Promise<SuccessResponse | AppError> {
     const url = API_URL.auth.forgotPass
     const body = JSON.stringify(dto)
@@ -91,7 +102,7 @@ export class AuthService {
   }
 
   async resetPassword(
-    dto: ResetPasswordDto
+    dto: ResetPasswordDto,
   ): Promise<SuccessResponse | AppError> {
     const url = API_URL.auth.resetPass
     const body = JSON.stringify(dto)
