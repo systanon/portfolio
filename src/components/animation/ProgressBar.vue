@@ -1,8 +1,7 @@
 <template>
-  <div
-    :class="['progress-bar', { _progress: progress }]"
-    ref="progressBar"
-  ></div>
+  <div :class="['progress-bar', { _progress: progress }]" ref="progressBar">
+    <slot />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -10,8 +9,16 @@ import { ref } from 'vue'
 import { useGsap } from '@/composables/useGsap'
 
 export interface IProgressBar {
-  play: (duration: number, onComplete?: () => void) => void
+  play: (
+    duration: number,
+    onComplete?: () => void,
+    update?: (tween: gsap.core.Tween) => void,
+  ) => void
   reset: () => void
+  pause: () => void
+  resume: () => void
+  seek: () => void
+  getTween: () => gsap.core.Tween
 }
 
 const props = withDefaults(
@@ -25,26 +32,48 @@ const props = withDefaults(
 
 const gsap = useGsap()
 const progressBar = ref<HTMLDivElement | null>(null)
+let tween: gsap.core.Tween | null = null
 
-const play = (durationInSeconds: number, onComplete?: () => void) => {
+const pause = () => {
+  tween?.pause()
+}
+
+const resume = () => {
+  tween?.resume()
+}
+
+const seek = (progress: number) => {
+  tween?.progress(progress)
+}
+
+const play = (
+  durationInSeconds: number,
+  onComplete?: () => void,
+  update?: (tween: gsap.core.Tween) => void,
+) => {
   const width = props.progress ? '100%' : '0'
   if (!progressBar.value) return
-  gsap.killTweensOf(progressBar.value)
-  gsap.to(progressBar.value, {
+  tween?.kill()
+  tween = gsap.to(progressBar.value, {
     width,
     duration: durationInSeconds,
     ease: 'linear',
+    onUpdate() {
+      if (tween) update?.(tween)
+    },
     onComplete,
   })
 }
 
 const reset = () => {
+  tween?.kill()
+  tween = null
+
   if (!progressBar.value) return
-  gsap.killTweensOf(progressBar.value)
   gsap.set(progressBar.value, { width: '0%' })
 }
 
-defineExpose({ play, reset })
+defineExpose({ play, pause, resume, seek, reset, getTween: () => tween })
 </script>
 
 <style scoped lang="scss">
@@ -52,7 +81,8 @@ defineExpose({ play, reset })
   position: absolute;
   bottom: 0;
   left: 0;
-  height: rem(5);
+  height: 100%;
+  max-height: rem(15);
   background-color: var(--bg-progress-bar);
   width: 100%;
   &._progress {
