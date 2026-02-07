@@ -27,25 +27,16 @@ import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import useVuelidate from '@vuelidate/core'
-import { required, helpers, minLength, sameAs } from '@vuelidate/validators'
 import { useRoute } from 'vue-router'
+import { useValidationRules } from '@/composables/useValidationRules'
 
 const route = useRoute()
 const password = ref<string>('')
 const confirmPassword = ref<string>('')
-
+const { passwordRules, confirmPasswordRules } = useValidationRules()
 const rules = {
-  password: {
-    required: helpers.withMessage('Password is required', required),
-    minLength: helpers.withMessage('Minimum 6 characters', minLength(6)),
-  },
-  confirmPassword: {
-    required,
-    sameAsPassword: helpers.withMessage(
-      'Passwords do not match',
-      sameAs(password),
-    ),
-  },
+  password: passwordRules,
+  confirmPassword: confirmPasswordRules(password),
 }
 const v$ = useVuelidate(rules, {
   password,
