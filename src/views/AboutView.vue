@@ -4,19 +4,18 @@
 
     <div class="about-page__description">
       <p class="about-page__description-text">
-        My name is Serhii Tustanovskyi, and I am a Front-End Developer with over
-        4 years of professional experience. I specialize in building complex web
-        applications, including crypto trading platforms, e-commerce systems,
-        and internal frameworks. My primary stack is Vue.js, TypeScript, and
-        modern frontend tooling. I focus on clean UI/UX implementation,
-        pixel-perfect layouts, reusable components, and maintainable frontend
-        architecture. I actively apply best practices such as SOLID, DRY, and
-        KISS to deliver scalable and reliable solutions. In addition to frontend
-        development, I have hands-on experience with backend technologies,
-        including Golang and REST APIs, which helps me effectively collaborate
-        with backend and DevOps teams and better understand full application
-        architecture. For a detailed overview of my professional experience,
-        projects, and technical skills. please download my CV.
+        My name is Serhii Tustanovskyi. I am a Front-End Developer with over 5
+        years of professional experience, specializing in building complex web
+        applications. I have worked on crypto trading platforms, e-commerce
+        systems, and internal frameworks. My primary stack includes Vue.js,
+        TypeScript, and modern frontend tooling. I focus on clean UI/UX,
+        pixel-perfect layouts, reusable components, and maintainable
+        architecture. I apply best practices such as SOLID, DRY, and KISS to
+        build scalable and reliable solutions. I also have hands-on experience
+        with Golang and REST APIs, which helps me collaborate effectively with
+        backend and DevOps teams and understand the full application
+        architecture. For a detailed overview of my experience and technical
+        skills, you can download my CV.
       </p>
       <UiButtonIcon @click="openForm" iconName="download">
         <template #prepend> <span>Download CV</span> </template>
