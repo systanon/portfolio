@@ -195,11 +195,15 @@ export class Application<
     return res
   }
 
-  public async forgotPassword(dto: ForgotPasswordDto): Promise<void> {
+  public async forgotPassword(
+    dto: ForgotPasswordDto,
+  ): Promise<void | AppRateLimitError | AppError> {
     this.#loading.value = true
     const res = await this.#authService.forgotPassword(dto)
-    if (res instanceof AppError) {
+    if (res instanceof AppError || res instanceof AppRateLimitError) {
+      this.#loading.value = false
       this.#notificationService.notify('error', res.message)
+      return res
     } else {
       this.#notificationService.notify('success', res.message)
     }

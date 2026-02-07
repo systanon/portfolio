@@ -96,7 +96,12 @@ export class AuthService {
         resource: url,
         url,
       })
-    } catch (error) {
+    } catch (error: unknown) {
+      if (isHttpError(error)) {
+        if (error.status === 429) {
+          return new AppRateLimitError(errorMsg(error), error.data.retryAfter)
+        }
+      }
       return new AppError(errorMsg(error))
     }
   }

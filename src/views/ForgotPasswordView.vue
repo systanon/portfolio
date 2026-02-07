@@ -18,7 +18,14 @@
           >Resend verification email?</AppLink
         >
       </div>
-      <UiButton type="submit" label="Submit" />
+      <UiButton type="submit" label="Submit" :disabled="isBlocked" />
+      <ProgressBar
+        v-if="showProgressBar"
+        ref="progressBarRef"
+        :progress="false"
+      >
+        <span>{{ time }}</span>
+      </ProgressBar>
     </form>
   </div>
 </template>
@@ -31,10 +38,15 @@ import UiButton from '@/components/ui/buttons/UiButton.vue'
 import AppLink from '@/components/AppLink.vue'
 import { useValidationRules } from '@/composables/useValidationRules'
 import useVuelidate from '@vuelidate/core'
+import ProgressBar from '@/components/animation/ProgressBar.vue'
+import { AppRateLimitError } from '@/types/app-errors'
+import { useRateLimit } from '@/composables/useRateLimit'
 
 const email = ref<string>('')
 
 const { emailRules } = useValidationRules()
+const { isBlocked, showProgressBar, time, startRateLimit, progressBarRef } =
+  useRateLimit()
 
 const rules = {
   email: emailRules,
@@ -51,7 +63,10 @@ const submitHandler = async () => {
     email: email.value,
   }
 
-  await application.forgotPassword(payload)
+  const res = await application.forgotPassword(payload)
+  if (res instanceof AppRateLimitError) {
+    await startRateLimit(res.retryAfter)
+  }
 }
 </script>
 
@@ -64,6 +79,7 @@ const submitHandler = async () => {
     color: var(--text-color-primary);
   }
   &__form {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: rem(15);
