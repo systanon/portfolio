@@ -8,7 +8,11 @@ import type {
 } from '../types/todo'
 import type { TodoService } from './services/todo.service'
 import type { ID } from '../types/general'
-import { AppError, AppSilentError } from '../types/app-errors'
+import {
+  AppError,
+  AppRateLimitError,
+  AppSilentError,
+} from '../types/app-errors'
 import type { AuthService } from './services/auth.service'
 import type {
   ConfirmQuery,
@@ -123,13 +127,15 @@ export class Application<
     await this.getProfile()
   }
 
-  public async resendConfirmEmail(dto: ResendConfirmEmailDto): Promise<void> {
+  public async resendConfirmEmail(
+    dto: ResendConfirmEmailDto,
+  ): Promise<void | AppRateLimitError | AppError> {
     this.#loading.value = true
     const res = await this.#authService.resendConfirmEmail(dto)
-    if (res instanceof AppError) {
+    if (res instanceof AppError || res instanceof AppRateLimitError) {
       this.#loading.value = false
       this.#notificationService.notify('error', res.message)
-      return
+      return res
     }
     this.#loading.value = false
     this.#notificationService.notify('success', res.message)
@@ -189,11 +195,15 @@ export class Application<
     return res
   }
 
-  public async forgotPassword(dto: ForgotPasswordDto): Promise<void> {
+  public async forgotPassword(
+    dto: ForgotPasswordDto,
+  ): Promise<void | AppRateLimitError | AppError> {
     this.#loading.value = true
     const res = await this.#authService.forgotPassword(dto)
-    if (res instanceof AppError) {
+    if (res instanceof AppError || res instanceof AppRateLimitError) {
+      this.#loading.value = false
       this.#notificationService.notify('error', res.message)
+      return res
     } else {
       this.#notificationService.notify('success', res.message)
     }

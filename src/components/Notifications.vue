@@ -28,20 +28,22 @@ const notifications = application.notifications
 .notification-messages {
   position: fixed;
   top: rem(16);
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 105;
   display: flex;
   flex-direction: column;
   gap: rem(5);
+  width: 100%;
   &__item {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: rem(8) rem(16);
     border-radius: rem(8);
-    min-width: rem(250);
-    max-width: rem(350);
+    width: 100%;
+    max-width: rem(450);
 
     &.success {
       background-color: var(--success);

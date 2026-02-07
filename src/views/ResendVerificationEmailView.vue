@@ -8,7 +8,14 @@
         placeholder="Enter email"
         :validation="v$.email"
       />
-      <UiButton type="submit" label="Submit" />
+      <UiButton type="submit" label="Submit" :disabled="isBlocked" />
+      <ProgressBar
+        v-if="showProgressBar"
+        ref="progressBarRef"
+        :progress="false"
+      >
+        <span>{{ time }}</span>
+      </ProgressBar>
     </form>
   </div>
 </template>
@@ -20,9 +27,14 @@ import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import { useValidationRules } from '@/composables/useValidationRules'
 import useVuelidate from '@vuelidate/core'
+import ProgressBar from '@/components/animation/ProgressBar.vue'
+import { AppRateLimitError } from '@/types/app-errors'
+import { useRateLimit } from '@/composables/useRateLimit'
+
+const { isBlocked, showProgressBar, time, startRateLimit, progressBarRef } =
+  useRateLimit()
 
 const email = ref<string>('')
-
 const { emailRules } = useValidationRules()
 
 const rules = {
@@ -40,7 +52,10 @@ const submitHandler = async () => {
     email: email.value,
   }
 
-  await application.resendConfirmEmail(payload)
+  const res = await application.resendConfirmEmail(payload)
+  if (res instanceof AppRateLimitError) {
+    await startRateLimit(res.retryAfter)
+  }
 }
 </script>
 
@@ -54,12 +69,13 @@ const submitHandler = async () => {
   }
   &__form {
     display: flex;
+    position: relative;
     flex-direction: column;
     gap: rem(15);
     background-color: var(--bg-primary);
     padding: rem(30);
     border-radius: rem(15);
-    width: rem(500);
+    width: 100%;
     max-width: rem(500);
   }
 }

@@ -2,6 +2,12 @@ type ErrorOptions = {
   cause?: unknown
 }
 
+export function isHttpError(
+  error: any,
+): error is { status: number; data: any } {
+  return error && typeof error.status === 'number'
+}
+
 export type APIError = {
   _type: string
   status: number
@@ -14,7 +20,7 @@ export class AppBase extends Error {
   constructor(
     message?: string,
     type: 'error' | 'info' | 'success' | 'silent' = 'silent',
-    options?: ErrorOptions
+    options?: ErrorOptions,
   ) {
     super(message)
     this.name = this.constructor.name
@@ -45,5 +51,12 @@ export class AppSuccess<T = unknown> extends AppBase {
 export class AppSilentError extends AppBase {
   constructor(message?: string, options?: ErrorOptions) {
     super(message, 'silent', options)
+  }
+}
+export class AppRateLimitError extends AppBase {
+  public readonly retryAfter: number
+  constructor(message: string, retryAfter: number, options?: ErrorOptions) {
+    super(message, 'error', options)
+    this.retryAfter = retryAfter
   }
 }

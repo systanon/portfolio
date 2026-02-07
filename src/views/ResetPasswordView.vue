@@ -27,25 +27,16 @@ import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import useVuelidate from '@vuelidate/core'
-import { required, helpers, minLength, sameAs } from '@vuelidate/validators'
 import { useRoute } from 'vue-router'
+import { useValidationRules } from '@/composables/useValidationRules'
 
 const route = useRoute()
 const password = ref<string>('')
 const confirmPassword = ref<string>('')
-
+const { passwordRules, confirmPasswordRules } = useValidationRules()
 const rules = {
-  password: {
-    required: helpers.withMessage('Password is required', required),
-    minLength: helpers.withMessage('Minimum 6 characters', minLength(6)),
-  },
-  confirmPassword: {
-    required,
-    sameAsPassword: helpers.withMessage(
-      'Passwords do not match',
-      sameAs(password),
-    ),
-  },
+  password: passwordRules,
+  confirmPassword: confirmPasswordRules(password),
 }
 const v$ = useVuelidate(rules, {
   password,
@@ -67,19 +58,15 @@ const submitHandler = async () => {
 <style scoped lang="scss">
 .reset-pass {
   display: flex;
-  min-height: 0;
   justify-content: center;
-  margin-top: 6rem;
   &__form {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
-    scrollbar-gutter: stable both-edges;
-    gap: 1rem;
+    gap: rem(15);
     background-color: var(--bg-primary);
-    padding: 2rem;
-    border-radius: 1rem;
-    width: rem(400);
+    padding: rem(30);
+    border-radius: rem(15);
+    width: 100%;
     max-width: rem(400);
     &-title {
       text-align: center;
