@@ -60,6 +60,7 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     min-height: 0;
+    padding-top: rem(45);
   }
   &:before {
     content: '';

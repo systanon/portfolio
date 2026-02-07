@@ -46,14 +46,13 @@ const { email, password, v$, submit } = useSignInForm()
 .page-sign-in {
   display: flex;
   justify-content: center;
-  margin-top: 6rem;
   &__form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: rem(15);
     background-color: var(--bg-primary);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: rem(30);
+    border-radius: rem(15);
     width: 100%;
     max-width: rem(400);
     &-title {

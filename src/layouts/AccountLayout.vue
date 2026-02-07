@@ -26,6 +26,7 @@ import MainFooter from '@/components/MainFooter.vue'
     height: 100%;
     display: flex;
     flex-direction: column;
+    padding-top: rem(45);
   }
   &:before {
     content: '';

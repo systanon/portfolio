@@ -60,7 +60,6 @@ const techList: Tech[] = [
     }
   }
   &__sub-title {
-    padding-top: rem(43);
     padding-bottom: rem(25);
     color: var(--text-color-secondary);
   }

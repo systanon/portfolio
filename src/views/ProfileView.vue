@@ -208,7 +208,6 @@ const signOutHandler = async () => {
   margin: 0 rem(-15);
   padding: rem(15);
   &__title {
-    padding-top: rem(43);
     text-align: center;
   }
   &__avatar {
