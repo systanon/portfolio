@@ -21,23 +21,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import { useValidationRules } from '@/composables/useValidationRules'
 import useVuelidate from '@vuelidate/core'
-import ProgressBar, {
-  type IProgressBar,
-} from '@/components/animation/ProgressBar.vue'
+import ProgressBar from '@/components/animation/ProgressBar.vue'
 import { AppRateLimitError } from '@/types/app-errors'
+import { useRateLimit } from '@/composables/useRateLimit'
+
+const { isBlocked, showProgressBar, time, startRateLimit, progressBarRef } =
+  useRateLimit()
 
 const email = ref<string>('')
-const isBlocked = ref<boolean>(false)
-const showProgressBar = ref<boolean>(false)
-const progressBarRef = ref<IProgressBar | null>(null)
-const time = ref('0:00')
-
 const { emailRules } = useValidationRules()
 
 const rules = {
@@ -48,38 +45,16 @@ const v$ = useVuelidate(rules, {
   email,
 })
 
-const formatTime = (sec: number) => {
-  const m = Math.floor(sec / 60)
-  const s = Math.floor(sec % 60)
-  return `${m}:${s.toString().padStart(2, '0')}`
-}
-
 const submitHandler = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
-  isBlocked.value = true
   const payload = {
     email: email.value,
   }
 
   const res = await application.resendConfirmEmail(payload)
   if (res instanceof AppRateLimitError) {
-    showProgressBar.value = true
-    await nextTick()
-    progressBarRef.value?.play(
-      res.retryAfter,
-      () => {
-        isBlocked.value = false
-        showProgressBar.value = false
-        time.value = '0:00'
-      },
-      (tween) => {
-        const remaining = tween.duration() - tween.time()
-        time.value = formatTime(remaining)
-      },
-    )
-  } else {
-    isBlocked.value = false
+    await startRateLimit(res.retryAfter)
   }
 }
 </script>
