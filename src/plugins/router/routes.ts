@@ -36,6 +36,12 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/RegistrationSuccess.vue'),
       },
       {
+        path: '/forgot-password-success',
+        name: 'ForgotPasswordSuccess',
+        meta: { accessMode: 'only-for-unauthorized' },
+        component: () => import('@/views/ForgotPasswordSuccess.vue'),
+      },
+      {
         path: 'notes',
         name: 'Notes',
         meta: { accessMode: 'private' },

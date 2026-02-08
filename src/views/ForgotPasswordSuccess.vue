@@ -1,13 +1,13 @@
 <template>
-  <section class="registration-success">
+  <section class="forgot-pass-success">
     <EmailNotification>
-      <template #title> Confirm Your Email </template>
+      <template #title> Check Your Email </template>
       <template #body>
-        <p>📧 We've sent a confirmation email to your inbox.</p>
-        <p>Click the link in the email to activate your account.</p>
+        <p>📧 We’ve sent a password reset link to your email.</p>
+        <p>Follow the instructions in the email to reset your password.</p>
         <p>
           If you don't see the email, please check your
-          <span class="registration-success__hint">Spam</span> folder.
+          <span class="forgot-pass-success__hint">Spam</span> folder.
         </p>
       </template>
     </EmailNotification>
@@ -19,7 +19,7 @@ import EmailNotification from '@/components/EmailNotification.vue'
 </script>
 
 <style scoped lang="scss">
-.registration-success {
+.forgot-pass-success {
   &__hint {
     font-weight: 900;
   }

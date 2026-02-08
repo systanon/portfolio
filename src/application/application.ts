@@ -136,7 +136,7 @@ export class Application<
       this.#notificationService.notify('error', res.message)
       return res
     }
-    this.#notificationService.notify('success', res.message)
+    this.#ee.emit('redirect', 'RegistrationSuccess' satisfies RouteName)
   }
 
   public async logout(): Promise<void | AppError> {
@@ -207,7 +207,7 @@ export class Application<
       this.#notificationService.notify('error', res.message)
       return res
     } else {
-      this.#notificationService.notify('success', res.message)
+      this.#ee.emit('redirect', 'ForgotPasswordSuccess' satisfies RouteName)
     }
   }
 
