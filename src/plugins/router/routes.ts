@@ -30,6 +30,12 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/SignUp.vue'),
       },
       {
+        path: '/registration-success',
+        name: 'RegistrationSuccess',
+        meta: { accessMode: 'only-for-unauthorized' },
+        component: () => import('@/views/RegistrationSuccess.vue'),
+      },
+      {
         path: 'notes',
         name: 'Notes',
         meta: { accessMode: 'private' },

@@ -25,5 +25,6 @@ export const routeNames = [
   'ResetPassword',
   'TodoList',
   'TodoDetail',
+  'RegistrationSuccess',
 ] as const
 export type RouteName = (typeof routeNames)[number]

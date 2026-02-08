@@ -105,15 +105,14 @@ export class Application<
     return this.#ee.off(event, fn, context, once)
   }
 
-  public async signUp(dto: SignUpDto): Promise<void | AppError> {
+  public async signUp(dto: SignUpDto): Promise<void> {
     this.#loading.value = true
     const res = await this.#authService.registration(dto)
     this.#loading.value = false
     if (res instanceof AppError) {
       this.#notificationService.notify('error', res.message)
-      return res
     }
-    this.#notificationService.notify('success', res.message)
+    this.#ee.emit('redirect', 'RegistrationSuccess' satisfies RouteName)
   }
 
   public async confirmEmail(params: ConfirmQuery): Promise<void> {
@@ -132,17 +131,18 @@ export class Application<
   ): Promise<void | AppRateLimitError | AppError> {
     this.#loading.value = true
     const res = await this.#authService.resendConfirmEmail(dto)
+    this.#loading.value = false
     if (res instanceof AppError || res instanceof AppRateLimitError) {
-      this.#loading.value = false
       this.#notificationService.notify('error', res.message)
       return res
     }
-    this.#loading.value = false
     this.#notificationService.notify('success', res.message)
   }
 
   public async logout(): Promise<void | AppError> {
+    this.#loading.value = true
     const res = await this.#authService.logout()
+    this.#loading.value = false
     if (res instanceof AppError) {
       this.#notificationService.notify('error', res.message)
       return res
@@ -152,7 +152,9 @@ export class Application<
   }
 
   public async signIn(dto: SignInDto): Promise<void | AppError> {
+    this.#loading.value = true
     const res = await this.#authService.authorization(dto)
+    this.#loading.value = false
     if (res instanceof AppError) {
       this.#notificationService.notify('error', res.message)
       return res
@@ -200,26 +202,25 @@ export class Application<
   ): Promise<void | AppRateLimitError | AppError> {
     this.#loading.value = true
     const res = await this.#authService.forgotPassword(dto)
+    this.#loading.value = false
     if (res instanceof AppError || res instanceof AppRateLimitError) {
-      this.#loading.value = false
       this.#notificationService.notify('error', res.message)
       return res
     } else {
       this.#notificationService.notify('success', res.message)
     }
-    this.#loading.value = false
   }
 
   public async resetPassword(dto: ResetPasswordDto): Promise<void> {
     this.#loading.value = true
     const res = await this.#authService.resetPassword(dto)
+    this.#loading.value = false
     if (res instanceof AppError) {
       this.#notificationService.notify('error', res.message)
     } else {
       this.#notificationService.notify('success', res.message)
       this.#ee.emit('redirect', 'SignIn' satisfies RouteName)
     }
-    this.#loading.value = false
   }
 
   public async createTodo(dto: CreateTodoDTO): Promise<ID | AppError> {

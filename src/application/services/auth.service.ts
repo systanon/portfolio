@@ -4,6 +4,7 @@ import {
   AppError,
   AppRateLimitError,
   AppSilentError,
+  AppSuccess,
   isHttpError,
   type APIError,
 } from '@/types/app-errors'
@@ -29,18 +30,18 @@ export class AuthService {
     this.httpClient = httpClient
   }
 
-  async registration(dto: SignUpDto): Promise<RegistrationResponse | AppError> {
+  async registration(dto: SignUpDto): Promise<AppSuccess | AppError> {
     const url = API_URL.auth.sign_up
     const body = JSON.stringify(dto)
     try {
-      const result: RegistrationResponse = await this.httpClient.jsonDo(url, {
+      const result = await this.httpClient.jsonDo(url, {
         method: 'POST',
         body,
         credentials: 'include',
         resource: url,
         url,
       })
-      return result
+      return new AppSuccess<RegistrationResponse>(errorMsg(result))
     } catch (error) {
       return new AppError(errorMsg(error))
     }
