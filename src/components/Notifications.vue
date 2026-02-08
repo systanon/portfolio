@@ -5,7 +5,7 @@
       :key="id"
       :class="['notification-messages__item', n.type]"
     >
-      <UiLittleKip :text="n.message" />
+      <p class="notification-messages__item-text">{{ n.message }}</p>
 
       <UiButtonIcon
         class="notification-messages__item-action"
@@ -20,7 +20,6 @@
 <script setup lang="ts">
 import { application } from '@/application'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
-import UiLittleKip from '@/components/ui/UiLittleKip.vue'
 
 const notifications = application.notifications
 </script>

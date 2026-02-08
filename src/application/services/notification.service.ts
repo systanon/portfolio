@@ -13,12 +13,12 @@ export class NotificationService {
   notifications = ref<Map<number, NotificationPayload>>(new Map())
   #counter = 0
 
-  async notify(type: NotificationType, message: string) {
+  async notify(type: NotificationType, message: string, _delay: number = 8000) {
     const id = this.#counter++
     const payload = { id, type, message }
     this.notifications.value.set(id, payload)
 
-    await delay(5000)
+    await delay(_delay)
     this.remove(id)
   }
 
