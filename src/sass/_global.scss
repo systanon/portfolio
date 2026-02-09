@@ -80,3 +80,9 @@ p {
     height: inherit;
   }
 }
+
+.backdrop {
+  background: $backdrop-color;
+  backdrop-filter: blur($blur-filter);
+  -webkit-backdrop-filter: blur($blur-filter);
+}
