@@ -65,7 +65,6 @@ const submitHandler = async () => {
   justify-content: center;
   &__title {
     text-align: center;
-    color: var(--text-color-primary);
   }
   &__form {
     display: flex;

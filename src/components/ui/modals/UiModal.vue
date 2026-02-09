@@ -3,10 +3,11 @@
     <div v-bind="$attrs" class="ui-modal">
       <div
         v-if="isOpen"
-        :class="['ui-modal__backdrop', { _opened: showBackdrop }]"
+        ref="backdropRef"
+        class="ui-modal__backdrop backdrop"
         @click="close"
       >
-        <div :class="['ui-modal__dialog', { _opened: show }]" @click.stop>
+        <div ref="dialogRef" class="ui-modal__dialog" @click.stop>
           <template v-if="title">
             <h2>{{ title }}</h2>
             <hr />
@@ -26,9 +27,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { delay } from '@/helpers/delay'
+import { ref, nextTick } from 'vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
+import { useGsap } from '@/composables/useGsap'
+import { useEscapeKey } from '@/composables/useEscapeKey'
+import { useScrollLock } from '@/composables/useScrollLock'
 
 export type ModalOpen<T = any> = () => Promise<null | T>
 export interface IModalOpen<T = boolean> {
@@ -40,18 +43,45 @@ defineProps<{
   title?: string
 }>()
 
+const gsap = useGsap()
+const { lock, unlock } = useScrollLock()
+
+const backdropRef = ref<HTMLElement | null>(null)
+const dialogRef = ref<HTMLElement | null>(null)
+
+let tl: gsap.core.Timeline | null = null
+
 const isOpen = ref(false)
-const showBackdrop = ref(false)
-const show = ref(false)
 
 let resolver: ((...args: any[]) => void) | null = null
 
 const open = async (): Promise<any> => {
+  lock()
   isOpen.value = true
-  await delay(0)
-  showBackdrop.value = true
-  await delay(700)
-  show.value = true
+  await nextTick()
+
+  tl = gsap.timeline()
+
+  tl.to(backdropRef.value, {
+    opacity: 1,
+    duration: 0.3,
+    ease: 'power2.out',
+  }).fromTo(
+    dialogRef.value,
+    {
+      opacity: 0,
+      y: -20,
+      scale: 0.95,
+    },
+    {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.35,
+      ease: 'power3.out',
+    },
+    '-=0.1',
+  )
 
   return new Promise((res) => {
     resolver = res
@@ -60,30 +90,21 @@ const open = async (): Promise<any> => {
 
 const confirm = async (...params: any[]) => {
   if (resolver) resolver(...params)
-  show.value = false
-  await delay(500)
-  showBackdrop.value = false
-  await delay(1000)
-  isOpen.value = false
+
+  if (!tl) return
+
+  await tl.reverse().eventCallback('onReverseComplete', () => {
+    isOpen.value = false
+    tl = null
+  })
+  unlock()
 }
 
 const close = () => {
   confirm(null)
 }
 
-const handleKeydown = (e: KeyboardEvent) => {
-  if (isOpen.value && e.key === 'Escape') {
-    close()
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('keydown', handleKeydown)
-})
-
-onBeforeUnmount(() => {
-  document.removeEventListener('keydown', handleKeydown)
-})
+useEscapeKey(close)
 
 defineExpose({
   open,
@@ -94,69 +115,29 @@ defineExpose({
 <style scoped lang="scss">
 .ui-modal {
   &__backdrop {
-    background-color: rgba(0, 0, 0, 0.8);
-    left: 50%;
     position: fixed;
-    height: 1px;
-    top: 50%;
+    inset: 0;
     z-index: 100;
-    transform: translate(-50%, -50%);
-    transition: width 0.5s ease 0.5s, height 0.5s ease;
-    width: 0;
-    &._opened {
-      height: 100%;
-      width: 100%;
-      transition: width 0.5s ease, height 0.5s ease 0.5s;
-    }
+    opacity: 0;
   }
   &__dialog {
     background-color: $bg-menu-secondary;
     width: calc(100% - rem(15));
-    border-radius: 10px;
-    left: 50%;
-    padding: 20px;
+    max-width: rem(600);
+    border-radius: rem(10);
+    padding: rem(20);
     position: fixed;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     z-index: 101;
-    top: 50%;
     opacity: 0;
-    transition: all 0.5s ease-in-out;
-
-    &._opened {
-      opacity: 1;
-      transition: all 1s ease-in-out;
-    }
   }
   &__actions {
     display: flex;
     gap: 1em;
     justify-content: end;
     text-align: right;
-  }
-}
-@include media-query('tablet') {
-  .ui-modal__dialog {
-    width: 70%;
-  }
-}
-@include media-query('desktop') {
-  .ui-modal__dialog {
-    width: 60%;
-  }
-}
-@include media-query('large-desktop') {
-  .ui-modal__dialog {
-    width: 50%;
-  }
-}
-@include media-query('extra-large-desktop') {
-  .ui-modal__dialog {
-    width: 40%;
-  }
-}
-@include media-query('ultra-wide') {
-  .ui-modal__dialog {
-    width: 30%;
   }
 }
 </style>
