@@ -3,6 +3,7 @@ import NavigationMenu from '@/components/NavigationMenu.vue'
 import NavigationMenuMobile from './NavigationMenuMobile.vue'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
 import Logo from '@/components/Logo.vue'
+import AppBreadcrumbs from './breadcrumbs/AppBreadcrumbs.vue'
 
 const { isTablet, isMobile } = useInjectWindowResize()
 </script>
@@ -17,6 +18,7 @@ const { isTablet, isMobile } = useInjectWindowResize()
         </template>
         <NavigationMenu v-else />
       </div>
+      <AppBreadcrumbs />
     </div>
   </header>
 </template>
