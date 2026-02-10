@@ -91,13 +91,16 @@ const open = async (): Promise<any> => {
 const confirm = async (...params: any[]) => {
   if (resolver) resolver(...params)
 
-  if (!tl) return
-
-  await tl.reverse().eventCallback('onReverseComplete', () => {
+  if (tl) {
+    await tl.reverse().eventCallback('onReverseComplete', () => {
+      isOpen.value = false
+    })
+  } else {
     isOpen.value = false
-    tl = null
-  })
+  }
+
   unlock()
+  tl = null
 }
 
 const close = () => {

@@ -1,45 +1,38 @@
-import { onUnmounted } from 'vue'
+import { ref, onUnmounted } from 'vue'
 
-let lockCount = 0
-let scrollY = 0
+let globalLockCount = 0
 
 export function useScrollLock() {
-  const lock = () => {
-    if (lockCount === 0) {
-      scrollY = window.scrollY
+  const isLocked = ref(false)
 
-      document.body.style.position = 'fixed'
-      document.body.style.top = `-${scrollY}px`
-      document.body.style.left = '0'
-      document.body.style.right = '0'
-      document.body.style.width = '100%'
+  const lock = () => {
+    if (isLocked.value) return
+
+    if (globalLockCount === 0) {
+      const scrollBarWidth =
+        window.innerWidth - document.documentElement.clientWidth
+
+      document.body.style.overflow = 'hidden'
+      document.body.style.paddingRight = `${scrollBarWidth}px`
     }
 
-    lockCount++
+    globalLockCount++
+    isLocked.value = true
   }
 
   const unlock = () => {
-    if (lockCount === 0) return
+    if (!isLocked.value) return
 
-    lockCount--
+    globalLockCount--
+    isLocked.value = false
 
-    if (lockCount === 0) {
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.right = ''
-      document.body.style.width = ''
-
-      window.scrollTo(0, scrollY)
+    if (globalLockCount === 0) {
+      document.body.style.overflow = ''
+      document.body.style.paddingRight = ''
     }
   }
 
-  onUnmounted(() => {
-    unlock()
-  })
+  onUnmounted(unlock)
 
-  return {
-    lock,
-    unlock,
-  }
+  return { lock, unlock }
 }
