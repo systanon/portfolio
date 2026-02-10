@@ -85,7 +85,7 @@ const submitHandler = async () => {
     background-color: var(--bg-primary);
     padding: rem(30);
     border-radius: rem(15);
-    width: rem(500);
+    width: 100%;
     max-width: rem(500);
   }
   &__redirect {
