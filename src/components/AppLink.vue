@@ -1,5 +1,10 @@
 <template>
-  <a :href="href" @click.prevent="emit('navigate', navigate)" :class="classes">
+  <a
+    :href="href"
+    @click.prevent="emit('navigate', navigate)"
+    :class="classes"
+    :aria-disabled="disabled"
+  >
     <slot />
   </a>
 </template>
@@ -11,12 +16,14 @@ import { useLink, type RouterLinkProps } from 'vue-router'
 const props = withDefaults(
   defineProps<
     RouterLinkProps & {
+      disabled?: boolean
       inactiveClass?: string
       activeClass?: string
       exactActiveClass?: string
     }
   >(),
   {
+    disabled: false,
     inactiveClass: '',
     activeClass: 'is-active',
     exactActiveClass: 'is-exact-active',
@@ -34,6 +41,7 @@ const classes = computed(() => {
     props.inactiveClass,
     isActive.value && props.activeClass,
     isExactActive.value && props.exactActiveClass,
+    props.disabled && 'link--disabled',
   ]
 })
 </script>
@@ -54,5 +62,10 @@ const classes = computed(() => {
   &:hover {
     opacity: $hover;
   }
+}
+.link--disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.6;
 }
 </style>

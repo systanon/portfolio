@@ -51,6 +51,7 @@ export class Application<
   #notificationService: NotificationService
   #profile: Ref<UserProfile | null> = ref(null)
   #loading: Ref<boolean> = ref(false)
+  private _pageTitle: Ref<string | null> = ref(null)
   resolveProfileLoading: (() => void) | null = null
   profileLoading: Promise<void> = Promise.resolve()
   private statisticService: StatisticService
@@ -76,6 +77,7 @@ export class Application<
   public get userProfile() {
     return this.#profile.value
   }
+
   public get notifications() {
     return this.#notificationService.notifications.value
   }
@@ -86,6 +88,18 @@ export class Application<
 
   public get loading(): boolean {
     return this.#loading.value
+  }
+
+  public get pageTitle() {
+    return this._pageTitle.value
+  }
+
+  public setPageTitle(title: string) {
+    this._pageTitle.value = title
+  }
+
+  public clearPageTitle() {
+    this._pageTitle.value = null
   }
 
   public on<T extends EventEmitter.EventNames<EventTypes>>(
@@ -243,6 +257,9 @@ export class Application<
 
   public async getOneTodo(id: ID): Promise<Todo | AppError> {
     const res = await this.#todoService.getOne(id)
+    if (!(res instanceof AppError)) {
+      this.setPageTitle(res.title)
+    }
     return res
   }
 
