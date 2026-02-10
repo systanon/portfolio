@@ -67,7 +67,9 @@ const breadcrumbs = computed<Breadcrumbs>(() => {
 
 <style lang="scss" scoped>
 .app-breadcrumbs {
+  padding-top: rem(20);
   display: flex;
+  flex-wrap: wrap;
   gap: rem(5);
 }
 </style>
