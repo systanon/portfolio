@@ -35,8 +35,8 @@ export const mainMenu: NavigationMenu = [
     showMode: 'authorized',
   },
   {
-    path: '/About',
-    text: 'About',
+    path: '/about',
+    text: 'About Me',
     i18n_key: 'about',
     routeName: 'About',
     icon: '',
@@ -49,6 +49,14 @@ export const mainMenu: NavigationMenu = [
     routeName: 'Notes',
     icon: '',
     showMode: 'authorized',
+  },
+  {
+    path: '/contacts',
+    text: 'Contacts',
+    i18n_key: 'contacts',
+    routeName: 'Contacts',
+    icon: '',
+    showMode: 'all',
   },
   {
     path: '/sign-in',
@@ -78,28 +86,28 @@ export const leftSide: NavigationMenu = [
     showMode: 'all',
   },
   {
-    path: '/todos',
-    text: 'Todo list',
-    i18n_key: 'todos',
-    routeName: 'TodoList',
+    path: '/about',
+    text: 'About Me',
+    i18n_key: 'about',
+    routeName: 'About',
+    icon: '',
+    showMode: 'all',
+  },
+  {
+    path: '/contacts',
+    text: 'Contacts',
+    i18n_key: 'contacts',
+    routeName: 'Contacts',
     icon: '',
     showMode: 'all',
   },
 ]
 export const rightSide: NavigationMenu = [
   {
-    path: '/profile',
-    text: 'Profile',
-    i18n_key: 'profile',
-    routeName: 'Profile',
-    icon: '',
-    showMode: 'authorized',
-  },
-  {
-    path: '/About',
-    text: 'About',
-    i18n_key: 'about',
-    routeName: 'About',
+    path: '/todos',
+    text: 'Todo list',
+    i18n_key: 'todos',
+    routeName: 'TodoList',
     icon: '',
     showMode: 'all',
   },
@@ -108,6 +116,14 @@ export const rightSide: NavigationMenu = [
     text: 'Notations',
     i18n_key: 'notations',
     routeName: 'Notes',
+    icon: '',
+    showMode: 'authorized',
+  },
+  {
+    path: '/profile',
+    text: 'Profile',
+    i18n_key: 'profile',
+    routeName: 'Profile',
     icon: '',
     showMode: 'authorized',
   },
@@ -136,8 +152,8 @@ export const mapperMainMenu = {
 
 export const byAuthorized =
   (isLogged: boolean) =>
-    (menuItem: NavigationMenuItem): boolean => {
-      const { showMode = 'all' } = menuItem
-      if (showMode === 'all') return true
-      return mapperMainMenu[showMode] === isLogged
-    }
+  (menuItem: NavigationMenuItem): boolean => {
+    const { showMode = 'all' } = menuItem
+    if (showMode === 'all') return true
+    return mapperMainMenu[showMode] === isLogged
+  }
