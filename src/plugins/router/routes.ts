@@ -71,6 +71,12 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { accessMode: 'public' },
         component: () => import('@/views/About.vue'),
       },
+      {
+        path: 'contacts',
+        name: 'Contacts',
+        meta: { accessMode: 'public' },
+        component: () => import('@/views/Contacts.vue'),
+      },
     ],
   },
   {
