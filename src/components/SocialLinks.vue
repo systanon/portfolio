@@ -1,17 +1,17 @@
 <template>
   <nav class="social-links" aria-label="Social Links">
     <a
-      v-for="link in links"
-      :key="link.icon"
-      :href="link.href"
-      target="_blank"
-      rel="noopener"
+      v-for="({ icon, href, label, external }, index) in links"
+      :key="index"
+      :href="href"
+      :target="external ? '_blank' : undefined"
+      :rel="external ? 'noopener noreferrer' : undefined"
       class="social-links__item"
       @mouseenter="onEnter"
       @mouseleave="onLeave"
-      :aria-label="link.label"
+      :aria-label="label"
     >
-      <UIIcon :name="link.icon" color="secondary" />
+      <UIIcon :name="icon" color="secondary" />
     </a>
   </nav>
 </template>
