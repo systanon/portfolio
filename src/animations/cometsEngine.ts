@@ -16,7 +16,13 @@ type Listener = (comets: Comet[]) => void
 
 export class CometsEngine {
   private gsap: typeof GSAPType
-  private cometRefs: Map<number, HTMLElement> = new Map()
+  private cometIndex: Map<
+    number,
+    {
+      root: HTMLElement
+      tail: HTMLElement
+    }
+  > = new Map()
   private spawnTween: gsap.core.Tween | null = null
   private timelines: Map<number, gsap.core.Timeline> = new Map()
   private comets: Comet[] = []
@@ -39,16 +45,20 @@ export class CometsEngine {
     this.listeners.forEach((fn) => fn([...this.comets]))
   }
 
-  public registerCometElement(id: number, comet: HTMLElement) {
-    this.cometRefs.set(id, comet)
+  public registerCometElement(
+    id: number,
+    root: HTMLElement,
+    tail: HTMLElement,
+  ) {
+    this.cometIndex.set(id, { root, tail })
   }
 
-  start() {
+  public start() {
     this.isRunning = true
     this.scheduleSpawn()
   }
 
-  stop() {
+  public stop() {
     this.isRunning = false
     this.spawnTween?.kill()
 
@@ -56,7 +66,7 @@ export class CometsEngine {
     this.timelines.clear()
 
     this.comets = []
-    this.cometRefs.clear()
+    this.cometIndex.clear()
 
     this.notify()
   }
@@ -90,32 +100,30 @@ export class CometsEngine {
   }
 
   private animateComet(comet: Comet) {
-    const element = this.cometRefs.get(comet.id)
+    const element = this.cometIndex.get(comet.id)
     if (!element) return
 
-    const tail = element.querySelector<HTMLElement>('.comets-field__tail')
+    const { root, tail } = element
     const { x, y } = calculateTarget(comet.startX, comet.startY, comet.angle)
 
-    this.gsap.set(element, {
+    this.gsap.set(root, {
       x: comet.startX,
       y: comet.startY,
       rotation: comet.angle,
     })
 
-    if (tail) {
-      this.gsap.set(tail, {
-        width: 0,
-        opacity: 0.8,
-        scaleX: 1,
-        transformOrigin: 'right center',
-        xPercent: -100,
-      })
-    }
+    this.gsap.set(tail, {
+      width: 0,
+      opacity: 0.8,
+      scaleX: 1,
+      transformOrigin: 'right center',
+      xPercent: -100,
+    })
 
     const tl = this.gsap.timeline({
       onComplete: () => {
         this.comets = this.comets.filter((c) => c.id !== comet.id)
-        this.cometRefs.delete(comet.id)
+        this.cometIndex.delete(comet.id)
         this.timelines.delete(comet.id)
         this.notify()
       },
@@ -123,18 +131,20 @@ export class CometsEngine {
 
     this.timelines.set(comet.id, tl)
 
-    tl.to(element, { x, y, duration: comet.duration, ease: 'power1.in' }, 0)
-    if (tail) {
-      tl.to(
-        tail,
-        {
-          width: 150 + Math.random() * 100,
-          opacity: 0,
-          duration: comet.duration,
-          ease: 'power1.in',
-        },
-        0,
-      )
-    }
+    tl.to(root, { x, y, duration: comet.duration, ease: 'power1.in' }, 0)
+    tl.to(
+      tail,
+      {
+        width: 150 + Math.random() * 100,
+        opacity: 0,
+        duration: comet.duration,
+        ease: 'power1.in',
+      },
+      0,
+    )
+  }
+
+  public unregisterCometElement(id: number) {
+    this.cometIndex.delete(id)
   }
 }
