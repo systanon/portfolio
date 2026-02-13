@@ -1,4 +1,5 @@
 import { defineConfig, loadEnv } from 'vite'
+import { visualizer } from 'rollup-plugin-visualizer'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 import { createHtmlPlugin } from 'vite-plugin-html'
@@ -29,6 +30,7 @@ export default defineConfig(async ({ mode }) => {
           ],
         },
       }),
+      visualizer({ open: true }),
     ],
     server: {
       proxy: {
