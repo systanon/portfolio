@@ -8,32 +8,31 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useGsap } from '@/composables/useGsap'
+import { createBurger } from '@/animations'
 
 export interface IBurgerButton {
   play: () => void
   reverse: () => void
 }
 
-const gsap = useGsap()
+const play = ref<() => void>(() => {})
+const reverse = ref<() => void>(() => {})
 
 const line1 = ref<HTMLSpanElement | null>(null)
 const line2 = ref<HTMLSpanElement | null>(null)
 const line3 = ref<HTMLSpanElement | null>(null)
 
-let tl: gsap.core.Timeline
-
-const play = () => tl?.play()
-const reverse = () => tl?.reverse()
-
-defineExpose({ play, reverse })
-
 onMounted(() => {
-  tl = gsap.timeline({ paused: true })
-  tl.to(line1.value, { top: '50%', y: '-50%', rotate: 45, duration: 0.2 }, 0)
-    .to(line2.value, { opacity: 0, duration: 0.2 }, 0)
-    .to(line3.value, { bottom: '50%', y: '50%', rotate: -45, duration: 0.2 }, 0)
+  if (!line1.value || !line2.value || !line3.value) return
+  const burger = createBurger([line1.value, line2.value, line3.value])
+
+  burger.init()
+
+  play.value = burger.play
+
+  reverse.value = burger.reverse
 })
+defineExpose({ play: () => play.value(), reverse: () => reverse.value() })
 </script>
 
 <style lang="scss" scoped>

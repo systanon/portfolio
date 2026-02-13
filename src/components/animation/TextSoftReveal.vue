@@ -6,9 +6,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, type ComponentPublicInstance } from 'vue'
-import { useGsap } from '@/composables/useGsap'
-
-const gsap = useGsap()
+import { createTextSoftReveal } from '@/animations'
 
 defineProps<{
   text: string
@@ -16,12 +14,7 @@ defineProps<{
 const textSoftReveal = ref<ComponentPublicInstance | null>(null)
 
 onMounted(() => {
-  gsap.from(textSoftReveal.value, {
-    scale: 0.9,
-    opacity: 0,
-    filter: 'blur(10px)',
-    duration: 3,
-    ease: 'power4.out',
-  })
+  if (!textSoftReveal.value) return
+  createTextSoftReveal(textSoftReveal.value)
 })
 </script>
