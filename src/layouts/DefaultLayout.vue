@@ -82,7 +82,7 @@ onUnmounted(() => {
     height: 100%;
     max-width: rem(800);
     max-height: rem(800);
-    background-image: url('@/assets/home-img/earth.png');
+    background-image: url('@/assets/home-img/earth.webp');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

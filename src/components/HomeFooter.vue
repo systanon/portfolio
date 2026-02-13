@@ -12,7 +12,7 @@ import MainFooter from './MainFooter.vue'
 .app-footer {
   position: relative;
   &:before {
-    background-image: url('@/assets/home-img/moon-planet.png');
+    background-image: url('@/assets/home-img/moon-planet.webp');
     content: '';
     position: fixed;
     background-repeat: no-repeat;
