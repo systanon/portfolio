@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import HomeFooter from '@/components/HomeFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
-import Comets from '@/components/Comets.vue'
+import Comets from '@/components/animation/comets/Comets.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
 
 defineOptions({

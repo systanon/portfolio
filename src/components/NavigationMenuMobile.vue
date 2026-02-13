@@ -1,7 +1,7 @@
 <template>
   <BurgerButton ref="burgerRef" @click="toggleNav" />
 
-  <aside ref="navRef" v-show="isNavOpen" class="app-navigation">
+  <aside ref="navRef" class="app-navigation">
     <nav ref="menuRef" class="app-navigation__menu" v-on-click-outside="close">
       <AppLink
         v-for="{ path, text, routeName } in menuList"
@@ -24,12 +24,10 @@ import { byAuthorized, mainMenu } from '@/config/main-menu'
 import AppLink from './AppLink.vue'
 import { useLogged } from '@/composables/useLogged'
 import BurgerButton, { type IBurgerButton } from './ui/buttons/BurgerButton.vue'
-import { useGsap } from '@/composables/useGsap'
 import { useEscapeKey } from '@/composables/useEscapeKey'
+import { createNavBar } from '@/animations'
 
 const vOnClickOutside: Directive = baseOnClickOutside
-const gsap = useGsap()
-
 const isNavOpen = ref(false)
 const navRef = ref<HTMLElement | null>(null)
 const burgerRef = ref<IBurgerButton | null>(null)
@@ -38,38 +36,33 @@ const menuRef = ref<HTMLElement | null>(null)
 const { isLogged } = useLogged()
 
 useEscapeKey(close)
-
-let tl: gsap.core.Timeline
-
-const playReverse = () =>
-  new Promise<void>((resolve) => {
-    tl.eventCallback('onReverseComplete', () => resolve())
-    tl.reverse()
-  })
+const play = ref<() => void>(() => {})
+const playReverse = ref<() => void>(() => {})
+const kill = ref<() => void>(() => {})
 
 const toggleNav = async () => {
   const toggle = !isNavOpen.value
   if (toggle) {
     burgerRef.value?.play()
-    tl.play()
+    play.value()
   } else {
     burgerRef.value?.reverse()
-    await playReverse()
+    await playReverse.value()
   }
   isNavOpen.value = toggle
 }
 
 async function close() {
   burgerRef.value?.reverse()
-  await playReverse()
+  await playReverse.value()
+
   isNavOpen.value = false
 }
 
 const onLinkNavigate = async (navigate: () => void) => {
-  if (!tl) return
-
   burgerRef.value?.reverse()
-  await playReverse()
+  await playReverse.value()
+
   isNavOpen.value = false
 
   navigate()
@@ -83,28 +76,16 @@ const initAnimation = () => {
   if (!navRef.value || !menuRef.value) return
 
   const items = menuRef.value.children
+  const navBar = createNavBar(navRef.value, items)
 
-  tl = gsap.timeline({ paused: true })
+  navBar.init()
 
-  tl.fromTo(
-    navRef.value,
-    { x: '-100%' },
-    { x: '0%', duration: 0.35, ease: 'power3.out' },
-    0,
-  ).from(
-    items,
-    {
-      y: 20,
-      opacity: 0,
-      stagger: 0.06,
-      duration: 0.25,
-      ease: 'power2.out',
-    },
-    0.15,
-  )
+  play.value = navBar.play
+  playReverse.value = navBar.playReverse
+  kill.value = navBar.kill
 }
 
-onMounted(() => {
+onMounted(async () => {
   initAnimation()
 })
 </script>
@@ -112,11 +93,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 .app-navigation {
   background-color: $bg-menu-secondary;
-  padding: 1em;
+  padding: rem(15);
   display: flex;
   flex-direction: column;
   align-items: end;
-  gap: 1em;
+  gap: rem(15);
   height: 100%;
   width: 100%;
   position: fixed;

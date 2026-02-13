@@ -29,9 +29,9 @@
 <script lang="ts" setup>
 import { ref, nextTick } from 'vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
-import { useGsap } from '@/composables/useGsap'
 import { useEscapeKey } from '@/composables/useEscapeKey'
 import { useScrollLock } from '@/composables/useScrollLock'
+import { modalEngine } from '@/animations/'
 
 export type ModalOpen<T = any> = () => Promise<null | T>
 export interface IModalOpen<T = boolean> {
@@ -39,17 +39,20 @@ export interface IModalOpen<T = boolean> {
   confirm: (result: T | null) => void
 }
 
-defineProps<{
-  title?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    title?: string
+    id?: number
+  }>(),
+  {
+    id: Date.now(),
+  },
+)
 
-const gsap = useGsap()
 const { lock, unlock } = useScrollLock()
 
 const backdropRef = ref<HTMLElement | null>(null)
 const dialogRef = ref<HTMLElement | null>(null)
-
-let tl: gsap.core.Timeline | null = null
 
 const isOpen = ref(false)
 
@@ -60,28 +63,10 @@ const open = async (): Promise<any> => {
   isOpen.value = true
   await nextTick()
 
-  tl = gsap.timeline()
-
-  tl.to(backdropRef.value, {
-    opacity: 1,
-    duration: 0.3,
-    ease: 'power2.out',
-  }).fromTo(
-    dialogRef.value,
-    {
-      opacity: 0,
-      y: -20,
-      scale: 0.95,
-    },
-    {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      duration: 0.35,
-      ease: 'power3.out',
-    },
-    '-=0.1',
-  )
+  if (backdropRef.value && dialogRef.value) {
+    modalEngine.init(props.id, backdropRef.value, dialogRef.value)
+  }
+  modalEngine.open(props.id)
 
   return new Promise((res) => {
     resolver = res
@@ -91,16 +76,9 @@ const open = async (): Promise<any> => {
 const confirm = async (...params: any[]) => {
   if (resolver) resolver(...params)
 
-  if (tl) {
-    await tl.reverse().eventCallback('onReverseComplete', () => {
-      isOpen.value = false
-    })
-  } else {
-    isOpen.value = false
-  }
+  await modalEngine.close(props.id, () => (isOpen.value = false))
 
   unlock()
-  tl = null
 }
 
 const close = () => {

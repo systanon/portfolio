@@ -5,8 +5,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useGsap } from '@/composables/useGsap'
+import { onMounted, ref } from 'vue'
+import { createProgress } from '@/animations'
 
 export interface IProgressBar {
   play: (
@@ -30,50 +30,44 @@ const props = withDefaults(
   },
 )
 
-const gsap = useGsap()
+const play = ref<
+  (
+    duration: number,
+    onComplete?: () => void,
+    update?: (tween: gsap.core.Tween) => void,
+  ) => void
+>(() => {})
+const reset = ref<() => void>(() => {})
+const pause = ref<() => void>(() => {})
+const resume = ref<() => void>(() => {})
+const seek = ref<(progress: number) => void>(() => {})
+const getTween = ref<() => gsap.core.Tween | null>()
 const progressBar = ref<HTMLDivElement | null>(null)
-let tween: gsap.core.Tween | null = null
 
-const pause = () => {
-  tween?.pause()
-}
-
-const resume = () => {
-  tween?.resume()
-}
-
-const seek = (progress: number) => {
-  tween?.progress(progress)
-}
-
-const play = (
-  durationInSeconds: number,
-  onComplete?: () => void,
-  update?: (tween: gsap.core.Tween) => void,
-) => {
-  const width = props.progress ? '100%' : '0'
+onMounted(() => {
   if (!progressBar.value) return
-  tween?.kill()
-  tween = gsap.to(progressBar.value, {
-    width,
-    duration: durationInSeconds,
-    ease: 'linear',
-    onUpdate() {
-      if (tween) update?.(tween)
-    },
-    onComplete,
-  })
-}
+  const progress = createProgress(progressBar.value, props.progress)
 
-const reset = () => {
-  tween?.kill()
-  tween = null
+  play.value = progress.play
+  reset.value = progress.reset
+  pause.value = progress.pause
+  resume.value = progress.resume
+  seek.value = progress.seek
+  getTween.value = progress.getTween
+})
 
-  if (!progressBar.value) return
-  gsap.set(progressBar.value, { width: '0%' })
-}
-
-defineExpose({ play, pause, resume, seek, reset, getTween: () => tween })
+defineExpose({
+  play: (
+    duration: number,
+    onComplete?: () => void,
+    update?: (tween: gsap.core.Tween) => void,
+  ) => play.value(duration, onComplete, update),
+  pause: () => pause.value(),
+  resume: () => resume.value(),
+  seek: (progress: number) => seek.value(progress),
+  reset: () => reset.value(),
+  getTween: () => getTween.value?.(),
+})
 </script>
 
 <style scoped lang="scss">
