@@ -92,7 +92,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .app-navigation {
-  background-color: $bg-menu-secondary;
+  background-color: var(--bg-tertiary);
   padding: rem(15);
   display: flex;
   flex-direction: column;
@@ -110,7 +110,7 @@ onMounted(async () => {
   &__menu {
     width: 100%;
     padding-top: rem(60);
-    color: $text-color-primary;
+    color: var(--text-color-primary);
     display: flex;
     flex-direction: column;
     align-items: center;

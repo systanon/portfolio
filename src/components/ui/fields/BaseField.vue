@@ -37,7 +37,7 @@ const id = uuidv4()
 const { validation } = defineProps<Props>()
 
 const errorMessages = computed(
-  () => validation?.$errors?.map((err) => unref(err.$message)) ?? []
+  () => validation?.$errors?.map((err) => unref(err.$message)) ?? [],
 )
 </script>
 
@@ -66,7 +66,7 @@ const errorMessages = computed(
     font-size: rem(14);
 
     &-text {
-      color: $error-color;
+      color: var(--error);
     }
   }
 }

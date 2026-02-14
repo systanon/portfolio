@@ -55,13 +55,13 @@ const { modelValueProxy, $v } = useField(props, emit)
 <style scoped lang="scss">
 .ui-input__field {
   padding: rem(16) rem(36) rem(16) rem(16);
-  border: 1px solid $border-color;
+  border: 1px solid var(--border-color);
   border-radius: rem(6);
   font-size: rem(18);
   width: 100%;
 
   &--error {
-    border-color: $error-color;
+    border-color: var(--error);
   }
 
   &:disabled {

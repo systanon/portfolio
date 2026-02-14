@@ -102,7 +102,7 @@ defineExpose({
     opacity: 0;
   }
   &__dialog {
-    background-color: $bg-menu-secondary;
+    background-color: var(--bg-tertiary);
     width: calc(100% - rem(15));
     max-width: rem(600);
     border-radius: rem(10);
