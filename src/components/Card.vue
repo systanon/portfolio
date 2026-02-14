@@ -25,7 +25,7 @@ defineProps<{
 .card-component {
   display: flex;
   flex-direction: column;
-  background: $backdrop-color;
+  background: var(--backdrop-color);
   backdrop-filter: blur($blur-filter);
   -webkit-backdrop-filter: blur($blur-filter);
   align-items: center;

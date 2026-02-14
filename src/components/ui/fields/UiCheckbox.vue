@@ -54,7 +54,7 @@ function onChange(event: Event) {
     width: rem(20);
     height: rem(20);
     cursor: pointer;
-    accent-color: $bg-menu-secondary;
+    accent-color: var(--bg-tertiary);
     margin: 0;
 
     &:disabled {

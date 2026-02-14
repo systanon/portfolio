@@ -51,7 +51,7 @@ const { modelValueProxy, $v } = useField(props, emit)
 
   &__field {
     padding: rem(16);
-    border: 1px solid $border-color;
+    border: 1px solid var(--border-color);
     border-radius: 6px;
     font-size: rem(18);
     width: 100%;
@@ -59,7 +59,7 @@ const { modelValueProxy, $v } = useField(props, emit)
     resize: vertical;
 
     &--error {
-      border-color: $error-color;
+      border-color: var(--error);
     }
     &:disabled {
       color: var(--text-color-secondary);

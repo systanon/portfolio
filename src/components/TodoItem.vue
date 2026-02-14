@@ -136,7 +136,7 @@ onClickOutside(menuRef, () => (menuOpen.value = false))
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: $bg-menu-tertiary;
+      background: var(--bg-quaternary);
       z-index: 1;
 
       display: flex;
@@ -170,7 +170,7 @@ onClickOutside(menuRef, () => (menuOpen.value = false))
       width: 200%;
       height: 200%;
       border-radius: 50%;
-      background: $bg-menu-secondary;
+      background: var(--bg-tertiary);
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);

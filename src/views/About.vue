@@ -68,7 +68,7 @@ const openForm = async () => {
   text-align: center;
   &__title {
     color: var(--text-color-primary);
-    text-shadow: $text-shadow;
+    text-shadow: var(--text-shadow);
     padding-bottom: rem(40);
   }
   &__description {

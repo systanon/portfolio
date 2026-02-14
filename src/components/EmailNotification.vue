@@ -42,7 +42,7 @@ const backToSignIn = () => {
 <style scoped lang="scss">
 .email-notification {
   &__backdrop {
-    background: $backdrop-color;
+    background: var(--backdrop-color);
     backdrop-filter: blur($blur-filter);
     -webkit-backdrop-filter: blur($blur-filter);
     text-align: center;
