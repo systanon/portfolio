@@ -67,28 +67,10 @@ span {
   color: var(--text-color-secondary);
 }
 
-h1 {
-  @include typography('h1');
-}
-
-h2 {
-  @include typography('h2');
-}
-
-h3 {
-  @include typography('h3');
-}
-
-h4 {
-  @include typography('h4');
-}
-
-h5 {
-  @include typography('h5');
-}
-
-p {
-  @include typography('p');
+@each $name, $props in $typography {
+  #{$name} {
+    @include typography($name);
+  }
 }
 
 .container {
