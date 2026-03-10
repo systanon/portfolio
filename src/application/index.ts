@@ -19,13 +19,10 @@ export const httpClient = new HTTPClient({
 export const wSService = new WSService(import.meta.env.VITE_APP_WS_API)
 
 export const notificationService = new NotificationService()
-export const todoService = new TodoService(httpClient, notificationService)
+export const todoService = new TodoService(httpClient)
 export const authService = new AuthService(httpClient)
 export const notesService = new NotesService(httpClient)
-export const statisticService = new StatisticService(
-  httpClient,
-  notificationService,
-)
+export const statisticService = new StatisticService(httpClient)
 httpClient.interceptors.request.use(
   (request) => {
     if (request.credentials === 'include') {
@@ -79,14 +76,10 @@ httpClient.interceptors.response.use(
   { runWhen: () => true },
 )
 
-export const createApplication = (): Application =>
-  new Application(
-    todoService,
-    authService,
-    notesService,
-    notificationService,
-    statisticService,
-  )
-
-// Here only for Pinia
-export const application = createApplication()
+export const application = new Application(
+  todoService,
+  authService,
+  notesService,
+  notificationService,
+  statisticService,
+)
