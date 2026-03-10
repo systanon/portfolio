@@ -4,7 +4,6 @@ import { defineStore } from 'pinia'
 import { AppError } from '@/types/app-errors'
 import type { CreateTodoDTO, Todo, UpdateTodoDTO } from '@/types/todo'
 import type { GetAllParams } from '@/types/app.types'
-import { errorMsg } from '@/helpers/formatErrorMsg'
 import type { Application } from '@/application/application'
 import type { WSMessage } from '@/application/services/ws.service'
 
@@ -32,31 +31,24 @@ export const useTodoStore = defineStore('todos', () => {
   }
 
   async function getAll(params: GetAllParams) {
-    try {
-      const {
-        data,
-        total: _total,
-        pages: _pages,
-      } = await application.getAllTodos(params)
-      rows.value = data.map(todo => {
-        indexID.value.set(todo.id, todo)
-        return todo
-      })
-      total.value = _total
-      pages.value = _pages
-      currentPage = params.page ?? 1
-    } catch (error) {
+    const res = await application.getAllTodos(params)
+    if (res instanceof AppError) {
       rows.value = []
       indexID.value = new Map()
       total.value = 0
       pages.value = 0
-      application.notify('error', errorMsg(error))
+    } else {
+      rows.value = res.data.map((todo) => {
+        indexID.value.set(todo.id, todo)
+        return todo
+      })
+      total.value = res.total
+      pages.value = res.pages
+      currentPage = params.page ?? 1
     }
   }
 
-  function _update(
-    todo: Todo,
-  ): void {
+  function _update(todo: Todo): void {
     const _todo = indexID.value.get(todo.id)
     if (!_todo) {
       return
@@ -64,9 +56,7 @@ export const useTodoStore = defineStore('todos', () => {
     Object.assign(_todo, todo)
   }
 
-  function _create(
-    todo: Todo,
-  ): void {
+  function _create(todo: Todo): void {
     indexID.value.set(todo.id, todo)
     if (currentPage === 1) {
       rows.value.unshift(todo)
@@ -74,9 +64,7 @@ export const useTodoStore = defineStore('todos', () => {
     total.value++
   }
 
-  function _delete(
-    id: number,
-  ): void {
+  function _delete(id: number): void {
     const _todo = indexID.value.get(id)
     if (!_todo) {
       return
@@ -94,7 +82,7 @@ export const useTodoStore = defineStore('todos', () => {
 
   async function update(
     _id: number,
-    payload: UpdateTodoDTO
+    payload: UpdateTodoDTO,
   ): Promise<AppError | void> {
     const res = await application.updateTodo(_id, payload)
     if (res instanceof AppError) {
