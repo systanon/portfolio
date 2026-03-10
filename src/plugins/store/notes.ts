@@ -1,13 +1,11 @@
 import { inject, ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { AppError } from '@/types/app-errors';
-import type { CreateNoteDTO, Note, UpdateNoteDTO } from '@/types/notes';
-import type { GetAllParams } from '@/types/app.types';
-import type { Application } from '@/application/application';
-import { errorMsg } from '@/helpers/formatErrorMsg';
-import type { WSMessage } from '@/application/services/ws.service';
-
+import { AppError } from '@/types/app-errors'
+import type { CreateNoteDTO, Note, UpdateNoteDTO } from '@/types/notes'
+import type { GetAllParams } from '@/types/app.types'
+import type { Application } from '@/application/application'
+import type { WSMessage } from '@/application/services/ws.service'
 
 export const useNotesStore = defineStore('notes', () => {
   const rows: Ref<Note[]> = ref([])
@@ -33,27 +31,25 @@ export const useNotesStore = defineStore('notes', () => {
   }
 
   async function getAll(params: GetAllParams) {
-    try {
-      const { data, total: _total, pages: _pages } = await application.getAllNotes(params)
-      rows.value = data.map(note => {
-        indexID.value.set(note.id, note)
-        return note
-      })
-      total.value = _total
-      pages.value = _pages
-      currentPage = params.page ?? 1
-    } catch (error) {
+    const res = await application.getAllNotes(params)
+
+    if (res instanceof AppError) {
       rows.value = []
       indexID.value = new Map()
       total.value = 0
       pages.value = 0
-      application.notify('error', errorMsg(error))
+    } else {
+      rows.value = res.data.map((note) => {
+        indexID.value.set(note.id, note)
+        return note
+      })
+      total.value = res.total
+      pages.value = res.pages
+      currentPage = params.page ?? 1
     }
   }
 
-  function _update(
-    note: Note,
-  ): void {
+  function _update(note: Note): void {
     const _todo = indexID.value.get(note.id)
     if (!_todo) {
       return
@@ -61,9 +57,7 @@ export const useNotesStore = defineStore('notes', () => {
     Object.assign(_todo, note)
   }
 
-  function _create(
-    note: Note,
-  ): void {
+  function _create(note: Note): void {
     indexID.value.set(note.id, note)
     if (currentPage === 1) {
       rows.value.unshift(note)
@@ -71,9 +65,7 @@ export const useNotesStore = defineStore('notes', () => {
     total.value++
   }
 
-  function _delete(
-    id: number,
-  ): void {
+  function _delete(id: number): void {
     const _todo = indexID.value.get(id)
     if (!_todo) {
       return
@@ -81,7 +73,6 @@ export const useNotesStore = defineStore('notes', () => {
     rows.value = rows.value.filter(({ id }) => id !== _todo.id)
     indexID.value.delete(_todo.id)
   }
-
 
   async function update(_id: number, payload: UpdateNoteDTO) {
     const res = await application.updateNote(_id, payload)
@@ -104,5 +95,15 @@ export const useNotesStore = defineStore('notes', () => {
     }
   }
 
-  return { getAll, rows, indexID, update, create, remove, total, pages, messageHandler }
+  return {
+    getAll,
+    rows,
+    indexID,
+    update,
+    create,
+    remove,
+    total,
+    pages,
+    messageHandler,
+  }
 })
