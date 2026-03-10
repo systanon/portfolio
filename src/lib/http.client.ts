@@ -1,3 +1,6 @@
+import type { ErrorResponse, SuccessResponse } from '@/types/api'
+import { AppError } from '@/types/app-errors'
+import { AppSuccess } from '@/types/app.types'
 import { stringify } from 'qs'
 
 export const RESPONSE_STATUS = {
@@ -8,14 +11,13 @@ export const RESPONSE_STATUS = {
   FORBIDDEN: 403,
   RATE_LIMIT: 429,
   INTERNAL_SERVER_ERROR: 500,
-  BAD_GATEWAY: 502
+  BAD_GATEWAY: 502,
 }
 
 type OnFulfilled<T> = (value: T) => T | Promise<T>
 type OnRejected<T> = (reason: T) => T | Promise<T>
 
-export type ResponseWithRequest = Response & { request: HTTPRequest };
-
+export type ResponseWithRequest = Response & { request: HTTPRequest }
 
 type Nullable<T> = T | null
 
@@ -31,7 +33,7 @@ class InterceptorManager<T, Err, Cfg> {
   public use(
     onfulfilled?: OnFulfilled<T>,
     onrejected?: OnRejected<Err>,
-    options: { runWhen?: (config: Cfg) => boolean } = {}
+    options: { runWhen?: (config: Cfg) => boolean } = {},
   ): number {
     if (!onfulfilled && !onrejected) return -1
 
@@ -39,7 +41,7 @@ class InterceptorManager<T, Err, Cfg> {
       this.interceptors.push({
         onfulfilled,
         onrejected,
-        runWhen: options.runWhen ?? undefined
+        runWhen: options.runWhen ?? undefined,
       }) - 1
     )
   }
@@ -55,34 +57,50 @@ class InterceptorManager<T, Err, Cfg> {
   }
 
   public forEach(fn: (interceptor: Interceptor<T, Err, Cfg>) => void): void {
-    this.interceptors.forEach(interceptor => {
+    this.interceptors.forEach((interceptor) => {
       if (interceptor) fn(interceptor)
     })
   }
 }
 
-export type HTTPClientConfig = Pick<RequestInit, "cache" | "credentials" | "headers" | "mode" | "referrer" | "referrerPolicy"> & {
+export type HTTPClientConfig = Pick<
+  RequestInit,
+  'cache' | 'credentials' | 'headers' | 'mode' | 'referrer' | 'referrerPolicy'
+> & {
   base?: string | URL | undefined
   interceptors?: Array<(v: any) => any>
 }
 
-export type HTTPRequest = Pick<RequestInit, "body" | "cache" | "credentials" | "integrity" | "keepalive" | "method" | "mode" | "redirect" | "referrer" | "referrerPolicy" | "signal" | "window"> & {
+export type HTTPRequest = Pick<
+  RequestInit,
+  | 'body'
+  | 'cache'
+  | 'credentials'
+  | 'integrity'
+  | 'keepalive'
+  | 'method'
+  | 'mode'
+  | 'redirect'
+  | 'referrer'
+  | 'referrerPolicy'
+  | 'signal'
+  | 'window'
+> & {
   readonly config?: HTTPClientConfig
   readonly headers?: Headers
   readonly resource: RequestInfo | URL
   readonly url: URL | string
   readonly data?: Record<string, any>
+  readonly params?: URLSearchParams | Record<string, any>
 }
 
 export class HTTPClient {
   interceptors = {
     request: new InterceptorManager<HTTPRequest, Error, HTTPRequest>(),
-    response: new InterceptorManager<ResponseWithRequest, Error, HTTPRequest>()
+    response: new InterceptorManager<ResponseWithRequest, Error, HTTPRequest>(),
   }
   private readonly config: HTTPClientConfig
-  constructor(
-    config: HTTPClientConfig
-  ) {
+  constructor(config: HTTPClientConfig) {
     this.config = config
   }
 
@@ -90,26 +108,30 @@ export class HTTPClient {
     try {
       const input = typeof req.resource === 'string' ? req.url : req.resource
       const response = await fetch(input, req)
-      const responseWithRequest: ResponseWithRequest = response as ResponseWithRequest;
-      responseWithRequest.request = req;
-      return responseWithRequest;
+      const responseWithRequest: ResponseWithRequest =
+        response as ResponseWithRequest
+      responseWithRequest.request = req
+      return responseWithRequest
     } catch (error) {
       return Promise.reject(error)
     }
   }
 
-
-  public async do(resource: RequestInfo | URL, options?: RequestInit & {
-    params?: URLSearchParams | Record<string, any>, data?: Record<string, any>
-  }): Promise<ResponseWithRequest> {
+  public async do(
+    resource: RequestInfo | URL,
+    options?: RequestInit & {
+      params?: URLSearchParams | Record<string, any>
+      data?: Record<string, any>
+    },
+  ): Promise<ResponseWithRequest> {
     let url: URL
 
-    if (typeof resource === "string" || resource instanceof URL) {
+    if (typeof resource === 'string' || resource instanceof URL) {
       url = new URL(resource, this.config.base)
     } else if (resource instanceof Request) {
       url = new URL(resource.url, this.config.base)
     } else {
-      return Promise.reject(new TypeError("resource: Request | string | URL"))
+      return Promise.reject(new TypeError('resource: Request | string | URL'))
     }
 
     fillParams(url.searchParams, options?.params)
@@ -133,31 +155,36 @@ export class HTTPClient {
       signal: options?.signal,
       url,
       window: options?.window,
-      data: options?.data ?? {}
+      data: options?.data ?? {},
     }
 
-
-    const fallbackOnRequestFulfilled: OnFulfilled<HTTPRequest> = (request) => request
+    const fallbackOnRequestFulfilled: OnFulfilled<HTTPRequest> = (request) =>
+      request
     const fallbackOnRequestRejected: OnRejected<Error> = (e) => e
-    const requestInterceptorChain: Array<[OnFulfilled<HTTPRequest>, OnRejected<Error>]> = []
+    const requestInterceptorChain: Array<
+      [OnFulfilled<HTTPRequest>, OnRejected<Error>]
+    > = []
     this.interceptors.request.forEach(
-      interceptor =>
+      (interceptor) =>
         (interceptor.runWhen?.(httpRequest) ?? false) &&
         requestInterceptorChain.unshift([
           interceptor.onfulfilled ?? fallbackOnRequestFulfilled,
-          interceptor.onrejected ?? fallbackOnRequestRejected
-        ])
+          interceptor.onrejected ?? fallbackOnRequestRejected,
+        ]),
     )
 
-
-    const fallbackOnResponseFulfilled: OnFulfilled<ResponseWithRequest> = (response) => response
+    const fallbackOnResponseFulfilled: OnFulfilled<ResponseWithRequest> = (
+      response,
+    ) => response
     const fallbackOnResponseRejected: OnRejected<Error> = (error) => error
-    const responseInterceptorChain: Array<[OnFulfilled<ResponseWithRequest>, OnRejected<Error>]> = []
-    this.interceptors.response.forEach(interceptor =>
+    const responseInterceptorChain: Array<
+      [OnFulfilled<ResponseWithRequest>, OnRejected<Error>]
+    > = []
+    this.interceptors.response.forEach((interceptor) =>
       responseInterceptorChain.push([
         interceptor.onfulfilled ?? fallbackOnResponseFulfilled,
-        interceptor.onrejected ?? fallbackOnResponseRejected
-      ])
+        interceptor.onrejected ?? fallbackOnResponseRejected,
+      ]),
     )
     return (async () => {
       let resp: Promise<ResponseWithRequest>
@@ -181,49 +208,41 @@ export class HTTPClient {
 
       for (let i = 0; i < responseInterceptorChain.length; i++) {
         const [onfulfilled, onrejected] = responseInterceptorChain[i]
-        resp = resp.then(onfulfilled, (e: any) => Promise.reject(onrejected(e as Error)))
+        resp = resp.then(onfulfilled, (e: any) =>
+          Promise.reject(onrejected(e as Error)),
+        )
       }
 
       return resp
     })()
-
   }
-  async jsonDo<T = any>(resource: string | URL | Request, options?: HTTPRequest): Promise<T> {
-    const allowedContentTypes = [
-      'application/json',
-      'text/json',
-      'application/javascript',
-      'application/vnd.api+json',
-      'application/json; charset=utf-8'
-    ]
-
+  async jsonDo<T = any>(
+    resource: string | URL | Request,
+    options?: HTTPRequest,
+  ): Promise<AppSuccess<T> | AppError> {
     try {
       const response = await this.do(resource, options)
-      const contentType = response.headers.get('Content-Type') || ''
 
-      if (response.ok && allowedContentTypes.includes(contentType)) {
-        return await response.json()
+      if (response.ok) {
+        const data = (await response.json()) as SuccessResponse<T>
+        return new AppSuccess(data.data, data.message, response.headers)
       }
 
-      if (response.status === RESPONSE_STATUS.NO_CONTENT) {
-        return {} as T
-      }
-
-      return Promise.reject({
-        _type: 'http-client-error',
-        status: response.status,
-        data: allowedContentTypes.includes(contentType) ? await response.json() : {}
-      })
+      const errorData = (await response.json()) as ErrorResponse
+      return new AppError(
+        errorData.error.message,
+        errorData.error.code,
+        response.headers,
+      )
     } catch (error: any) {
-      return Promise.reject({
-        _type: 'http-client-error',
-        status: error.status ?? 500,
-        data: error.message ?? {}
-      })
+      return new AppError(error.message, error.code)
     }
   }
 
-  async blobDo(resource: string | URL | Request, options?: RequestInit): Promise<Blob> {
+  async blobDo(
+    resource: string | URL | Request,
+    options?: RequestInit,
+  ): Promise<Blob> {
     try {
       const response = await this.do(resource, options)
       if (response.ok) return response.blob()
@@ -236,17 +255,23 @@ export class HTTPClient {
     }
   }
 
-  async bufferDo(resource: string | URL | Request, options?: RequestInit): Promise<ArrayBuffer> {
+  async bufferDo(
+    resource: string | URL | Request,
+    options?: RequestInit,
+  ): Promise<ArrayBuffer | AppError> {
     try {
       const response = await this.do(resource, options)
       if (response.ok) return response.arrayBuffer()
-
-      return Promise.reject(response)
-    } catch (error) {
-      return Promise.reject(error)
+      const errorData = (await response.json()) as ErrorResponse
+      return new AppError(
+        errorData.error.message,
+        errorData.error.code,
+        response.headers,
+      )
+    } catch (error: any) {
+      return new AppError(error.message, error.code)
     }
   }
-
 
   private mergeHeaders(optionsHeaders?: HeadersInit): Headers {
     const headers = new Headers()
@@ -258,7 +283,6 @@ export class HTTPClient {
   }
 }
 
-
 const copyHeaders = (target: Headers, source?: HeadersInit): void => {
   if (!source) return
 
@@ -268,14 +292,17 @@ const copyHeaders = (target: Headers, source?: HeadersInit): void => {
     }
   } else if (Array.isArray(source)) {
     source.forEach(([header, value]) => target.set(header, value))
-  } else if (typeof source === "object") {
+  } else if (typeof source === 'object') {
     for (let header in source) {
       target.set(header, source[header])
     }
   }
 }
 
-const fillParams = (target: URLSearchParams, source: URLSearchParams | Record<string, any> | undefined) => {
+const fillParams = (
+  target: URLSearchParams,
+  source: URLSearchParams | Record<string, any> | undefined,
+) => {
   if (!source) return
 
   if (source instanceof URLSearchParams) {
@@ -285,7 +312,10 @@ const fillParams = (target: URLSearchParams, source: URLSearchParams | Record<st
   }
 }
 
-const fillParamsFromRecord = (params: URLSearchParams, record: URLSearchParams | Record<string, any> | undefined) => {
+const fillParamsFromRecord = (
+  params: URLSearchParams,
+  record: URLSearchParams | Record<string, any> | undefined,
+) => {
   const url = new URL(`http://temp-domain.com/path?${stringify(record)}`)
   url.searchParams.forEach((v, k) => params.append(k, v))
 }

@@ -4,125 +4,97 @@ import type {
   Todo,
   ReplaceTodoDTO,
   UpdateTodoDTO,
+  CreateTodoResponse,
 } from '@/types/todo'
 import { AppError } from '@/types/app-errors'
 import type { ID } from '@/types/general'
-import { errorMsg } from '@/helpers/formatErrorMsg'
-import type { GetAllParams, PaginateResult } from '@/types/app.types'
+import {
+  AppSuccess,
+  type GetAllParams,
+  type PaginateResult,
+} from '@/types/app.types'
 import { getTotalPages } from '@/utils/getTotalPages'
 import { API_URL } from '@/constants'
-import type { NotificationService } from './notification.service'
 
 export class TodoService {
   private readonly httpClient: HTTPClient
-  private readonly notificationService: NotificationService
 
-  constructor(
-    httpClient: HTTPClient,
-    notificationService: NotificationService
-  ) {
+  constructor(httpClient: HTTPClient) {
     this.httpClient = httpClient
-    this.notificationService = notificationService
   }
 
-  async create(dto: CreateTodoDTO): Promise<ID | AppError> {
+  async create(
+    dto: CreateTodoDTO,
+  ): Promise<AppSuccess<CreateTodoResponse> | AppError> {
     const url = API_URL.todos
     const body = JSON.stringify(dto)
-    try {
-      const result = await this.httpClient.jsonDo<Todo>(url, {
-        method: 'POST',
-        body,
-        resource: url,
-        url,
-      })
-      const id = Number(result.id)
-
-      return id
-    } catch (error) {
-      const msg = errorMsg(error)
-      this.notificationService.notify('error', msg)
-      return new AppError(msg)
-    }
+    return await this.httpClient.jsonDo(url, {
+      method: 'POST',
+      body,
+      resource: url,
+      url,
+    })
   }
 
-  async getAll(params: GetAllParams): Promise<PaginateResult<Todo>> {
+  async getAll(params: GetAllParams): Promise<PaginateResult<Todo> | AppError> {
     const url = API_URL.todos
-    try {
-      const response = await this.httpClient.do(url, { params })
-      if (response.ok) {
-        const data = await response.json()
-        return {
-          ...getTotalPages(response.headers),
-          data,
-        }
+    const result = await this.httpClient.jsonDo<Todo[]>(url, {
+      method: 'GET',
+      params,
+      resource: url,
+      url,
+    })
+    if (result instanceof AppSuccess) {
+      return {
+        ...getTotalPages(result.headers),
+        data: result.data,
       }
-      return Promise.reject(response)
-    } catch (error) {
-      return Promise.reject(error)
     }
+    return result
   }
 
   async getOne(id: ID): Promise<Todo | AppError> {
     const url = `${API_URL.todos}/${id}`
-    try {
-      const result = await this.httpClient.jsonDo<Todo>(url)
-      return result
-    } catch (error) {
-      const msg = errorMsg(error)
-      this.notificationService.notify('error', msg)
-      return new AppError(msg)
+    const response = await this.httpClient.jsonDo<Todo>(url, {
+      resource: url,
+      url,
+    })
+
+    if (response instanceof AppSuccess) {
+      return response.data
     }
+
+    return response
   }
 
-  async replace(id: ID, dto: ReplaceTodoDTO): Promise<Todo | AppError> {
+  async replace(id: ID, dto: ReplaceTodoDTO): Promise<AppSuccess | AppError> {
     const url = `${API_URL.todos}/${id}`
     const body = JSON.stringify(dto)
-    try {
-      const result = await this.httpClient.jsonDo<Todo>(url, {
-        method: 'PUT',
-        body,
-        resource: url,
-        url,
-      })
-      return result
-    } catch (error) {
-      const msg = errorMsg(error)
-      this.notificationService.notify('error', msg)
-      return new AppError(msg)
-    }
+    return await this.httpClient.jsonDo<Todo>(url, {
+      method: 'PUT',
+      body,
+      resource: url,
+      url,
+    })
   }
 
-  async update(id: ID, dto: UpdateTodoDTO): Promise<Todo | AppError> {
+  async update(id: ID, dto: UpdateTodoDTO): Promise<AppSuccess | AppError> {
     const url = `${API_URL.todos}/${id}`
     const body = JSON.stringify(dto)
-    try {
-      const result = await this.httpClient.jsonDo<Todo>(url, {
-        method: 'PATCH',
-        body,
-        resource: url,
-        url,
-      })
-      return result
-    } catch (error) {
-      const msg = errorMsg(error)
-      this.notificationService.notify('error', msg)
-      return new AppError(msg)
-    }
+    return await this.httpClient.jsonDo<Todo>(url, {
+      method: 'PATCH',
+      body,
+      resource: url,
+      url,
+    })
   }
 
-  async delete(id: ID): Promise<Todo | AppError> {
+  async delete(id: ID): Promise<AppSuccess | AppError> {
     const url = `${API_URL.todos}/${id}`
-    try {
-      const result = await this.httpClient.jsonDo<Todo>(url, {
-        method: 'DELETE',
-        resource: url,
-        url,
-      })
-      return result
-    } catch (error) {
-      const msg = errorMsg(error)
-      this.notificationService.notify('error', msg)
-      return new AppError(msg)
-    }
+    return await this.httpClient.jsonDo<Todo>(url, {
+      method: 'DELETE',
+      resource: url,
+      url,
+    })
   }
 }

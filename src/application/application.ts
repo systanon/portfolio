@@ -24,7 +24,11 @@ import type {
   UserProfile,
   UserProfileUpdateInfo,
 } from '@/types/auth'
-import type { GetAllParams, PaginateResult } from '@/types/app.types'
+import type {
+  AppSuccess,
+  GetAllParams,
+  PaginateResult,
+} from '@/types/app.types'
 import type { NotesService } from './services/notes.service'
 import type {
   CreateNoteDTO,
@@ -202,13 +206,8 @@ export class Application<
 
   public async updateProfileInfo(
     dto: UserProfileUpdateInfo,
-  ): Promise<AppError | string> {
+  ): Promise<AppError | AppSuccess> {
     return await this.#authService.updateProfile(dto)
-  }
-
-  public async refreshToken(): Promise<void | AppError> {
-    const res = await this.#authService.refresh()
-    return res
   }
 
   public async forgotPassword(
@@ -237,22 +236,20 @@ export class Application<
     }
   }
 
-  public async createTodo(dto: CreateTodoDTO): Promise<ID | AppError> {
-    const res = await this.#todoService.create(dto)
-    return res
+  public async createTodo(dto: CreateTodoDTO): Promise<AppSuccess | AppError> {
+    return await this.#todoService.create(dto)
   }
 
   public async getAllTodos(
     params: GetAllParams,
-  ): Promise<PaginateResult<Todo>> {
-    try {
-      this.#loading.value = true
-      return await this.#todoService.getAll(params)
-    } catch (error) {
-      return Promise.reject(error)
-    } finally {
-      this.#loading.value = false
+  ): Promise<PaginateResult<Todo> | AppError> {
+    this.#loading.value = true
+    const res = await this.#todoService.getAll(params)
+    if (res instanceof AppError) {
+      this.notify('error', res.message)
     }
+    this.#loading.value = false
+    return res
   }
 
   public async getOneTodo(id: ID): Promise<Todo | AppError> {
@@ -266,7 +263,7 @@ export class Application<
   public async replaceTodo(
     id: ID,
     dto: ReplaceTodoDTO,
-  ): Promise<Todo | AppError> {
+  ): Promise<AppSuccess | AppError> {
     const res = await this.#todoService.replace(id, dto)
     return res
   }
@@ -274,30 +271,26 @@ export class Application<
   public async updateTodo(
     id: ID,
     dto: UpdateTodoDTO,
-  ): Promise<Todo | AppError> {
+  ): Promise<AppSuccess | AppError> {
     const res = await this.#todoService.update(id, dto)
     return res
   }
 
-  public async deleteTodo(id: ID): Promise<Todo | AppError> {
+  public async deleteTodo(id: ID): Promise<AppSuccess | AppError> {
     const res = await this.#todoService.delete(id)
     return res
   }
 
   public async getAllNotes(
     params: GetAllParams,
-  ): Promise<PaginateResult<Note>> {
-    try {
-      this.#loading.value = true
-      return await this.#noteService.getAll(params)
-    } catch (error) {
-      return Promise.reject(error)
-    } finally {
-      this.#loading.value = false
-    }
+  ): Promise<PaginateResult<Note> | AppError> {
+    this.#loading.value = true
+    const res = await this.#noteService.getAll(params)
+    this.#loading.value = false
+    return res
   }
 
-  public async createNote(dto: CreateNoteDTO): Promise<ID | AppError> {
+  public async createNote(dto: CreateNoteDTO): Promise<AppSuccess | AppError> {
     const res = await this.#noteService.create(dto)
     return res
   }
@@ -310,7 +303,7 @@ export class Application<
   public async replaceNote(
     id: ID,
     dto: ReplaceNoteDTO,
-  ): Promise<Note | AppError> {
+  ): Promise<AppSuccess | AppError> {
     const res = await this.#noteService.replace(id, dto)
     return res
   }
@@ -318,12 +311,12 @@ export class Application<
   public async updateNote(
     id: ID,
     dto: UpdateNoteDTO,
-  ): Promise<Note | AppError> {
+  ): Promise<AppSuccess | AppError> {
     const res = await this.#noteService.update(id, dto)
     return res
   }
 
-  public async deleteNote(id: ID): Promise<Note | AppError> {
+  public async deleteNote(id: ID): Promise<AppSuccess | AppError> {
     const res = await this.#noteService.delete(id)
     return res
   }

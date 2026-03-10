@@ -30,8 +30,6 @@ export type ResetPasswordDto = {
   token: string
 }
 
-export type SuccessResponse = RegistrationResponse
-
 export type UserProfile = {
   id: number
   email: string
