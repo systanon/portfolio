@@ -1,19 +1,7 @@
 import { ref, type Ref } from 'vue'
 import EventEmitter from 'eventemitter3'
-import type { ID } from '../types/general'
 import { AppError } from '../types/app-errors'
-import type {
-  AppSuccess,
-  GetAllParams,
-  PaginateResult,
-} from '@/types/app.types'
-import type { NotesService } from './services/notes.service'
-import type {
-  CreateNoteDTO,
-  Note,
-  ReplaceNoteDTO,
-  UpdateNoteDTO,
-} from '@/types/notes'
+
 import type {
   NotificationService,
   NotificationType,
@@ -23,6 +11,7 @@ import type { StatisticDTO } from '@/types/statistic'
 import type { AuthApplication } from './auth.application'
 import type { UserApplication } from './user.application'
 import type { TodoApplication } from './todo.application'
+import type { NoteApplication } from './note.application'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
@@ -30,9 +19,9 @@ export class Application<
 > {
   #ee: EventEmitter = new EventEmitter()
   public todoApplication: TodoApplication
-  #noteService: NotesService
   public authApplication: AuthApplication
   public userApplication: UserApplication
+  public noteApplication: NoteApplication
   #notificationService: NotificationService
   #loading: Ref<boolean> = ref(false)
   private _pageTitle: Ref<string | null> = ref(null)
@@ -42,14 +31,14 @@ export class Application<
     authApplication: AuthApplication,
     userApplication: UserApplication,
     todoApplication: TodoApplication,
-    notesService: NotesService,
+    noteApplication: NoteApplication,
     notificationService: NotificationService,
     statisticService: StatisticService,
   ) {
     this.authApplication = authApplication
     this.userApplication = userApplication
     this.todoApplication = todoApplication
-    this.#noteService = notesService
+    this.noteApplication = noteApplication
     this.#notificationService = notificationService
     this.statisticService = statisticService
   }
@@ -89,46 +78,6 @@ export class Application<
     once?: boolean,
   ): EventEmitter {
     return this.#ee.off(event, fn, context, once)
-  }
-
-  public async getAllNotes(
-    params: GetAllParams,
-  ): Promise<PaginateResult<Note> | AppError> {
-    this.#loading.value = true
-    const res = await this.#noteService.getAll(params)
-    this.#loading.value = false
-    return res
-  }
-
-  public async createNote(dto: CreateNoteDTO): Promise<AppSuccess | AppError> {
-    const res = await this.#noteService.create(dto)
-    return res
-  }
-
-  public async getOneNote(id: ID): Promise<Note | AppError> {
-    const res = await this.#noteService.getOne(id)
-    return res
-  }
-
-  public async replaceNote(
-    id: ID,
-    dto: ReplaceNoteDTO,
-  ): Promise<AppSuccess | AppError> {
-    const res = await this.#noteService.replace(id, dto)
-    return res
-  }
-
-  public async updateNote(
-    id: ID,
-    dto: UpdateNoteDTO,
-  ): Promise<AppSuccess | AppError> {
-    const res = await this.#noteService.update(id, dto)
-    return res
-  }
-
-  public async deleteNote(id: ID): Promise<AppSuccess | AppError> {
-    const res = await this.#noteService.delete(id)
-    return res
   }
 
   public async saveStatistic(dto: StatisticDTO): Promise<any | AppError> {

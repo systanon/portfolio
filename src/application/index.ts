@@ -2,7 +2,7 @@ import { HTTPClient, type ResponseWithRequest } from '../lib/http.client'
 import { WSService } from '@/application/services/ws.service'
 
 import { TodoService } from './services/todo.service'
-import { NotesService } from './services/notes.service'
+import { NoteService } from './services/note.service'
 import { NotificationService } from './services/notification.service'
 
 import { Application } from './application'
@@ -14,6 +14,7 @@ import { UserService } from './services/user.service'
 import { UserApplication } from './user.application'
 import { AppSuccess } from '@/types/app.types'
 import { TodoApplication } from './todo.application'
+import { NoteApplication } from './note.application'
 
 export const httpClient = new HTTPClient({
   base: import.meta.env.VITE_APP_API_URL,
@@ -29,12 +30,13 @@ export const notificationService = new NotificationService()
 export const todoService = new TodoService(httpClient)
 export const authService = new AuthService(httpClient)
 export const userService = new UserService(httpClient)
-export const notesService = new NotesService(httpClient)
+export const noteService = new NoteService(httpClient)
 export const statisticService = new StatisticService(httpClient)
 
 export const userApplication = new UserApplication(userService)
 export const authApplication = new AuthApplication(authService, tokenManager)
 export const todoApplication = new TodoApplication(todoService)
+export const noteApplication = new NoteApplication(noteService)
 
 httpClient.interceptors.request.use(
   (request) => {
@@ -92,7 +94,7 @@ export const application = new Application(
   authApplication,
   userApplication,
   todoApplication,
-  notesService,
+  noteApplication,
   notificationService,
   statisticService,
 )
