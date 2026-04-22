@@ -71,9 +71,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useNotesStore } from '@/plugins/store/notes'
+import { useNoteStore } from '@/plugins/store/note'
 import NoteItem from '@/components/NoteItem.vue'
 import UIPagination from '@/components/ui/UiPagination.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
@@ -84,7 +84,10 @@ import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { type Note } from '../types/notes'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
-import { usePageItem } from '@/composables/usePageItem'
+import { useNote } from '@/composables/useNote'
+import { usePaginatedRoute } from '@/composables/usePaginatedRoute'
+import { AppError } from '@/types/app-errors'
+import { useLoading } from '@/composables/useLoading'
 
 const createFormRef = ref()
 const editFormRef = ref()
@@ -97,9 +100,9 @@ const editingNote = ref<Note | undefined>(undefined)
 
 const { isMobile, isTablet } = useInjectWindowResize()
 
-const notesStore = useNotesStore()
-const { rows, pages } = storeToRefs(notesStore)
-const { getAll, update, create, remove, messageHandler } = notesStore
+const noteStore = useNoteStore()
+const { rows, pages } = storeToRefs(noteStore)
+const { getAll, update, create, remove } = useNote()
 
 const {
   pagination,
@@ -108,9 +111,22 @@ const {
   nextPage,
   latestPage,
   btnPage,
-  loading,
-  submitWithModal,
-} = usePageItem(getAll, pages, 'notes', messageHandler)
+  setPages,
+  saveQuery,
+  requestParams,
+} = usePaginatedRoute(pages)
+
+const { loading } = useLoading()
+
+const submitWithModal = async (
+  modal: IModalOpen | null,
+  action: () => Promise<unknown>,
+) => {
+  const res = await action()
+  if (!(res instanceof AppError)) {
+    modal?.confirm(true)
+  }
+}
 
 const openEditForm = async (note: Note) => {
   editingNote.value = note
@@ -143,6 +159,25 @@ const createNote = async () => {
 
   await submitWithModal(createModalRef.value, () => create(data))
 }
+
+watch(
+  pages,
+  (pages) => {
+    if (!pages) return
+    setPages(pages)
+  },
+  { immediate: true },
+)
+
+watch(requestParams, (params) => {
+  getAll(params)
+  saveQuery()
+})
+
+onMounted(() => {
+  getAll(requestParams.value)
+  saveQuery()
+})
 </script>
 
 <style scoped lang="scss">
