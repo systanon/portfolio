@@ -8,15 +8,10 @@ import type {
 } from '../../types/notes'
 import { AppError } from '../../types/app-errors'
 import type { ID } from '../../types/general'
-import {
-  AppSuccess,
-  type GetAllParams,
-  type PaginateResult,
-} from '@/types/app.types'
-import { getTotalPages } from '@/utils/getTotalPages'
+import { AppSuccess, type GetAllParams } from '@/types/app.types'
 import { API_URL } from '@/constants'
 
-export class NotesService {
+export class NoteService {
   private readonly httpClient: HTTPClient
 
   constructor(httpClient: HTTPClient) {
@@ -29,7 +24,7 @@ export class NotesService {
     const url = API_URL.notes
     const body = JSON.stringify(dto)
 
-    return await this.httpClient.jsonDo(url, {
+    return this.httpClient.jsonDo(url, {
       method: 'POST',
       body,
       credentials: 'include',
@@ -40,45 +35,32 @@ export class NotesService {
 
   public async getAll(
     params: GetAllParams,
-  ): Promise<PaginateResult<Note> | AppError> {
+  ): Promise<AppSuccess<Note[]> | AppError> {
     const url = API_URL.notes
 
-    const result = await this.httpClient.jsonDo<Note[]>(url, {
+    return this.httpClient.jsonDo<Note[]>(url, {
       method: 'GET',
       params,
       resource: url,
       credentials: 'include',
       url,
     })
-    if (result instanceof AppSuccess) {
-      return {
-        ...getTotalPages(result.headers),
-        data: result.data,
-      }
-    }
-    return result
   }
 
-  async getOne(id: ID): Promise<Note | AppError> {
+  async getOne(id: ID): Promise<AppSuccess<Note> | AppError> {
     const url = `${API_URL.notes}/${id}`
-    const result = await this.httpClient.jsonDo<Note>(url, {
+    return this.httpClient.jsonDo<Note>(url, {
       credentials: 'include',
       resource: url,
       url,
     })
-
-    if (result instanceof AppSuccess) {
-      return result.data
-    }
-
-    return result
   }
 
   async replace(id: ID, dto: ReplaceNoteDTO): Promise<AppSuccess | AppError> {
     const url = `${API_URL.notes}/${id}`
     const body = JSON.stringify(dto)
 
-    return await this.httpClient.jsonDo<null>(url, {
+    return this.httpClient.jsonDo<null>(url, {
       method: 'PUT',
       body,
       resource: url,
@@ -91,7 +73,7 @@ export class NotesService {
     const url = `${API_URL.notes}/${id}`
     const body = JSON.stringify(dto)
 
-    return await this.httpClient.jsonDo<null>(url, {
+    return this.httpClient.jsonDo<null>(url, {
       method: 'PATCH',
       body,
       credentials: 'include',
@@ -102,7 +84,7 @@ export class NotesService {
 
   async delete(id: ID): Promise<AppSuccess | AppError> {
     const url = `${API_URL.notes}/${id}`
-    return await this.httpClient.jsonDo(url, {
+    return this.httpClient.jsonDo(url, {
       method: 'DELETE',
       resource: url,
       credentials: 'include',
