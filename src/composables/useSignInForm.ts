@@ -6,7 +6,7 @@ import { useAuth } from './useAuth'
 export function useSignInForm() {
   const email = ref('')
   const password = ref('')
-  const { singIn } = useAuth()
+  const { signIn } = useAuth()
 
   const { emailRules, passwordRules } = useValidationRules()
 
@@ -21,7 +21,7 @@ export function useSignInForm() {
     const isValid = await v$.value.$validate()
     if (!isValid) return
 
-    singIn({
+    signIn({
       email: email.value,
       password: password.value,
     })

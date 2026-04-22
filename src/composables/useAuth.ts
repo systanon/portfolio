@@ -11,7 +11,7 @@ import { AppSuccess } from '@/types/app.types'
 import { router } from '@/plugins/router'
 
 export function useAuth() {
-  const singIn = async (dto: SignInDto) => {
+  const signIn = async (dto: SignInDto) => {
     const result = await application.authApplication.signIn(dto)
     if (result instanceof AppSuccess) {
       const profile = await application.userApplication.getProfile()
@@ -46,7 +46,7 @@ export function useAuth() {
   }
 
   return {
-    singIn,
+    signIn,
     logout,
     signUp,
     confirmEmail,
