@@ -11,7 +11,7 @@ type InsertData = {
   currentPage: number
 }
 
-export const useTodoStore = defineStore('todos', () => {
+export const useTodoStore = defineStore('todo', () => {
   const rows: Ref<Todo[]> = ref([])
   const indexID = ref(new Map<number, Todo>())
   const total = ref<number>(0)

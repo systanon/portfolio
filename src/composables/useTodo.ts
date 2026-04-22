@@ -1,5 +1,5 @@
 import { application, wSService } from '@/application'
-import { useTodoStore } from '@/plugins/store/todos'
+import { useTodoStore } from '@/plugins/store/todo'
 import { AppError } from '@/types/app-errors'
 import { AppSuccess, type GetAllParams } from '@/types/app.types'
 import type { CreateTodoDTO, UpdateTodoDTO } from '@/types/todo'

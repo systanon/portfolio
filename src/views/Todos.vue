@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useTodoStore } from '@/plugins/store/todos'
+import { useTodoStore } from '@/plugins/store/todo'
 import TodoItem from '@/components/TodoItem.vue'
 import UIPagination from '@/components/ui/UiPagination.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
