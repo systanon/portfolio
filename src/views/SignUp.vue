@@ -45,12 +45,14 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import useVuelidate from '@vuelidate/core'
 import AppLink from '@/components/AppLink.vue'
 import { useValidationRules } from '@/composables/useValidationRules'
+import { useAuth } from '@/composables/useAuth'
+
+const { signUp } = useAuth()
 
 const email = ref<string>('')
 const password = ref<string>('')
@@ -75,7 +77,7 @@ const submitHandler = async () => {
     password: password.value,
   }
 
-  application.signUp(payload)
+  signUp(payload)
 }
 </script>
 

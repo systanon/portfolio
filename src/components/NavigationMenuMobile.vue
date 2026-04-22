@@ -22,10 +22,10 @@ import type { Directive } from 'vue'
 import { vOnClickOutside as baseOnClickOutside } from '@vueuse/components'
 import { byAuthorized, mainMenu } from '@/config/main-menu'
 import AppLink from './AppLink.vue'
-import { useLogged } from '@/composables/useLogged'
 import BurgerButton, { type IBurgerButton } from './ui/buttons/BurgerButton.vue'
 import { useEscapeKey } from '@/composables/useEscapeKey'
 import { createNavBar } from '@/animations'
+import { useProfile } from '@/composables/useProfile'
 
 const vOnClickOutside: Directive = baseOnClickOutside
 const isNavOpen = ref(false)
@@ -33,7 +33,7 @@ const navRef = ref<HTMLElement | null>(null)
 const burgerRef = ref<IBurgerButton | null>(null)
 const menuRef = ref<HTMLElement | null>(null)
 
-const { isLogged } = useLogged()
+const { isLogged } = useProfile()
 
 useEscapeKey(close)
 const play = ref<() => void>(() => {})

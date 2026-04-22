@@ -1,12 +1,12 @@
 import { ref } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { useValidationRules } from '@/composables/useValidationRules'
-import { application } from '@/application'
-
+import { useAuth } from './useAuth'
 
 export function useSignInForm() {
   const email = ref('')
   const password = ref('')
+  const { singIn } = useAuth()
 
   const { emailRules, passwordRules } = useValidationRules()
 
@@ -21,9 +21,11 @@ export function useSignInForm() {
     const isValid = await v$.value.$validate()
     if (!isValid) return
 
-    await application.signIn({ email: email.value, password: password.value })
+    singIn({
+      email: email.value,
+      password: password.value,
+    })
   }
-
 
   return {
     email,

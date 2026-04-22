@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import { router } from './plugins/router'
 import { application, wSService } from './application'
+import { useProfile } from './composables/useProfile'
 
 import '@/sass/_theme.scss'
 import 'floating-vue/dist/style.css'
@@ -26,7 +27,7 @@ app.use(router)
 
 app.use(FloatingVue)
 
-application.run()
+useProfile().getProfile()
 
 application.on('unlogged', async () => {
   router.checkAccessCurrentRoute()

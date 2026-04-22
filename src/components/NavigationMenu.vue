@@ -31,11 +31,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { byAuthorized, rightSide, leftSide } from '@/config/main-menu'
-import { useLogged } from '@/composables/useLogged'
 import AppLink from './AppLink.vue'
 import Logo from './Logo.vue'
+import { useProfile } from '@/composables/useProfile'
 
-const { isLogged } = useLogged()
+const { isLogged } = useProfile()
 
 const right = computed(() => {
   return rightSide.filter(byAuthorized(isLogged.value))

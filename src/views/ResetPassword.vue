@@ -29,7 +29,9 @@ import UiButton from '@/components/ui/buttons/UiButton.vue'
 import useVuelidate from '@vuelidate/core'
 import { useRoute } from 'vue-router'
 import { useValidationRules } from '@/composables/useValidationRules'
+import { useAuth } from '@/composables/useAuth'
 
+const { resetPassword } = useAuth()
 const route = useRoute()
 const password = ref<string>('')
 const confirmPassword = ref<string>('')
@@ -51,7 +53,7 @@ const submitHandler = async () => {
     token: typeof route.query.token === 'string' ? route.query.token : '',
   }
 
-  await application.resetPassword(payload)
+  resetPassword(payload)
 }
 </script>
 

@@ -79,6 +79,8 @@ import { AppError } from '@/types/app-errors'
 import avatar from '@/assets/avatar.webp'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
+import { useProfile } from '@/composables/useProfile'
+import { useAuth } from '@/composables/useAuth'
 
 type FieldKey = keyof UserProfileUpdateInfo
 
@@ -92,35 +94,38 @@ interface FieldData {
 const deleteModalRef = ref<IModalOpen | null>(null)
 const signOutModalRef = ref<IModalOpen | null>(null)
 
+const { profile, updateProfile } = useProfile()
+const { logout } = useAuth()
+
 const fields = {
   email: {
     label: 'Email',
-    value: ref(application.userProfile?.email ?? ''),
-    originalValue: application.userProfile?.email ?? '',
+    value: ref(profile.value?.email ?? ''),
+    originalValue: profile.value?.email ?? '',
     isEditing: ref(false),
   },
   first_name: {
     label: 'First Name',
-    value: ref(application.userProfile?.first_name ?? ''),
-    originalValue: application.userProfile?.first_name ?? '',
+    value: ref(profile.value?.first_name ?? ''),
+    originalValue: profile.value?.first_name ?? '',
     isEditing: ref(false),
   },
   last_name: {
     label: 'Last Name',
-    value: ref(application.userProfile?.last_name ?? ''),
-    originalValue: application.userProfile?.last_name ?? '',
+    value: ref(profile.value?.last_name ?? ''),
+    originalValue: profile.value?.last_name ?? '',
     isEditing: ref(false),
   },
   phone: {
     label: 'Phone',
-    value: ref(application.userProfile?.phone ?? ''),
-    originalValue: application.userProfile?.phone ?? '',
+    value: ref(profile.value?.phone ?? ''),
+    originalValue: profile.value?.phone ?? '',
     isEditing: ref(false),
   },
   bio: {
     label: 'Bio',
-    value: ref(application.userProfile?.bio ?? ''),
-    originalValue: application.userProfile?.bio ?? '',
+    value: ref(profile.value?.bio ?? ''),
+    originalValue: profile.value?.bio ?? '',
     isEditing: ref(false),
   },
 } satisfies Record<FieldKey, FieldData>
@@ -165,7 +170,7 @@ async function submitField(key: FieldKey) {
   if (validation.$invalid) return
 
   if (field.value.value !== field.originalValue) {
-    const res = await application.updateProfileInfo({
+    const res = await updateProfile({
       [key]: field.value.value,
     })
     if (!(res instanceof AppError)) {
@@ -189,7 +194,7 @@ const signOutHandler = async () => {
   const modal = signOutModalRef.value
   const res = await modal?.open()
   if (res) {
-    application.logout()
+    logout()
   }
 }
 </script>
