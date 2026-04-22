@@ -1,52 +1,47 @@
-import type { Application } from '@/application/application'
+import type { UserApplication } from '@/application/user.application'
 import type { NavigationGuard, RouteLocationNormalized } from 'vue-router'
 
 export const canUserAccess = async (
   to: RouteLocationNormalized,
   isAuthenticated: boolean,
 ) => {
-  const { accessMode = "public" } = to.meta;
+  const { accessMode = 'public' } = to.meta
 
-  if (accessMode === "only-for-unauthorized" && !isAuthenticated) {
-    return true;
+  if (accessMode === 'only-for-unauthorized' && !isAuthenticated) {
+    return true
   }
-  if (accessMode === "only-for-unauthorized" && isAuthenticated) {
-    return false;
+  if (accessMode === 'only-for-unauthorized' && isAuthenticated) {
+    return false
   }
-  if (accessMode === "private" && !isAuthenticated) {
-    return false;
+  if (accessMode === 'private' && !isAuthenticated) {
+    return false
   }
-  if (accessMode === "private" && isAuthenticated) {
-    return true;
+  if (accessMode === 'private' && isAuthenticated) {
+    return true
   }
 
-  return false;
-};
+  return false
+}
 
-export const navigationGuard = (application: Application): NavigationGuard => async (to, from) => {
-  const { accessMode = "public" } = to.meta;
-  if (from.fullPath === to.fullPath && from.name === to.name) return false;
+export const navigationGuard =
+  (userApplication: UserApplication): NavigationGuard =>
+  async (to, from) => {
+    const { accessMode = 'public' } = to.meta
+    if (from.fullPath === to.fullPath && from.name === to.name) return false
 
-  if (accessMode === "public") return true;
+    if (accessMode === 'public') return true
 
-  await application.profileLoading
+    await userApplication.profileLoading
 
-  const canAccess = await canUserAccess(
-    to,
-    application.isLogged,
-  );
-  if (!canAccess) {
-    const canAccess = await canUserAccess(
-      from,
-      application.isLogged,
-    );
+    const canAccess = await canUserAccess(to, userApplication.isLogged)
     if (!canAccess) {
+      const canAccess = await canUserAccess(from, userApplication.isLogged)
+      if (!canAccess) {
+        return { name: 'Home' }
+      }
 
-      return { name: "Home" };
+      return false
     }
 
-    return false;
+    return true
   }
-
-  return true;
-}
