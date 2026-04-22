@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTodoStore } from '@/plugins/store/todos'
 import TodoItem from '@/components/TodoItem.vue'
@@ -87,13 +87,16 @@ import UIPagination from '@/components/ui/UiPagination.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import ItemForm from '@/components/forms/ItemForm.vue'
-
+import { useRouter } from 'vue-router'
 import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { type Todo } from '../types/todo'
 import { AppError } from '@/types/app-errors'
 import UiPaginationMobile from '@/components/ui/UiPaginationMobile.vue'
 import { useInjectWindowResize } from '@/composables/useWindowResize'
-import { usePageItem } from '@/composables/usePageItem'
+import { useTodo } from '@/composables/useTodo'
+import type { RouteName } from '@/types/router'
+import { useLoading } from '@/composables/useLoading'
+import { usePaginatedRoute } from '@/composables/usePaginatedRoute'
 
 defineOptions({
   name: 'TodosView',
@@ -108,11 +111,11 @@ const editModalRef = ref<IModalOpen | null>(null)
 const createModalRef = ref<IModalOpen | null>(null)
 
 const { isMobile, isTablet } = useInjectWindowResize()
-
+const router = useRouter()
 const todoStore = useTodoStore()
 
 const { pages, rows } = storeToRefs(todoStore)
-const { getAll, update, create, remove, messageHandler } = todoStore
+const { getAll, update, create, remove } = useTodo()
 
 const {
   pagination,
@@ -121,10 +124,29 @@ const {
   nextPage,
   latestPage,
   btnPage,
-  details,
-  submitWithModal,
-  loading,
-} = usePageItem(getAll, pages, 'todos', messageHandler)
+  setPages,
+  saveQuery,
+  requestParams,
+} = usePaginatedRoute(pages)
+
+const { loading } = useLoading()
+
+const details = (id: number) => {
+  router.push({
+    name: 'TodoDetail' satisfies RouteName,
+    params: { id },
+  })
+}
+
+const submitWithModal = async (
+  modal: IModalOpen | null,
+  action: () => Promise<unknown>,
+) => {
+  const res = await action()
+  if (!(res instanceof AppError)) {
+    modal?.confirm(true)
+  }
+}
 
 const openEditForm = async (todo: Todo) => {
   editingTodo.value = todo
@@ -142,6 +164,25 @@ const createTodo = async () => {
 
   await submitWithModal(createModalRef.value, () => create(data))
 }
+
+watch(
+  pages,
+  (pages) => {
+    if (!pages) return
+    setPages(pages)
+  },
+  { immediate: true },
+)
+
+watch(requestParams, (params) => {
+  getAll(params)
+  saveQuery()
+})
+
+onMounted(() => {
+  getAll(requestParams.value)
+  saveQuery()
+})
 
 const updateTodo = async () => {
   const data = await editFormRef.value?.submit()
