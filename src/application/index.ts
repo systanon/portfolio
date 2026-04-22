@@ -8,6 +8,11 @@ import { NotificationService } from './services/notification.service'
 import { Application } from './application'
 import { AuthService } from './services/auth.service'
 import { StatisticService } from './services/statistic.service'
+import { TokenManager } from './tokenManager'
+import { AuthApplication } from './auth.application'
+import { UserService } from './services/user.service'
+import { UserApplication } from './user.application'
+import { AppSuccess } from '@/types/app.types'
 
 export const httpClient = new HTTPClient({
   base: import.meta.env.VITE_APP_API_URL,
@@ -17,16 +22,22 @@ export const httpClient = new HTTPClient({
 })
 
 export const wSService = new WSService(import.meta.env.VITE_APP_WS_API)
+export const tokenManager = new TokenManager()
 
 export const notificationService = new NotificationService()
 export const todoService = new TodoService(httpClient)
 export const authService = new AuthService(httpClient)
+export const userService = new UserService(httpClient)
 export const notesService = new NotesService(httpClient)
 export const statisticService = new StatisticService(httpClient)
+
+export const userApplication = new UserApplication(userService)
+export const authApplication = new AuthApplication(authService, tokenManager)
+
 httpClient.interceptors.request.use(
   (request) => {
     if (request.credentials === 'include') {
-      const newToken = localStorage.getItem('access_token')
+      const newToken = tokenManager.getToken()
       const newHeaders = new Headers(request.headers)
       if (newToken) {
         newHeaders.set('Authorization', newToken)
@@ -41,10 +52,10 @@ httpClient.interceptors.request.use(
   },
   { runWhen: () => true },
 )
+
 httpClient.interceptors.response.use(
   async (response) => {
     if (response.status !== 401) return response
-
     const originalRequest = (response as ResponseWithRequest).request
 
     const alreadyTried = (originalRequest as any).data.retry
@@ -58,17 +69,16 @@ httpClient.interceptors.response.use(
     )
       return response
 
-    try {
-      await authService.refresh()
+    const res = await authApplication.refresh()
+    if (res instanceof AppSuccess) {
       ;(originalRequest as any).data.retry = true
 
       return await httpClient.do(originalRequest.url, {
         ...originalRequest,
         params: undefined,
       })
-    } catch (e) {
-      return response
     }
+    return response
   },
   async (reason) => {
     return Promise.reject(reason)
@@ -77,8 +87,9 @@ httpClient.interceptors.response.use(
 )
 
 export const application = new Application(
+  authApplication,
+  userApplication,
   todoService,
-  authService,
   notesService,
   notificationService,
   statisticService,

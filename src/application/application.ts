@@ -8,22 +8,7 @@ import type {
 } from '../types/todo'
 import type { TodoService } from './services/todo.service'
 import type { ID } from '../types/general'
-import {
-  AppError,
-  AppRateLimitError,
-  AppSilentError,
-} from '../types/app-errors'
-import type { AuthService } from './services/auth.service'
-import type {
-  ConfirmQuery,
-  ForgotPasswordDto,
-  ResendConfirmEmailDto,
-  ResetPasswordDto,
-  SignInDto,
-  SignUpDto,
-  UserProfile,
-  UserProfileUpdateInfo,
-} from '@/types/auth'
+import { AppError } from '../types/app-errors'
 import type {
   AppSuccess,
   GetAllParams,
@@ -40,9 +25,10 @@ import type {
   NotificationService,
   NotificationType,
 } from './services/notification.service'
-import type { RouteName } from '@/types/router'
 import type { StatisticService } from './services/statistic.service'
 import type { StatisticDTO } from '@/types/statistic'
+import type { AuthApplication } from './auth.application'
+import type { UserApplication } from './user.application'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
@@ -51,43 +37,31 @@ export class Application<
   #ee: EventEmitter = new EventEmitter()
   #todoService: TodoService
   #noteService: NotesService
-  #authService: AuthService
+  public authApplication: AuthApplication
+  public userApplication: UserApplication
   #notificationService: NotificationService
-  #profile: Ref<UserProfile | null> = ref(null)
   #loading: Ref<boolean> = ref(false)
   private _pageTitle: Ref<string | null> = ref(null)
-  resolveProfileLoading: (() => void) | null = null
-  profileLoading: Promise<void> = Promise.resolve()
   private statisticService: StatisticService
 
   constructor(
+    authApplication: AuthApplication,
+    userApplication: UserApplication,
     todoService: TodoService,
-    authService: AuthService,
     notesService: NotesService,
     notificationService: NotificationService,
     statisticService: StatisticService,
   ) {
+    this.authApplication = authApplication
+    this.userApplication = userApplication
     this.#todoService = todoService
-    this.#authService = authService
     this.#noteService = notesService
     this.#notificationService = notificationService
     this.statisticService = statisticService
   }
 
-  private clearProfile() {
-    this.#profile.value = null
-  }
-
-  public get userProfile() {
-    return this.#profile.value
-  }
-
   public get notifications() {
     return this.#notificationService.notifications.value
-  }
-
-  public get isLogged(): boolean {
-    return this.#profile.value !== null
   }
 
   public get loading(): boolean {
@@ -121,119 +95,6 @@ export class Application<
     once?: boolean,
   ): EventEmitter {
     return this.#ee.off(event, fn, context, once)
-  }
-
-  public async signUp(dto: SignUpDto): Promise<void> {
-    this.#loading.value = true
-    const res = await this.#authService.registration(dto)
-    this.#loading.value = false
-    if (res instanceof AppError) {
-      this.#notificationService.notify('error', res.message)
-    }
-    this.#ee.emit('redirect', 'RegistrationSuccess' satisfies RouteName)
-  }
-
-  public async confirmEmail(params: ConfirmQuery): Promise<void> {
-    this.#loading.value = true
-    const res = await this.#authService.confirmEmail(params)
-    if (res instanceof AppError) {
-      this.#loading.value = false
-      this.#notificationService.notify('error', res.message)
-      return
-    }
-    await this.getProfile()
-  }
-
-  public async resendConfirmEmail(
-    dto: ResendConfirmEmailDto,
-  ): Promise<void | AppRateLimitError | AppError> {
-    this.#loading.value = true
-    const res = await this.#authService.resendConfirmEmail(dto)
-    this.#loading.value = false
-    if (res instanceof AppError || res instanceof AppRateLimitError) {
-      this.#notificationService.notify('error', res.message)
-      return res
-    }
-    this.#ee.emit('redirect', 'RegistrationSuccess' satisfies RouteName)
-  }
-
-  public async logout(): Promise<void | AppError> {
-    this.#loading.value = true
-    const res = await this.#authService.logout()
-    this.#loading.value = false
-    if (res instanceof AppError) {
-      this.#notificationService.notify('error', res.message)
-      return res
-    }
-    this.clearProfile()
-    this.#ee.emit('unlogged')
-  }
-
-  public async signIn(dto: SignInDto): Promise<void | AppError> {
-    this.#loading.value = true
-    const res = await this.#authService.authorization(dto)
-    this.#loading.value = false
-    if (res instanceof AppError) {
-      this.#notificationService.notify('error', res.message)
-      return res
-    }
-    await this.getProfile()
-  }
-
-  public async getProfile(): Promise<UserProfile | AppError | AppSilentError> {
-    this.#loading.value = true
-    this.profileLoading = new Promise<void>(
-      (resolve) => (this.resolveProfileLoading = resolve),
-    )
-    const res = await this.#authService.getProfile()
-    if (res instanceof AppError) {
-      this.#profile.value = null
-      this.#notificationService.notify('error', res.message)
-      this.#ee.emit('unlogged')
-    } else if (res instanceof AppSilentError) {
-      this.#profile.value = null
-      this.#ee.emit('unlogged')
-    } else {
-      this.#profile.value = res
-      this.#ee.emit('logged', res.id)
-    }
-    this.resolveProfileLoading?.()
-
-    this.#loading.value = false
-
-    return res
-  }
-
-  public async updateProfileInfo(
-    dto: UserProfileUpdateInfo,
-  ): Promise<AppError | AppSuccess> {
-    return await this.#authService.updateProfile(dto)
-  }
-
-  public async forgotPassword(
-    dto: ForgotPasswordDto,
-  ): Promise<void | AppRateLimitError | AppError> {
-    this.#loading.value = true
-    const res = await this.#authService.forgotPassword(dto)
-    this.#loading.value = false
-    if (res instanceof AppError || res instanceof AppRateLimitError) {
-      this.#notificationService.notify('error', res.message)
-      return res
-    } else {
-      this.#ee.emit('redirect', 'ForgotPasswordSuccess' satisfies RouteName)
-    }
-  }
-
-  public async resetPassword(dto: ResetPasswordDto): Promise<void> {
-    this.#loading.value = true
-    const res = await this.#authService.resetPassword(dto)
-    this.#loading.value = false
-    if (res instanceof AppError) {
-      this.#notificationService.notify('error', res.message)
-    } else {
-      this.#notificationService.notify('success', res.message)
-      this.#ee.emit('redirect', 'SignIn' satisfies RouteName)
-    }
   }
 
   public async createTodo(dto: CreateTodoDTO): Promise<AppSuccess | AppError> {
@@ -324,10 +185,6 @@ export class Application<
   public async saveStatistic(dto: StatisticDTO): Promise<any | AppError> {
     const res = await this.statisticService.save(dto)
     return res
-  }
-
-  public async run(): Promise<void> {
-    await this.getProfile()
   }
 
   public notify(type: NotificationType, message: string): void {
