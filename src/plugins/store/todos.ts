@@ -1,11 +1,15 @@
-import { inject, ref, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { AppError } from '@/types/app-errors'
-import type { CreateTodoDTO, Todo, UpdateTodoDTO } from '@/types/todo'
-import type { GetAllParams } from '@/types/app.types'
-import type { Application } from '@/application/application'
+import type { Todo } from '@/types/todo'
 import type { WSMessage } from '@/application/services/ws.service'
+
+type InsertData = {
+  todos: Todo[]
+  total: number
+  pages: number
+  currentPage: number
+}
 
 export const useTodoStore = defineStore('todos', () => {
   const rows: Ref<Todo[]> = ref([])
@@ -13,8 +17,6 @@ export const useTodoStore = defineStore('todos', () => {
   const total = ref<number>(0)
   const pages = ref<number>(0)
   let currentPage = 0
-
-  const application = inject('application') as Application
 
   function messageHandler(message: WSMessage) {
     switch (message.event) {
@@ -30,22 +32,14 @@ export const useTodoStore = defineStore('todos', () => {
     }
   }
 
-  async function getAll(params: GetAllParams) {
-    const res = await application.getAllTodos(params)
-    if (res instanceof AppError) {
-      rows.value = []
-      indexID.value = new Map()
-      total.value = 0
-      pages.value = 0
-    } else {
-      rows.value = res.data.map((todo) => {
-        indexID.value.set(todo.id, todo)
-        return todo
-      })
-      total.value = res.total
-      pages.value = res.pages
-      currentPage = params.page ?? 1
-    }
+  async function addAll(data: InsertData) {
+    rows.value = data.todos.map((todo) => {
+      indexID.value.set(todo.id, todo)
+      return todo
+    })
+    total.value = data.total
+    pages.value = data.pages
+    currentPage = data.currentPage
   }
 
   function _update(todo: Todo): void {
@@ -73,36 +67,9 @@ export const useTodoStore = defineStore('todos', () => {
     indexID.value.delete(_todo.id)
   }
 
-  async function create(payload: CreateTodoDTO): Promise<AppError | void> {
-    const res = await application.createTodo(payload)
-    if (res instanceof AppError) {
-      return res
-    }
-  }
-
-  async function update(
-    _id: number,
-    payload: UpdateTodoDTO,
-  ): Promise<AppError | void> {
-    const res = await application.updateTodo(_id, payload)
-    if (res instanceof AppError) {
-      return res
-    }
-  }
-
-  async function remove(id: number): Promise<AppError | void> {
-    const res = await application.deleteTodo(id)
-    if (res instanceof AppError) {
-      return res
-    }
-  }
-
   return {
-    getAll,
+    addAll,
     indexID,
-    update,
-    create,
-    remove,
     total,
     pages,
     rows,
