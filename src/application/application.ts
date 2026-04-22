@@ -1,12 +1,5 @@
 import { ref, type Ref } from 'vue'
 import EventEmitter from 'eventemitter3'
-import type {
-  CreateTodoDTO,
-  ReplaceTodoDTO,
-  Todo,
-  UpdateTodoDTO,
-} from '../types/todo'
-import type { TodoService } from './services/todo.service'
 import type { ID } from '../types/general'
 import { AppError } from '../types/app-errors'
 import type {
@@ -29,13 +22,14 @@ import type { StatisticService } from './services/statistic.service'
 import type { StatisticDTO } from '@/types/statistic'
 import type { AuthApplication } from './auth.application'
 import type { UserApplication } from './user.application'
+import type { TodoApplication } from './todo.application'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any,
 > {
   #ee: EventEmitter = new EventEmitter()
-  #todoService: TodoService
+  public todoApplication: TodoApplication
   #noteService: NotesService
   public authApplication: AuthApplication
   public userApplication: UserApplication
@@ -47,14 +41,14 @@ export class Application<
   constructor(
     authApplication: AuthApplication,
     userApplication: UserApplication,
-    todoService: TodoService,
+    todoApplication: TodoApplication,
     notesService: NotesService,
     notificationService: NotificationService,
     statisticService: StatisticService,
   ) {
     this.authApplication = authApplication
     this.userApplication = userApplication
-    this.#todoService = todoService
+    this.todoApplication = todoApplication
     this.#noteService = notesService
     this.#notificationService = notificationService
     this.statisticService = statisticService
@@ -95,51 +89,6 @@ export class Application<
     once?: boolean,
   ): EventEmitter {
     return this.#ee.off(event, fn, context, once)
-  }
-
-  public async createTodo(dto: CreateTodoDTO): Promise<AppSuccess | AppError> {
-    return await this.#todoService.create(dto)
-  }
-
-  public async getAllTodos(
-    params: GetAllParams,
-  ): Promise<PaginateResult<Todo> | AppError> {
-    this.#loading.value = true
-    const res = await this.#todoService.getAll(params)
-    if (res instanceof AppError) {
-      this.notify('error', res.message)
-    }
-    this.#loading.value = false
-    return res
-  }
-
-  public async getOneTodo(id: ID): Promise<Todo | AppError> {
-    const res = await this.#todoService.getOne(id)
-    if (!(res instanceof AppError)) {
-      this.setPageTitle(res.title)
-    }
-    return res
-  }
-
-  public async replaceTodo(
-    id: ID,
-    dto: ReplaceTodoDTO,
-  ): Promise<AppSuccess | AppError> {
-    const res = await this.#todoService.replace(id, dto)
-    return res
-  }
-
-  public async updateTodo(
-    id: ID,
-    dto: UpdateTodoDTO,
-  ): Promise<AppSuccess | AppError> {
-    const res = await this.#todoService.update(id, dto)
-    return res
-  }
-
-  public async deleteTodo(id: ID): Promise<AppSuccess | AppError> {
-    const res = await this.#todoService.delete(id)
-    return res
   }
 
   public async getAllNotes(

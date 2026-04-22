@@ -13,6 +13,7 @@ import { AuthApplication } from './auth.application'
 import { UserService } from './services/user.service'
 import { UserApplication } from './user.application'
 import { AppSuccess } from '@/types/app.types'
+import { TodoApplication } from './todo.application'
 
 export const httpClient = new HTTPClient({
   base: import.meta.env.VITE_APP_API_URL,
@@ -33,6 +34,7 @@ export const statisticService = new StatisticService(httpClient)
 
 export const userApplication = new UserApplication(userService)
 export const authApplication = new AuthApplication(authService, tokenManager)
+export const todoApplication = new TodoApplication(todoService)
 
 httpClient.interceptors.request.use(
   (request) => {
@@ -89,7 +91,7 @@ httpClient.interceptors.response.use(
 export const application = new Application(
   authApplication,
   userApplication,
-  todoService,
+  todoApplication,
   notesService,
   notificationService,
   statisticService,
