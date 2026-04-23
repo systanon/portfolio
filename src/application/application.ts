@@ -80,6 +80,10 @@ export class Application<
     return this.#ee.off(event, fn, context, once)
   }
 
+  public async init() {
+    this.userApplication.getProfile()
+  }
+
   public async saveStatistic(dto: StatisticDTO): Promise<any | AppError> {
     const res = await this.statisticService.save(dto)
     return res
