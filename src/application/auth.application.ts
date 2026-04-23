@@ -32,14 +32,7 @@ export class AuthApplication {
     const response = await this.authService.authorization(dto)
     if (response instanceof AppSuccess) {
       const { access_token } = response.data
-      if (access_token) {
-        this.tokenManager.setToken(response.data.access_token)
-      } else {
-        return new AppError(
-          'access token not found',
-          Errors.ACCESS_TOKEN_NOT_FOUND,
-        )
-      }
+      this.tokenManager.setToken(access_token)
     } else {
       this.notificationModule.notify('error', response.message)
     }
@@ -59,14 +52,7 @@ export class AuthApplication {
     const response = await this.authService.confirmEmail(params)
     if (response instanceof AppSuccess) {
       const access_token = response.data.access_token
-      if (access_token) {
-        this.tokenManager.setToken(access_token)
-      } else {
-        return new AppError(
-          'access token not found',
-          Errors.ACCESS_TOKEN_NOT_FOUND,
-        )
-      }
+      this.tokenManager.setToken(access_token)
     } else {
       this.notificationModule.notify('error', response.message)
     }
@@ -79,10 +65,6 @@ export class AuthApplication {
     const response = await this.authService.resendConfirmEmail(dto)
     if (response instanceof AppError) {
       this.notificationModule.notify('error', response.message)
-      if (response.code === Errors.RATE_LIMIT) {
-        const retry = response.headers!.get('Retry-After')
-        return new AppRateLimitError(response.message, Number(retry))
-      }
     }
     return response
   }
@@ -94,10 +76,6 @@ export class AuthApplication {
 
     if (response instanceof AppError) {
       this.notificationModule.notify('error', response.message)
-      if (response.code === Errors.RATE_LIMIT) {
-        const retry = response.headers!.get('Retry-After')
-        return new AppRateLimitError(response.message, Number(retry))
-      }
     }
     return response
   }
@@ -117,14 +95,7 @@ export class AuthApplication {
     const response = await this.authService.refresh()
     if (response instanceof AppSuccess) {
       const access_token = response.data.access_token
-      if (access_token) {
-        this.tokenManager.setToken(access_token)
-      } else {
-        return new AppError(
-          'access token not found',
-          Errors.ACCESS_TOKEN_NOT_FOUND,
-        )
-      }
+      this.tokenManager.setToken(access_token)
     }
     return response
   }
