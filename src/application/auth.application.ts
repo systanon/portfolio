@@ -31,7 +31,15 @@ export class AuthApplication {
   async signIn(dto: SignInDto): Promise<AppSuccess | AppError> {
     const response = await this.authService.authorization(dto)
     if (response instanceof AppSuccess) {
-      this.tokenManager.setToken(response.data.access_token)
+      const { access_token } = response.data
+      if (access_token) {
+        this.tokenManager.setToken(response.data.access_token)
+      } else {
+        return new AppError(
+          'access token not found',
+          Errors.ACCESS_TOKEN_NOT_FOUND,
+        )
+      }
     } else {
       this.notificationModule.notify('error', response.message)
     }
@@ -53,6 +61,11 @@ export class AuthApplication {
       const access_token = response.data.access_token
       if (access_token) {
         this.tokenManager.setToken(access_token)
+      } else {
+        return new AppError(
+          'access token not found',
+          Errors.ACCESS_TOKEN_NOT_FOUND,
+        )
       }
     } else {
       this.notificationModule.notify('error', response.message)
@@ -106,6 +119,11 @@ export class AuthApplication {
       const access_token = response.data.access_token
       if (access_token) {
         this.tokenManager.setToken(access_token)
+      } else {
+        return new AppError(
+          'access token not found',
+          Errors.ACCESS_TOKEN_NOT_FOUND,
+        )
       }
     }
     return response
