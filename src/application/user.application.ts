@@ -1,23 +1,32 @@
 import { AppSuccess } from '@/types/app.types'
 import type { UserService } from './services/user.service'
-import { AppError } from '@/types/app-errors'
+import { AppError, AppSilentError } from '@/types/app-errors'
 import type { UserProfile, UserProfileUpdateInfo } from '@/types/auth'
 import { ref, type Ref } from 'vue'
 import type { WSService } from './services/ws.service'
+import type { NotificationService } from './services/notification.service'
 
 export class UserApplication {
   private userService: UserService
   private profile: Ref<UserProfile | null> = ref(null)
   private wsService: WSService
+  private notificationService: NotificationService
   resolveProfileLoading: (() => void) | null = null
   profileLoading: Promise<void> = Promise.resolve()
 
-  constructor(userService: UserService, wsService: WSService) {
+  constructor(
+    userService: UserService,
+    wsService: WSService,
+    notificationService: NotificationService,
+  ) {
     this.userService = userService
     this.wsService = wsService
+    this.notificationService = notificationService
   }
 
-  async getProfile(): Promise<AppSuccess<UserProfile> | AppError> {
+  async getProfile(): Promise<
+    AppSuccess<UserProfile> | AppError | AppSilentError
+  > {
     this.profileLoading = new Promise<void>(
       (resolve) => (this.resolveProfileLoading = resolve),
     )
@@ -28,6 +37,10 @@ export class UserApplication {
       await this.wsService.wsConnecting
 
       this.wsService.auth(profile.data.id)
+    } else {
+      if (profile instanceof AppError) {
+        this.notificationService.notify('error', profile.message)
+      }
     }
     this.resolveProfileLoading?.()
     return profile
@@ -36,7 +49,11 @@ export class UserApplication {
   async updateProfile(
     dto: UserProfileUpdateInfo,
   ): Promise<AppError | AppSuccess> {
-    return this.userService.updateProfile(dto)
+    const response = await this.userService.updateProfile(dto)
+    if (response instanceof AppError) {
+      this.notificationService.notify('error', response.message)
+    }
+    return response
   }
 
   public get userProfile() {
