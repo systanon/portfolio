@@ -3,15 +3,18 @@ import type { UserService } from './services/user.service'
 import { AppError } from '@/types/app-errors'
 import type { UserProfile, UserProfileUpdateInfo } from '@/types/auth'
 import { ref, type Ref } from 'vue'
+import type { WSService } from './services/ws.service'
 
 export class UserApplication {
   private userService: UserService
   private profile: Ref<UserProfile | null> = ref(null)
+  private wsService: WSService
   resolveProfileLoading: (() => void) | null = null
   profileLoading: Promise<void> = Promise.resolve()
 
-  constructor(userService: UserService) {
+  constructor(userService: UserService, wsService: WSService) {
     this.userService = userService
+    this.wsService = wsService
   }
 
   async getProfile(): Promise<AppSuccess<UserProfile> | AppError> {
@@ -20,7 +23,11 @@ export class UserApplication {
     )
     const profile = await this.userService.getProfile()
     if (profile instanceof AppSuccess) {
-      this.profile.value = profile.data as UserProfile
+      this.profile.value = profile.data
+
+      await this.wsService.wsConnecting
+
+      this.wsService.auth(profile.data.id)
     }
     this.resolveProfileLoading?.()
     return profile
@@ -42,5 +49,6 @@ export class UserApplication {
 
   public clearProfile() {
     this.profile.value = null
+    this.wsService.unauth()
   }
 }

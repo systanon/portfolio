@@ -33,7 +33,7 @@ export const userService = new UserService(httpClient)
 export const noteService = new NoteService(httpClient)
 export const statisticService = new StatisticService(httpClient)
 
-export const userApplication = new UserApplication(userService)
+export const userApplication = new UserApplication(userService, wSService)
 export const authApplication = new AuthApplication(authService, tokenManager)
 export const todoApplication = new TodoApplication(todoService)
 export const noteApplication = new NoteApplication(noteService)
