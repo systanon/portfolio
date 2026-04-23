@@ -242,16 +242,19 @@ export class HTTPClient {
   async blobDo(
     resource: string | URL | Request,
     options?: RequestInit,
-  ): Promise<Blob> {
+  ): Promise<AppSuccess<Blob> | AppError> {
     try {
       const response = await this.do(resource, options)
-      if (response.ok) return response.blob()
+      if (response.ok) return new AppSuccess(await response.blob())
 
-      const failed = await response.json()
-
-      return Promise.reject(failed)
-    } catch (error) {
-      return Promise.reject(error)
+      const errorData = (await response.json()) as ErrorResponse
+      return new AppError(
+        errorData.error.message,
+        errorData.error.code,
+        response.headers,
+      )
+    } catch (error: any) {
+      return new AppError(error.message, error.code)
     }
   }
 
