@@ -1,17 +1,11 @@
 import { ref, type Ref } from 'vue'
 import EventEmitter from 'eventemitter3'
-import { AppError } from '../types/app-errors'
 
-import type {
-  NotificationService,
-  NotificationType,
-} from './services/notification.service'
-import type { StatisticService } from './services/statistic.service'
-import type { StatisticDTO } from '@/types/statistic'
 import type { AuthApplication } from './auth.application'
 import type { UserApplication } from './user.application'
 import type { TodoApplication } from './todo.application'
 import type { NoteApplication } from './note.application'
+import type { StatisticApplication } from './statistic.application'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
@@ -22,29 +16,22 @@ export class Application<
   public authApplication: AuthApplication
   public userApplication: UserApplication
   public noteApplication: NoteApplication
-  #notificationService: NotificationService
+  public statisticApplication: StatisticApplication
   #loading: Ref<boolean> = ref(false)
   private _pageTitle: Ref<string | null> = ref(null)
-  private statisticService: StatisticService
 
   constructor(
     authApplication: AuthApplication,
     userApplication: UserApplication,
     todoApplication: TodoApplication,
     noteApplication: NoteApplication,
-    notificationService: NotificationService,
-    statisticService: StatisticService,
+    statisticApplication: StatisticApplication,
   ) {
     this.authApplication = authApplication
     this.userApplication = userApplication
     this.todoApplication = todoApplication
     this.noteApplication = noteApplication
-    this.#notificationService = notificationService
-    this.statisticService = statisticService
-  }
-
-  public get notifications() {
-    return this.#notificationService.notifications.value
+    this.statisticApplication = statisticApplication
   }
 
   public get loading(): boolean {
@@ -82,14 +69,5 @@ export class Application<
 
   public async init() {
     this.userApplication.getProfile()
-  }
-
-  public async saveStatistic(dto: StatisticDTO): Promise<any | AppError> {
-    const res = await this.statisticService.save(dto)
-    return res
-  }
-
-  public notify(type: NotificationType, message: string): void {
-    this.#notificationService.notify(type, message)
   }
 }
