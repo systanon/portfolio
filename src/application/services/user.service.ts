@@ -1,6 +1,6 @@
 import type { HTTPClient } from '@/lib/http.client'
-import { AppError } from '@/types/app-errors'
-import { API_URL } from '@/constants'
+import { AppError, AppSilentError } from '@/types/app-errors'
+import { API_URL, Errors } from '@/constants'
 
 import type { UserProfile, UserProfileUpdateInfo } from '@/types/auth'
 import { AppSuccess } from '@/types/app.types'
@@ -12,14 +12,23 @@ export class UserService {
     this.httpClient = httpClient
   }
 
-  async getProfile(): Promise<AppSuccess<UserProfile> | AppError> {
+  async getProfile(): Promise<
+    AppSuccess<UserProfile> | AppError | AppSilentError
+  > {
     const url = API_URL.auth.profile
-    return this.httpClient.jsonDo<UserProfile>(url, {
+    const response = await this.httpClient.jsonDo<UserProfile>(url, {
       method: 'POST',
       credentials: 'include',
       resource: url,
       url,
     })
+    if (response instanceof AppError) {
+      if (response.code === Errors.UNAUTHORIZED) {
+        return new AppSilentError(response.message)
+      }
+    }
+
+    return response
   }
 
   async updateProfile(
