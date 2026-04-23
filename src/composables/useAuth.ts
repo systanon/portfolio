@@ -9,45 +9,73 @@ import type {
 import { application } from '@/application'
 import { AppSuccess } from '@/types/app.types'
 import { router } from '@/plugins/router'
+import type { RouteName } from '@/types/router'
 
 export function useAuth() {
   const { authApplication, userApplication } = application
+
   const signIn = async (dto: SignInDto) => {
-    const result = await authApplication.signIn(dto)
-    if (result instanceof AppSuccess) {
+    const response = await authApplication.signIn(dto)
+    if (response instanceof AppSuccess) {
       const profile = await userApplication.getProfile()
       if (profile instanceof AppSuccess) {
-        router.push({ name: 'Profile' })
+        router.push({ name: 'Profile' satisfies RouteName })
       }
     }
+    return response
   }
 
   const logout = async () => {
-    const res = await authApplication.logout()
-    if (res instanceof AppSuccess) {
+    const response = await authApplication.logout()
+    if (response instanceof AppSuccess) {
       userApplication.clearProfile()
       router.checkAccessCurrentRoute()
     }
+    return response
   }
 
   const signUp = async (dto: SignUpDto) => {
-    return authApplication.signUp(dto)
+    const response = await authApplication.signUp(dto)
+    if (response instanceof AppSuccess) {
+      router.push({ name: 'RegistrationSuccess' satisfies RouteName })
+    }
+    return response
   }
 
-  const confirmEmail = (params: ConfirmQuery) => {
-    return authApplication.confirmEmail(params)
+  const confirmEmail = async (params: ConfirmQuery) => {
+    const response = await authApplication.confirmEmail(params)
+
+    if (response instanceof AppSuccess) {
+      const profile = await userApplication.getProfile()
+      if (profile instanceof AppSuccess) {
+        router.push({ name: 'Profile' satisfies RouteName })
+      }
+    }
+    return response
   }
 
   const resendConfirmEmail = async (dto: ResendConfirmEmailDto) => {
-    return authApplication.resendConfirmEmail(dto)
+    const response = await authApplication.resendConfirmEmail(dto)
+    if (response instanceof AppSuccess) {
+      router.push({ name: 'RegistrationSuccess' satisfies RouteName })
+    }
+    return response
   }
 
   const forgotPassword = async (dto: ForgotPasswordDto) => {
-    return authApplication.forgotPassword(dto)
+    const response = await authApplication.forgotPassword(dto)
+    if (response instanceof AppSuccess) {
+      router.push({ name: 'ForgotPasswordSuccess' satisfies RouteName })
+    }
+    return response
   }
 
   const resetPassword = async (dto: ResetPasswordDto) => {
-    return authApplication.resetPassword(dto)
+    const response = await authApplication.resetPassword(dto)
+    if (response instanceof AppSuccess) {
+      router.push({ name: 'SignIn' satisfies RouteName })
+    }
+    return response
   }
 
   return {
