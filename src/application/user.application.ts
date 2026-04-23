@@ -4,24 +4,24 @@ import { AppError, AppSilentError } from '@/types/app-errors'
 import type { UserProfile, UserProfileUpdateInfo } from '@/types/auth'
 import { ref, type Ref } from 'vue'
 import type { WSService } from './services/ws.service'
-import type { NotificationService } from './services/notification.service'
+import type { NotificationModule } from './modules/notification.module'
 
 export class UserApplication {
   private userService: UserService
   private profile: Ref<UserProfile | null> = ref(null)
   private wsService: WSService
-  private notificationService: NotificationService
+  private notificationModule: NotificationModule
   resolveProfileLoading: (() => void) | null = null
   profileLoading: Promise<void> = Promise.resolve()
 
   constructor(
     userService: UserService,
     wsService: WSService,
-    notificationService: NotificationService,
+    notificationModule: NotificationModule,
   ) {
     this.userService = userService
     this.wsService = wsService
-    this.notificationService = notificationService
+    this.notificationModule = notificationModule
   }
 
   async getProfile(): Promise<
@@ -39,7 +39,7 @@ export class UserApplication {
       this.wsService.auth(profile.data.id)
     } else {
       if (profile instanceof AppError) {
-        this.notificationService.notify('error', profile.message)
+        this.notificationModule.notify('error', profile.message)
       }
     }
     this.resolveProfileLoading?.()
@@ -51,7 +51,7 @@ export class UserApplication {
   ): Promise<AppError | AppSuccess> {
     const response = await this.userService.updateProfile(dto)
     if (response instanceof AppError) {
-      this.notificationService.notify('error', response.message)
+      this.notificationModule.notify('error', response.message)
     }
     return response
   }

@@ -11,21 +11,21 @@ import { AppSuccess } from '@/types/app.types'
 import { AppError, AppRateLimitError } from '@/types/app-errors'
 import type { TokenManager } from './tokenManager'
 import { Errors } from '@/constants'
-import type { NotificationService } from './services/notification.service'
+import type { NotificationModule } from './modules/notification.module'
 
 export class AuthApplication {
   private authService: AuthService
   private tokenManager: TokenManager
-  private notificationService: NotificationService
+  private notificationModule: NotificationModule
 
   constructor(
     authService: AuthService,
     tokenManager: TokenManager,
-    notificationService: NotificationService,
+    notificationModule: NotificationModule,
   ) {
     this.authService = authService
     this.tokenManager = tokenManager
-    this.notificationService = notificationService
+    this.notificationModule = notificationModule
   }
 
   async signIn(dto: SignInDto): Promise<AppSuccess | AppError> {
@@ -33,7 +33,7 @@ export class AuthApplication {
     if (response instanceof AppSuccess) {
       this.tokenManager.setToken(response.data.access_token)
     } else {
-      this.notificationService.notify('error', response.message)
+      this.notificationModule.notify('error', response.message)
     }
     return response
   }
@@ -42,7 +42,7 @@ export class AuthApplication {
     const response = await this.authService.registration(dto)
 
     if (response instanceof AppError) {
-      this.notificationService.notify('error', response.message)
+      this.notificationModule.notify('error', response.message)
     }
     return response
   }
@@ -55,7 +55,7 @@ export class AuthApplication {
         this.tokenManager.setToken(access_token)
       }
     } else {
-      this.notificationService.notify('error', response.message)
+      this.notificationModule.notify('error', response.message)
     }
     return response
   }
@@ -65,7 +65,7 @@ export class AuthApplication {
   ): Promise<AppSuccess | AppError | AppRateLimitError> {
     const response = await this.authService.resendConfirmEmail(dto)
     if (response instanceof AppError) {
-      this.notificationService.notify('error', response.message)
+      this.notificationModule.notify('error', response.message)
       if (response.code === Errors.RATE_LIMIT) {
         const retry = response.headers!.get('Retry-After')
         return new AppRateLimitError(response.message, Number(retry))
@@ -80,7 +80,7 @@ export class AuthApplication {
     const response = await this.authService.forgotPassword(dto)
 
     if (response instanceof AppError) {
-      this.notificationService.notify('error', response.message)
+      this.notificationModule.notify('error', response.message)
       if (response.code === Errors.RATE_LIMIT) {
         const retry = response.headers!.get('Retry-After')
         return new AppRateLimitError(response.message, Number(retry))
@@ -92,9 +92,9 @@ export class AuthApplication {
   async resetPassword(dto: ResetPasswordDto): Promise<AppSuccess | AppError> {
     const response = await this.authService.resetPassword(dto)
     if (response instanceof AppSuccess) {
-      this.notificationService.notify('success', response.message)
+      this.notificationModule.notify('success', response.message)
     } else {
-      this.notificationService.notify('error', response.message)
+      this.notificationModule.notify('error', response.message)
     }
 
     return response
@@ -116,7 +116,7 @@ export class AuthApplication {
     if (response instanceof AppSuccess) {
       this.tokenManager.clearToken()
     } else {
-      this.notificationService.notify('error', response.message)
+      this.notificationModule.notify('error', response.message)
     }
     return response
   }

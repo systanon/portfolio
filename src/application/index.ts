@@ -3,7 +3,7 @@ import { WSService } from '@/application/services/ws.service'
 
 import { TodoService } from './services/todo.service'
 import { NoteService } from './services/note.service'
-import { NotificationService } from './services/notification.service'
+import { NotificationModule } from './modules/notification.module'
 
 import { Application } from './application'
 import { AuthService } from './services/auth.service'
@@ -15,6 +15,7 @@ import { UserApplication } from './user.application'
 import { AppSuccess } from '@/types/app.types'
 import { TodoApplication } from './todo.application'
 import { NoteApplication } from './note.application'
+import { StatisticApplication } from './statistic.application'
 
 export const httpClient = new HTTPClient({
   base: import.meta.env.VITE_APP_API_URL,
@@ -26,17 +27,30 @@ export const httpClient = new HTTPClient({
 export const wSService = new WSService(import.meta.env.VITE_APP_WS_API)
 export const tokenManager = new TokenManager()
 
-export const notificationService = new NotificationService()
+export const notificationModule = new NotificationModule()
 export const todoService = new TodoService(httpClient)
 export const authService = new AuthService(httpClient)
 export const userService = new UserService(httpClient)
 export const noteService = new NoteService(httpClient)
 export const statisticService = new StatisticService(httpClient)
 
-export const userApplication = new UserApplication(userService, wSService)
-export const authApplication = new AuthApplication(authService, tokenManager)
+export const userApplication = new UserApplication(
+  userService,
+  wSService,
+  notificationModule,
+)
+export const authApplication = new AuthApplication(
+  authService,
+  tokenManager,
+  notificationModule,
+)
 export const todoApplication = new TodoApplication(todoService)
 export const noteApplication = new NoteApplication(noteService)
+
+export const statisticApplication = new StatisticApplication(
+  statisticService,
+  notificationModule,
+)
 
 httpClient.interceptors.request.use(
   (request) => {
@@ -95,6 +109,5 @@ export const application = new Application(
   userApplication,
   todoApplication,
   noteApplication,
-  notificationService,
-  statisticService,
+  statisticApplication,
 )
