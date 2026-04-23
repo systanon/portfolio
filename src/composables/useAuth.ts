@@ -11,10 +11,11 @@ import { AppSuccess } from '@/types/app.types'
 import { router } from '@/plugins/router'
 
 export function useAuth() {
+  const { authApplication, userApplication } = application
   const signIn = async (dto: SignInDto) => {
-    const result = await application.authApplication.signIn(dto)
+    const result = await authApplication.signIn(dto)
     if (result instanceof AppSuccess) {
-      const profile = await application.userApplication.getProfile()
+      const profile = await userApplication.getProfile()
       if (profile instanceof AppSuccess) {
         router.push({ name: 'Profile' })
       }
@@ -22,27 +23,31 @@ export function useAuth() {
   }
 
   const logout = async () => {
-    return application.authApplication.logout()
+    const res = await authApplication.logout()
+    if (res instanceof AppSuccess) {
+      userApplication.clearProfile()
+      router.checkAccessCurrentRoute()
+    }
   }
 
   const signUp = async (dto: SignUpDto) => {
-    return application.authApplication.signUp(dto)
+    return authApplication.signUp(dto)
   }
 
   const confirmEmail = (params: ConfirmQuery) => {
-    return application.authApplication.confirmEmail(params)
+    return authApplication.confirmEmail(params)
   }
 
   const resendConfirmEmail = async (dto: ResendConfirmEmailDto) => {
-    return application.authApplication.resendConfirmEmail(dto)
+    return authApplication.resendConfirmEmail(dto)
   }
 
   const forgotPassword = async (dto: ForgotPasswordDto) => {
-    return application.authApplication.forgotPassword(dto)
+    return authApplication.forgotPassword(dto)
   }
 
   const resetPassword = async (dto: ResetPasswordDto) => {
-    return application.authApplication.resetPassword(dto)
+    return authApplication.resetPassword(dto)
   }
 
   return {
