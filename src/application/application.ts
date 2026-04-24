@@ -11,13 +11,13 @@ export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any,
 > {
-  #ee: EventEmitter = new EventEmitter()
+  private ee: EventEmitter = new EventEmitter()
   public todoApplication: TodoApplication
   public authApplication: AuthApplication
   public userApplication: UserApplication
   public noteApplication: NoteApplication
   public statisticApplication: StatisticApplication
-  #loading: Ref<boolean> = ref(false)
+  private _loading: Ref<boolean> = ref(false)
   private _pageTitle: Ref<string | null> = ref(null)
 
   constructor(
@@ -35,7 +35,7 @@ export class Application<
   }
 
   public get loading(): boolean {
-    return this.#loading.value
+    return this._loading.value
   }
 
   public get pageTitle() {
@@ -55,7 +55,7 @@ export class Application<
     fn: EventEmitter.EventListener<EventTypes, T>,
     context?: EventContext,
   ): EventEmitter {
-    return this.#ee.on(event, fn, context)
+    return this.ee.on(event, fn, context)
   }
 
   public off<T extends EventEmitter.EventNames<EventTypes>>(
@@ -64,7 +64,7 @@ export class Application<
     context?: EventContext,
     once?: boolean,
   ): EventEmitter {
-    return this.#ee.off(event, fn, context, once)
+    return this.ee.off(event, fn, context, once)
   }
 
   public async init() {
