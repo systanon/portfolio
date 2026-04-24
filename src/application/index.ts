@@ -48,7 +48,10 @@ export const todoApplication = new TodoApplication(
   todoService,
   notificationModule,
 )
-export const noteApplication = new NoteApplication(noteService)
+export const noteApplication = new NoteApplication(
+  noteService,
+  notificationModule,
+)
 
 export const statisticApplication = new StatisticApplication(
   statisticService,

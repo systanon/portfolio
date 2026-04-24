@@ -6,35 +6,61 @@ import type {
   Note,
   UpdateNoteDTO,
 } from '@/types/notes'
-import type { AppError } from '@/types/app-errors'
+import { AppError } from '@/types/app-errors'
 import type { ID } from '@/types/general'
+import type { NotificationModule } from './modules/notification.module'
 
 export class NoteApplication {
   private notesService: NoteService
+  private notificationModule: NotificationModule
 
-  constructor(notesService: NoteService) {
+  constructor(
+    notesService: NoteService,
+    notificationModule: NotificationModule,
+  ) {
     this.notesService = notesService
+    this.notificationModule = notificationModule
   }
 
   async create(
     dto: CreateNoteDTO,
   ): Promise<AppSuccess<CreateNoteResponse> | AppError> {
-    return this.notesService.create(dto)
+    const response = await this.notesService.create(dto)
+    if (response instanceof AppError) {
+      this.notificationModule.notify('error', response.message)
+    }
+    return response
   }
 
   async getAll(params: GetAllParams): Promise<AppSuccess<Note[]> | AppError> {
-    return this.notesService.getAll(params)
+    const response = await this.notesService.getAll(params)
+    if (response instanceof AppError) {
+      this.notificationModule.notify('error', response.message)
+    }
+    return response
   }
 
   async getOne(id: ID): Promise<AppSuccess<Note> | AppError> {
-    return this.notesService.getOne(id)
+    const response = await this.notesService.getOne(id)
+    if (response instanceof AppError) {
+      this.notificationModule.notify('error', response.message)
+    }
+    return response
   }
 
   async update(id: ID, dto: UpdateNoteDTO): Promise<AppSuccess | AppError> {
-    return this.notesService.update(id, dto)
+    const response = await this.notesService.update(id, dto)
+    if (response instanceof AppError) {
+      this.notificationModule.notify('error', response.message)
+    }
+    return response
   }
 
   async delete(id: ID): Promise<AppSuccess | AppError> {
-    return this.notesService.delete(id)
+    const response = await this.notesService.delete(id)
+    if (response instanceof AppError) {
+      this.notificationModule.notify('error', response.message)
+    }
+    return response
   }
 }
