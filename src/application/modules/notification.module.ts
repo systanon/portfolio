@@ -9,7 +9,7 @@ export interface NotificationPayload {
   message: string
 }
 
-export class NotificationService {
+export class NotificationModule {
   notifications = ref<Map<number, NotificationPayload>>(new Map())
   #counter = 0
 

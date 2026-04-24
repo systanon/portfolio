@@ -8,8 +8,10 @@
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { application } from '@/application'
 import type { ConfirmQuery } from '@/types/auth'
+import { useAuth } from '@/composables/useAuth'
+
+const { confirmEmail } = useAuth()
 
 const route = useRoute()
 
@@ -18,7 +20,7 @@ const token: ConfirmQuery = {
 }
 
 onMounted(() => {
-  application.confirmEmail(token)
+  confirmEmail(token)
 })
 </script>
 

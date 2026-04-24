@@ -3,7 +3,7 @@ import FloatingVue from 'floating-vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import { router } from './plugins/router'
-import { application, wSService } from './application'
+import { application } from './application'
 
 import '@/sass/_theme.scss'
 import 'floating-vue/dist/style.css'
@@ -26,24 +26,6 @@ app.use(router)
 
 app.use(FloatingVue)
 
-application.run()
-
-application.on('unlogged', async () => {
-  router.checkAccessCurrentRoute()
-  await wSService.wsConnecting
-  wSService.unauth()
-})
-
-application.on('redirect', (routeName) => {
-  router.push({ name: routeName })
-})
-
-application.on('logged', async (user_id: number) => {
-  router.checkAccessCurrentRoute()
-
-  await wSService.wsConnecting
-
-  wSService.auth(user_id)
-})
+application.init()
 
 app.mount('#app')

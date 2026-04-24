@@ -1,40 +1,49 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
+const { mockSignIn, mockGetProfile } = vi.hoisted(() => ({
+  mockSignIn: vi.fn(),
+  mockGetProfile: vi.fn(),
+}))
+
 const mockEmailRules = {
   required: 'email-required',
   maxLength: 'email-max',
-  email: 'email-invalid'
+  email: 'email-invalid',
 }
 
 const mockPasswordRules = {
   required: 'password-required',
   minLength: 'password-min',
-  maxLength: 'password-max'
+  maxLength: 'password-max',
 }
 
 vi.mock('@/application', () => ({
   application: {
-    signIn: vi.fn()
-  }
+    authApplication: {
+      signIn: mockSignIn,
+    },
+    userApplication: {
+      getProfile: mockGetProfile,
+    },
+  },
 }))
 
 vi.mock('@/composables/useValidationRules', () => ({
   useValidationRules: () => ({
     emailRules: mockEmailRules,
-    passwordRules: mockPasswordRules
-  })
+    passwordRules: mockPasswordRules,
+  }),
 }))
 
 const useVuelidateMock = vi.fn()
 vi.mock('@vuelidate/core', () => ({
-  default: (...args: any[]) => useVuelidateMock(...args)
+  default: (...args: any[]) => useVuelidateMock(...args),
 }))
-
 
 import { application } from '@/application'
 import { useSignInForm } from './useSignInForm'
 
-describe('useSignInForm (ESM)', () => {
+describe('useSignInForm', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -51,26 +60,26 @@ describe('useSignInForm (ESM)', () => {
     expect(useVuelidateMock).toHaveBeenCalledWith(
       {
         email: mockEmailRules,
-        password: mockPasswordRules
+        password: mockPasswordRules,
       },
-      expect.any(Object)
+      expect.any(Object),
     )
   })
 
   it('does NOT call signIn when validation fails', async () => {
     useVuelidateMock.mockReturnValue({
-      value: { $validate: vi.fn().mockResolvedValue(false) }
+      value: { $validate: vi.fn().mockResolvedValue(false) },
     })
 
     const { submit } = useSignInForm()
     await submit()
 
-    expect(application.signIn).not.toHaveBeenCalled()
+    expect(mockSignIn).not.toHaveBeenCalled()
   })
 
   it('calls signIn when validation passes', async () => {
     useVuelidateMock.mockReturnValue({
-      value: { $validate: vi.fn().mockResolvedValue(true) }
+      value: { $validate: vi.fn().mockResolvedValue(true) },
     })
 
     const { email, password, submit } = useSignInForm()
@@ -80,9 +89,9 @@ describe('useSignInForm (ESM)', () => {
 
     await submit()
 
-    expect(application.signIn).toHaveBeenCalledWith({
+    expect(application.authApplication.signIn).toHaveBeenCalledWith({
       email: 'test@mail.com',
-      password: '123456'
+      password: '123456',
     })
   })
 })

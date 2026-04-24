@@ -2,7 +2,7 @@
   <div class="todo-page">
     <h2 class="todo-page__title">Todo details</h2>
     <template v-if="todo">
-      <TodoDelail :todo="todo" />
+      <TodoDetail :todo="todo" />
     </template>
     <template v-else>
       <p>not found</p>
@@ -10,42 +10,28 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import { application } from '@/application'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { AppError } from '@/types/app-errors'
-import TodoDelail from '@/components/TodoDelail.vue'
+import TodoDetail from '@/components/TodoDetail.vue'
 import type { Todo } from '@/types/todo'
-export default defineComponent({
-  components: {
-    TodoDelail,
-  },
-  data() {
-    return {
-      todo: null as Todo | null,
-    }
-  },
-  async beforeRouteEnter(to, _, next) {
-    const id = Number(to.params.id)
-    const todo = await application.getOneTodo(id)
-    if (todo instanceof AppError) {
-      next((vm: any) => vm.setTodo(null))
-    } else {
-      next((vm: any) => vm.setTodo(todo))
-    }
-  },
-  async beforeRouteUpdate(to, _) {
-    const id = Number(to.params.id)
-    this.todo = null
-    const todo = await application.getOneTodo(id)
-    todo instanceof AppError ? this.setTodo(null) : this.setTodo(todo)
-  },
-  methods: {
-    setTodo(todo: Todo | null) {
-      this.todo = todo
-    },
-  },
-})
+import { useTodo } from '@/composables/useTodo'
+const { getOne } = useTodo()
+
+const route = useRoute()
+const todo = ref<Todo | null>(null)
+
+async function fetchTodo(id: number) {
+  const result = await getOne(id)
+  todo.value = result instanceof AppError ? null : result.data
+}
+
+watch(
+  () => route.params.id,
+  (id) => fetchTodo(Number(id)),
+  { immediate: true },
+)
 </script>
 
 <style scoped lang="scss">

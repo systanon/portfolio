@@ -39,7 +39,7 @@ import UiButton from '@/components/ui/buttons/UiButton.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import CvForm from '@/components/forms/CvForm.vue'
 import { application } from '@/application'
-import { AppError } from '@/types/app-errors'
+import { AppSuccess } from '@/types/app.types'
 
 defineOptions({
   name: 'AboutView',
@@ -47,19 +47,19 @@ defineOptions({
 
 const cvModalRef = ref<IModalOpen | null>(null)
 const cvFormRef = ref()
-
+const { statisticApplication } = application
 const submitForm = async () => {
   const data = await cvFormRef.value?.validateAndGet()
   if (!data) return
 
-  const res = await application.saveStatistic(data)
-  if (!(res instanceof AppError)) {
+  const res = await statisticApplication.getCV(data)
+  if (res instanceof AppSuccess) {
     cvModalRef.value?.confirm(true)
   }
 }
 
-const openForm = async () => {
-  await cvModalRef.value?.open()
+const openForm = () => {
+  cvModalRef.value?.open()
 }
 </script>
 

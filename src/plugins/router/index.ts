@@ -4,9 +4,9 @@ import { routes } from './routes'
 import { navigationGuard } from './guards'
 import { application } from '@/application'
 import { canUserAccess } from '@/plugins/router/guards'
-import type { Application } from '@/application/application'
+import type { UserApplication } from '@/application/user.application'
 
-export const createRouter = (application: Application): Router => {
+export const createRouter = (userApplication: UserApplication): Router => {
   const router = makeRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
@@ -16,14 +16,14 @@ export const createRouter = (application: Application): Router => {
     application.clearPageTitle()
   })
 
-  router.beforeEach(navigationGuard(application))
+  router.beforeEach(navigationGuard(userApplication))
 
   router.checkAccessCurrentRoute = async () => {
     const route = router.currentRoute.value
     const { accessMode = 'public' } = route.meta
     if (accessMode === 'public') return
 
-    const canAccess = await canUserAccess(route, application.isLogged)
+    const canAccess = await canUserAccess(route, userApplication.isLogged)
     if (canAccess) return
 
     console.log('Redirect because there is no access to the route.')
@@ -35,4 +35,4 @@ export const createRouter = (application: Application): Router => {
 }
 
 // Here only for Pinia
-export const router = createRouter(application)
+export const router = createRouter(application.userApplication)

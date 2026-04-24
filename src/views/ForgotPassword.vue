@@ -32,7 +32,6 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { application } from '@/application'
 import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import AppLink from '@/components/AppLink.vue'
@@ -41,8 +40,11 @@ import useVuelidate from '@vuelidate/core'
 import ProgressBar from '@/components/animation/ProgressBar.vue'
 import { AppRateLimitError } from '@/types/app-errors'
 import { useRateLimit } from '@/composables/useRateLimit'
+import { useAuth } from '@/composables/useAuth'
 
 const email = ref<string>('')
+
+const { forgotPassword } = useAuth()
 
 const { emailRules } = useValidationRules()
 const { isBlocked, showProgressBar, time, startRateLimit, progressBarRef } =
@@ -63,7 +65,7 @@ const submitHandler = async () => {
     email: email.value,
   }
 
-  const res = await application.forgotPassword(payload)
+  const res = await forgotPassword(payload)
   if (res instanceof AppRateLimitError) {
     await startRateLimit(res.retryAfter)
   }

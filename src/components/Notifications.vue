@@ -1,27 +1,27 @@
 <template>
   <div class="notification-messages">
     <div
-      v-for="[id, n] in notifications"
+      v-for="[id, { type, message }] of notifications"
       :key="id"
-      :class="['notification-messages__item', n.type]"
+      :class="['notification-messages__item', type]"
     >
-      <p class="notification-messages__item-text">{{ n.message }}</p>
+      <p class="notification-messages__item-text">{{ message }}</p>
 
       <UiButtonIcon
         class="notification-messages__item-action"
         icon-name="close-square"
         :with-border="false"
-        @click="notifications.delete(id)"
+        @click="remove(id)"
       />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { application } from '@/application'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
+import { useNotifications } from '@/composables/useNotifications'
 
-const notifications = application.notifications
+const { notifications, remove } = useNotifications()
 </script>
 <style lang="scss" scoped>
 .notification-messages {

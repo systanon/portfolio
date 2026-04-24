@@ -1,97 +1,41 @@
 import { ref, type Ref } from 'vue'
 import EventEmitter from 'eventemitter3'
-import type {
-  CreateTodoDTO,
-  ReplaceTodoDTO,
-  Todo,
-  UpdateTodoDTO,
-} from '../types/todo'
-import type { TodoService } from './services/todo.service'
-import type { ID } from '../types/general'
-import {
-  AppError,
-  AppRateLimitError,
-  AppSilentError,
-} from '../types/app-errors'
-import type { AuthService } from './services/auth.service'
-import type {
-  ConfirmQuery,
-  ForgotPasswordDto,
-  ResendConfirmEmailDto,
-  ResetPasswordDto,
-  SignInDto,
-  SignUpDto,
-  UserProfile,
-  UserProfileUpdateInfo,
-} from '@/types/auth'
-import type {
-  AppSuccess,
-  GetAllParams,
-  PaginateResult,
-} from '@/types/app.types'
-import type { NotesService } from './services/notes.service'
-import type {
-  CreateNoteDTO,
-  Note,
-  ReplaceNoteDTO,
-  UpdateNoteDTO,
-} from '@/types/notes'
-import type {
-  NotificationService,
-  NotificationType,
-} from './services/notification.service'
-import type { RouteName } from '@/types/router'
-import type { StatisticService } from './services/statistic.service'
-import type { StatisticDTO } from '@/types/statistic'
+
+import type { AuthApplication } from './auth.application'
+import type { UserApplication } from './user.application'
+import type { TodoApplication } from './todo.application'
+import type { NoteApplication } from './note.application'
+import type { StatisticApplication } from './statistic.application'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
   EventContext extends any = any,
 > {
-  #ee: EventEmitter = new EventEmitter()
-  #todoService: TodoService
-  #noteService: NotesService
-  #authService: AuthService
-  #notificationService: NotificationService
-  #profile: Ref<UserProfile | null> = ref(null)
-  #loading: Ref<boolean> = ref(false)
+  private ee: EventEmitter = new EventEmitter()
+  public todoApplication: TodoApplication
+  public authApplication: AuthApplication
+  public userApplication: UserApplication
+  public noteApplication: NoteApplication
+  public statisticApplication: StatisticApplication
+  private _loading: Ref<boolean> = ref(false)
   private _pageTitle: Ref<string | null> = ref(null)
-  resolveProfileLoading: (() => void) | null = null
-  profileLoading: Promise<void> = Promise.resolve()
-  private statisticService: StatisticService
 
   constructor(
-    todoService: TodoService,
-    authService: AuthService,
-    notesService: NotesService,
-    notificationService: NotificationService,
-    statisticService: StatisticService,
+    authApplication: AuthApplication,
+    userApplication: UserApplication,
+    todoApplication: TodoApplication,
+    noteApplication: NoteApplication,
+    statisticApplication: StatisticApplication,
   ) {
-    this.#todoService = todoService
-    this.#authService = authService
-    this.#noteService = notesService
-    this.#notificationService = notificationService
-    this.statisticService = statisticService
-  }
-
-  private clearProfile() {
-    this.#profile.value = null
-  }
-
-  public get userProfile() {
-    return this.#profile.value
-  }
-
-  public get notifications() {
-    return this.#notificationService.notifications.value
-  }
-
-  public get isLogged(): boolean {
-    return this.#profile.value !== null
+    this.authApplication = authApplication
+    this.userApplication = userApplication
+    this.todoApplication = todoApplication
+    this.noteApplication = noteApplication
+    this.statisticApplication = statisticApplication
   }
 
   public get loading(): boolean {
-    return this.#loading.value
+    return this._loading.value
   }
 
   public get pageTitle() {
@@ -111,7 +55,7 @@ export class Application<
     fn: EventEmitter.EventListener<EventTypes, T>,
     context?: EventContext,
   ): EventEmitter {
-    return this.#ee.on(event, fn, context)
+    return this.ee.on(event, fn, context)
   }
 
   public off<T extends EventEmitter.EventNames<EventTypes>>(
@@ -120,217 +64,10 @@ export class Application<
     context?: EventContext,
     once?: boolean,
   ): EventEmitter {
-    return this.#ee.off(event, fn, context, once)
+    return this.ee.off(event, fn, context, once)
   }
 
-  public async signUp(dto: SignUpDto): Promise<void> {
-    this.#loading.value = true
-    const res = await this.#authService.registration(dto)
-    this.#loading.value = false
-    if (res instanceof AppError) {
-      this.#notificationService.notify('error', res.message)
-    }
-    this.#ee.emit('redirect', 'RegistrationSuccess' satisfies RouteName)
-  }
-
-  public async confirmEmail(params: ConfirmQuery): Promise<void> {
-    this.#loading.value = true
-    const res = await this.#authService.confirmEmail(params)
-    if (res instanceof AppError) {
-      this.#loading.value = false
-      this.#notificationService.notify('error', res.message)
-      return
-    }
-    await this.getProfile()
-  }
-
-  public async resendConfirmEmail(
-    dto: ResendConfirmEmailDto,
-  ): Promise<void | AppRateLimitError | AppError> {
-    this.#loading.value = true
-    const res = await this.#authService.resendConfirmEmail(dto)
-    this.#loading.value = false
-    if (res instanceof AppError || res instanceof AppRateLimitError) {
-      this.#notificationService.notify('error', res.message)
-      return res
-    }
-    this.#ee.emit('redirect', 'RegistrationSuccess' satisfies RouteName)
-  }
-
-  public async logout(): Promise<void | AppError> {
-    this.#loading.value = true
-    const res = await this.#authService.logout()
-    this.#loading.value = false
-    if (res instanceof AppError) {
-      this.#notificationService.notify('error', res.message)
-      return res
-    }
-    this.clearProfile()
-    this.#ee.emit('unlogged')
-  }
-
-  public async signIn(dto: SignInDto): Promise<void | AppError> {
-    this.#loading.value = true
-    const res = await this.#authService.authorization(dto)
-    this.#loading.value = false
-    if (res instanceof AppError) {
-      this.#notificationService.notify('error', res.message)
-      return res
-    }
-    await this.getProfile()
-  }
-
-  public async getProfile(): Promise<UserProfile | AppError | AppSilentError> {
-    this.#loading.value = true
-    this.profileLoading = new Promise<void>(
-      (resolve) => (this.resolveProfileLoading = resolve),
-    )
-    const res = await this.#authService.getProfile()
-    if (res instanceof AppError) {
-      this.#profile.value = null
-      this.#notificationService.notify('error', res.message)
-      this.#ee.emit('unlogged')
-    } else if (res instanceof AppSilentError) {
-      this.#profile.value = null
-      this.#ee.emit('unlogged')
-    } else {
-      this.#profile.value = res
-      this.#ee.emit('logged', res.id)
-    }
-    this.resolveProfileLoading?.()
-
-    this.#loading.value = false
-
-    return res
-  }
-
-  public async updateProfileInfo(
-    dto: UserProfileUpdateInfo,
-  ): Promise<AppError | AppSuccess> {
-    return await this.#authService.updateProfile(dto)
-  }
-
-  public async forgotPassword(
-    dto: ForgotPasswordDto,
-  ): Promise<void | AppRateLimitError | AppError> {
-    this.#loading.value = true
-    const res = await this.#authService.forgotPassword(dto)
-    this.#loading.value = false
-    if (res instanceof AppError || res instanceof AppRateLimitError) {
-      this.#notificationService.notify('error', res.message)
-      return res
-    } else {
-      this.#ee.emit('redirect', 'ForgotPasswordSuccess' satisfies RouteName)
-    }
-  }
-
-  public async resetPassword(dto: ResetPasswordDto): Promise<void> {
-    this.#loading.value = true
-    const res = await this.#authService.resetPassword(dto)
-    this.#loading.value = false
-    if (res instanceof AppError) {
-      this.#notificationService.notify('error', res.message)
-    } else {
-      this.#notificationService.notify('success', res.message)
-      this.#ee.emit('redirect', 'SignIn' satisfies RouteName)
-    }
-  }
-
-  public async createTodo(dto: CreateTodoDTO): Promise<AppSuccess | AppError> {
-    return await this.#todoService.create(dto)
-  }
-
-  public async getAllTodos(
-    params: GetAllParams,
-  ): Promise<PaginateResult<Todo> | AppError> {
-    this.#loading.value = true
-    const res = await this.#todoService.getAll(params)
-    if (res instanceof AppError) {
-      this.notify('error', res.message)
-    }
-    this.#loading.value = false
-    return res
-  }
-
-  public async getOneTodo(id: ID): Promise<Todo | AppError> {
-    const res = await this.#todoService.getOne(id)
-    if (!(res instanceof AppError)) {
-      this.setPageTitle(res.title)
-    }
-    return res
-  }
-
-  public async replaceTodo(
-    id: ID,
-    dto: ReplaceTodoDTO,
-  ): Promise<AppSuccess | AppError> {
-    const res = await this.#todoService.replace(id, dto)
-    return res
-  }
-
-  public async updateTodo(
-    id: ID,
-    dto: UpdateTodoDTO,
-  ): Promise<AppSuccess | AppError> {
-    const res = await this.#todoService.update(id, dto)
-    return res
-  }
-
-  public async deleteTodo(id: ID): Promise<AppSuccess | AppError> {
-    const res = await this.#todoService.delete(id)
-    return res
-  }
-
-  public async getAllNotes(
-    params: GetAllParams,
-  ): Promise<PaginateResult<Note> | AppError> {
-    this.#loading.value = true
-    const res = await this.#noteService.getAll(params)
-    this.#loading.value = false
-    return res
-  }
-
-  public async createNote(dto: CreateNoteDTO): Promise<AppSuccess | AppError> {
-    const res = await this.#noteService.create(dto)
-    return res
-  }
-
-  public async getOneNote(id: ID): Promise<Note | AppError> {
-    const res = await this.#noteService.getOne(id)
-    return res
-  }
-
-  public async replaceNote(
-    id: ID,
-    dto: ReplaceNoteDTO,
-  ): Promise<AppSuccess | AppError> {
-    const res = await this.#noteService.replace(id, dto)
-    return res
-  }
-
-  public async updateNote(
-    id: ID,
-    dto: UpdateNoteDTO,
-  ): Promise<AppSuccess | AppError> {
-    const res = await this.#noteService.update(id, dto)
-    return res
-  }
-
-  public async deleteNote(id: ID): Promise<AppSuccess | AppError> {
-    const res = await this.#noteService.delete(id)
-    return res
-  }
-
-  public async saveStatistic(dto: StatisticDTO): Promise<any | AppError> {
-    const res = await this.statisticService.save(dto)
-    return res
-  }
-
-  public async run(): Promise<void> {
-    await this.getProfile()
-  }
-
-  public notify(type: NotificationType, message: string): void {
-    this.#notificationService.notify(type, message)
+  public async init() {
+    this.userApplication.getProfile()
   }
 }
