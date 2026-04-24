@@ -44,7 +44,10 @@ export const authApplication = new AuthApplication(
   tokenManager,
   notificationModule,
 )
-export const todoApplication = new TodoApplication(todoService)
+export const todoApplication = new TodoApplication(
+  todoService,
+  notificationModule,
+)
 export const noteApplication = new NoteApplication(noteService)
 
 export const statisticApplication = new StatisticApplication(
