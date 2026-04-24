@@ -5,23 +5,25 @@ import { computed } from 'vue'
 import type { UserProfileUpdateInfo } from '@/types/auth'
 
 export function useProfile() {
+  const { userApplication } = application
+
   const getProfile = async () => {
-    const profile = await application.userApplication.getProfile()
+    const profile = await userApplication.getProfile()
     if (profile instanceof AppSuccess) {
       router.checkAccessCurrentRoute()
     }
   }
 
   const updateProfile = async (dto: UserProfileUpdateInfo) => {
-    return application.userApplication.updateProfile(dto)
+    return userApplication.updateProfile(dto)
   }
 
   const isLogged = computed(() => {
-    return application.userApplication.isLogged
+    return userApplication.isLogged
   })
 
   const profile = computed(() => {
-    return application.userApplication.userProfile
+    return userApplication.userProfile
   })
 
   return {
