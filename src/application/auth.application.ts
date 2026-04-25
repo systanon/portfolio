@@ -9,8 +9,7 @@ import type {
 import type { AuthService } from './services/auth.service'
 import { AppSuccess } from '@/types/app.types'
 import { AppError, AppRateLimitError } from '@/types/app-errors'
-import type { TokenManager } from './tokenManager'
-import { Errors } from '@/constants'
+import type { TokenManager } from '../lib/token.manager'
 import type { NotificationModule } from './modules/notification.module'
 
 export class AuthApplication {
