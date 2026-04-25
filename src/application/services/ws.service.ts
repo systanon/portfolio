@@ -1,134 +1,210 @@
-type WSHandler<T = any> = (data: T) => void
+import { Logger } from '@/lib/logger'
 
-export type WSMessage<T = any> = {
-  event: string
+const MAX_RECONNECT_DELAY_MS = 30_000
+const BASE_RECONNECT_DELAY_MS = 1_000
+
+export type WSMessage<T = unknown> = {
+  event?: string
   topic?: string
   data: T
   user_id?: number
 }
 
-export class WSService {
-  private readonly handlers = new Map<string, Set<WSHandler>>()
-  private ws: WebSocket | null = null
-  private url: string
-  private userId: number | null = null
-  private reconnectAttempts = 0
-  private isDestroyed = false
+export type WSHandler<T = unknown> = (message: WSMessage<T>) => void
 
-  resolveConnecting: (() => void) | null = null
-  wsConnecting: Promise<void> = Promise.resolve()
+export interface WSServiceLike {
+  connect(): void
+  onOpen(callback: () => void): () => void
+  auth(user_id: number): void
+  unauth(): void
+  subscribe<T = unknown>(topic: string, handler: WSHandler<T>): () => void
+  destroy(): void
+}
+
+export class WSService implements WSServiceLike {
+  private readonly handlers = new Map<string, Set<WSHandler>>()
+  private readonly openCallbacks = new Set<() => void>()
+  private readonly url: string
+  private readonly logger = new Logger('WebSocketService')
+
+  private ws: WebSocket | null = null
+  private reconnectAttempts = 0
+  private reconnectTimer: ReturnType<typeof setTimeout> | null = null
+  private isDestroyed = false
 
   constructor(url: string) {
     this.url = url
-    this.connect()
+    window.addEventListener('beforeunload', this.destroy.bind(this))
   }
 
-  private connect() {
+  connect(): void {
     if (this.isDestroyed) return
-    this.wsConnecting = new Promise(
-      (resolve) => (this.resolveConnecting = resolve),
-    )
-    console.log(`WS: Connecting to ${this.url}...`)
+
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer)
+      this.reconnectTimer = null
+    }
+
+    if (
+      this.ws?.readyState === WebSocket.CONNECTING ||
+      this.ws?.readyState === WebSocket.OPEN
+    ) {
+      return
+    }
+
+    this.logger.log(`Connecting to ${this.url}...`)
     this.ws = new WebSocket(this.url)
 
     this.ws.onopen = () => {
-      console.log('WS: Connected')
+      this.logger.log('Connected')
       this.reconnectAttempts = 0
-
-      if (this.userId) {
-        this.auth(this.userId)
-      }
-      this.resolveConnecting?.()
+      this.openCallbacks.forEach((cb) => cb())
     }
 
     this.ws.onmessage = (event) => this.handleMessage(event)
 
-    this.ws.onclose = (e) => {
+    this.ws.onclose = (event) => {
+      this.cleanupSocket()
+
       if (this.isDestroyed) return
 
-      const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000)
-      console.warn(
-        `WS: Connection closed. Reconnecting in ${delay}ms...`,
-        e.reason,
+      const delay = Math.min(
+        BASE_RECONNECT_DELAY_MS * Math.pow(2, this.reconnectAttempts),
+        MAX_RECONNECT_DELAY_MS,
+      )
+
+      this.logger.warn(
+        `Closed (code ${event.code}). Reconnecting in ${delay}ms`,
+        event.reason,
       )
 
       this.reconnectAttempts++
-      setTimeout(() => this.connect(), delay)
+      this.reconnectTimer = setTimeout(() => this.connect(), delay)
     }
 
     this.ws.onerror = (err) => {
-      console.error('WS: Socket error', err)
+      this.logger.error('Socket error', err)
       this.ws?.close()
     }
   }
 
-  private handleMessage(message: MessageEvent) {
-    let payload: WSMessage
-    try {
-      payload = JSON.parse(message.data)
-    } catch {
-      console.warn('WS: invalid JSON', message.data)
-      return
+  onOpen(callback: () => void): () => void {
+    this.openCallbacks.add(callback)
+
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      callback()
     }
 
-    if (typeof payload?.topic === 'string') {
-      const handlers = this.handlers.get(payload.topic)
-      handlers?.forEach((handler) => {
-        try {
-          handler(payload)
-        } catch (err) {
-          console.error(`WS handler error [${payload.topic}]`, err)
-        }
-      })
+    return () => this.openCallbacks.delete(callback)
+  }
+
+  auth(user_id: number): void {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.sendAuth(user_id)
     }
   }
 
-  emit<T = any>(event: string, data: T) {
+  unauth(): void {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.logger.log('Unauth send')
+      this.emit('unauth', {})
+    }
+  }
+
+  emit<T = unknown>(event: string, data: T): void {
     if (this.ws?.readyState !== WebSocket.OPEN) {
-      console.warn('WS: cannot emit, connection not open')
+      this.logger.warn(`Cannot emit "${event}", socket not open`)
       return
     }
     this.ws.send(JSON.stringify({ event, data }))
   }
 
-  auth(user_id: number) {
-    this.userId = user_id
-    if (this.ws?.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify({ event: 'auth', user_id }))
-      console.log('WS: Auth sent for user', user_id)
-    }
-  }
-  unauth() {
-    if (this.userId) {
-      this.userId = null
-
-      if (this.ws?.readyState === WebSocket.OPEN) {
-        this.emit('unauth', {})
-      }
-    }
-  }
-
-  subscribe<T = any>(topic: string, handler: WSHandler<T>) {
-    const handlers = this.handlers.get(topic) ?? new Set()
-    handlers.add(handler as WSHandler)
-    this.handlers.set(topic, handlers)
+  subscribe<T = unknown>(topic: string, handler: WSHandler<T>): () => void {
+    const set = this.handlers.get(topic) ?? new Set<WSHandler>()
+    set.add(handler as WSHandler)
+    this.handlers.set(topic, set)
+    this.logger.log(`Subscribed to "${topic}" (total: ${set.size})`)
     return () => this.unsubscribe(topic, handler)
   }
 
-  unsubscribe<T = any>(topic: string, handler: WSHandler<T>) {
-    const handlers = this.handlers.get(topic)
-    if (handlers) {
-      handlers.delete(handler as WSHandler)
-      if (handlers.size === 0) this.handlers.delete(topic)
+  destroy(): void {
+    this.logger.log('Destroying connection')
+    this.isDestroyed = true
+    this.reconnectAttempts = 0
+
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer)
+      this.reconnectTimer = null
+    }
+
+    this.handlers.clear()
+    this.openCallbacks.clear()
+
+    if (this.ws) {
+      this.ws.close(1000, 'client destroyed')
+      this.cleanupSocket()
     }
   }
 
-  destroy() {
-    this.isDestroyed = true
-    this.handlers.clear()
-    if (this.ws) {
-      this.ws.close()
-      this.ws = null
+  private sendAuth(user_id: number): void {
+    this.logger.log('Auth sent for user', user_id)
+    this.ws!.send(JSON.stringify({ event: 'auth', user_id }))
+  }
+
+  private handleMessage(message: MessageEvent): void {
+    let payload: WSMessage
+
+    try {
+      payload = JSON.parse(message.data)
+    } catch {
+      this.logger.error('Ignored non-JSON message', message.data)
+      return
     }
+
+    this.logger.log(
+      `Received "${payload.topic ?? payload.event}"`,
+      payload.data,
+    )
+
+    const called = new Set<WSHandler>()
+
+    if (payload.topic) {
+      this.handlers.get(payload.topic)?.forEach((h) => {
+        called.add(h)
+        this.safeCall(h, payload, payload.topic!)
+      })
+    }
+
+    if (payload.event) {
+      this.handlers.get(payload.event)?.forEach((h) => {
+        if (called.has(h)) return
+        this.safeCall(h, payload, payload.event!)
+      })
+    }
+  }
+
+  private safeCall(handler: WSHandler, payload: WSMessage, key: string): void {
+    try {
+      handler(payload)
+    } catch (err) {
+      this.logger.error(`Handler error [${key}]`, err)
+    }
+  }
+
+  private cleanupSocket(): void {
+    if (!this.ws) return
+    this.ws.onopen = null
+    this.ws.onmessage = null
+    this.ws.onclose = null
+    this.ws.onerror = null
+    this.ws = null
+  }
+
+  private unsubscribe<T = unknown>(topic: string, handler: WSHandler<T>): void {
+    const set = this.handlers.get(topic)
+    if (!set) return
+    set.delete(handler as WSHandler)
+    this.logger.log(`Unsubscribed from "${topic}" (remaining: ${set.size})`)
+    if (set.size === 0) this.handlers.delete(topic)
   }
 }
