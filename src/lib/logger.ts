@@ -1,6 +1,6 @@
 const TIME_START = 11
 const TIME_END = 19
-const LEVELS = ['error', 'info', 'log', 'warn'] as const
+export const LEVELS = ['error', 'info', 'log', 'warn'] as const
 type LogLevelType = (typeof LEVELS)[number]
 
 const COLOR: Record<LogLevelType, string> = {
@@ -28,7 +28,7 @@ declare global {
   }
 }
 
-class LogLevel {
+export class LogLevel {
   private _levels: LogLevelType[] = []
   constructor(levels: readonly LogLevelType[] = LEVELS) {
     this.set(levels)
