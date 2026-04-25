@@ -6,6 +6,7 @@ import type { UserApplication } from './user.application'
 import type { TodoApplication } from './todo.application'
 import type { NoteApplication } from './note.application'
 import type { StatisticApplication } from './statistic.application'
+import type { WSServiceLike } from './services/ws.service'
 
 export class Application<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
@@ -17,6 +18,7 @@ export class Application<
   public userApplication: UserApplication
   public noteApplication: NoteApplication
   public statisticApplication: StatisticApplication
+  private wsService: WSServiceLike
   private _loading: Ref<boolean> = ref(false)
   private _pageTitle: Ref<string | null> = ref(null)
 
@@ -26,12 +28,14 @@ export class Application<
     todoApplication: TodoApplication,
     noteApplication: NoteApplication,
     statisticApplication: StatisticApplication,
+    wsService: WSServiceLike,
   ) {
     this.authApplication = authApplication
     this.userApplication = userApplication
     this.todoApplication = todoApplication
     this.noteApplication = noteApplication
     this.statisticApplication = statisticApplication
+    this.wsService = wsService
   }
 
   public get loading(): boolean {
@@ -68,6 +72,7 @@ export class Application<
   }
 
   public async init() {
+    this.wsService.connect()
     this.userApplication.getProfile()
   }
 }

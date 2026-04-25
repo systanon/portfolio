@@ -116,4 +116,5 @@ export const application = new Application(
   todoApplication,
   noteApplication,
   statisticApplication,
+  wSService,
 )

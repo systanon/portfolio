@@ -34,9 +34,7 @@ export class UserApplication {
     if (profile instanceof AppSuccess) {
       this.profile.value = profile.data
 
-      await this.wsService.wsConnecting
-
-      this.wsService.auth(profile.data.id)
+      this.wsService.onOpen(() => this.wsService.auth(profile.data.id))
     } else {
       if (profile instanceof AppError) {
         this.notificationModule.notify('error', profile.message)
