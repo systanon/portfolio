@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import { router } from './plugins/router'
 import { application } from './application'
+import { setupSyncListener } from './application/listeners/sync.listener'
 
 import '@/sass/_theme.scss'
 import 'floating-vue/dist/style.css'
@@ -27,5 +28,6 @@ app.use(router)
 app.use(FloatingVue)
 
 application.init()
+setupSyncListener()
 
 app.mount('#app')

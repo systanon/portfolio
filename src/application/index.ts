@@ -16,6 +16,16 @@ import { TodoApplication } from './todo.application'
 import { NoteApplication } from './note.application'
 import { StatisticApplication } from './statistic.application'
 import { createAuthRequest, createAuthResponse } from './interceptors'
+import { SyncModule } from './modules/sync/sync.module'
+import type { AppSyncEvents } from '@/types/listeners'
+
+const URL_EXCLUDE = ['/refresh', '/sign-up', '/sign_in']
+
+export const syncModule = new SyncModule<AppSyncEvents>(
+  new SharedWorker(new URL('./modules/sync/sync.worker.ts', import.meta.url), {
+    type: 'module',
+  }),
+)
 
 export const httpClient = new HTTPClient({
   base: import.meta.env.VITE_APP_API_URL,
@@ -24,9 +34,7 @@ export const httpClient = new HTTPClient({
   },
 })
 
-const URL_EXCLUDE = ['/refresh', '/sign-up', '/sign_in']
-
-export const wSService = new WSService(import.meta.env.VITE_APP_WS_API)
+export const wsService = new WSService(import.meta.env.VITE_APP_WS_API)
 export const tokenManager = new TokenManager()
 
 export const notificationModule = new NotificationModule()
@@ -38,8 +46,9 @@ export const statisticService = new StatisticService(httpClient)
 
 export const userApplication = new UserApplication(
   userService,
-  wSService,
+  wsService,
   notificationModule,
+  syncModule,
 )
 export const authApplication = new AuthApplication(
   authService,
@@ -82,5 +91,5 @@ export const application = new Application(
   todoApplication,
   noteApplication,
   statisticApplication,
-  wSService,
+  wsService,
 )

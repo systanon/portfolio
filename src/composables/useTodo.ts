@@ -1,4 +1,4 @@
-import { application, wSService } from '@/application'
+import { application, wsService } from '@/application'
 import { useTodoStore } from '@/plugins/store/todo'
 import { AppError } from '@/types/app-errors'
 import { AppSuccess, type GetAllParams } from '@/types/app.types'
@@ -8,7 +8,7 @@ import { onUnmounted } from 'vue'
 
 export function useTodo() {
   const { addAll, messageHandler } = useTodoStore()
-  const unsubscribe = wSService.subscribe('todos', messageHandler)
+  const unsubscribe = wsService.subscribe('todos', messageHandler)
   const { todoApplication } = application
 
   const getAll = async (params: GetAllParams) => {
