@@ -25,6 +25,8 @@ export class SyncModule<
     clientID: null,
     master: true,
   })
+  private workerReady = false
+  private workerReadyResolvers: (() => void)[] = []
   private testConnectTimestamp = Date.now()
   private lostConnection = false
   private pingInterval: ReturnType<typeof setInterval> | null = null
@@ -40,8 +42,8 @@ export class SyncModule<
   constructor(
     syncWorker: SharedWorker,
     config: SyncModuleConfig = {
-      pingPongInterval: 5000,
-      offlineInterval: 10000,
+      pingPongInterval: 2000,
+      offlineInterval: 5000,
     },
   ) {
     this.syncWorker = syncWorker
@@ -143,6 +145,13 @@ export class SyncModule<
     return promise
   }
 
+  public waitForWorker(): Promise<void> {
+    if (this.workerReady) return Promise.resolve()
+    return new Promise((resolve) => {
+      this.workerReadyResolvers.push(resolve)
+    })
+  }
+
   private startPingWatcher() {
     this.pingInterval = setInterval(() => {
       const now = Date.now()
@@ -180,6 +189,13 @@ export class SyncModule<
 
   private handlePing(data: { id: number; timestamp: number }) {
     this.testConnectTimestamp = Date.now()
+
+    if (!this.workerReady) {
+      this.workerReady = true
+      this.workerReadyResolvers.forEach((r) => r())
+      this.workerReadyResolvers = []
+    }
+
     const message = {
       event: SyncEvent.SYNC,
       data: {
