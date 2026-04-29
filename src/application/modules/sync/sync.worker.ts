@@ -1,3 +1,5 @@
+import { Logger } from '@/lib/logger'
+
 export enum SyncEvent {
   SYNC = 'sync',
   CONNECT = 'connect',
@@ -17,6 +19,7 @@ export interface ISyncModule {
 
 const MAX_MISSED_PINGS = 3
 
+const logger = new Logger('SyncWorker')
 interface Connection extends MessagePort {
   _id: number
   _pong: number
@@ -92,6 +95,7 @@ const testPong = (timestamp: number): void => {
   )
 
   deadConnections.forEach((connection) => {
+    logger.warn('dead connection removed', connection._id)
     try {
       connection.postMessage(
         structuredClone(
@@ -109,6 +113,7 @@ const testPong = (timestamp: number): void => {
 
   masterID =
     liveConnections.length > 0 ? (liveConnections[0]?._id ?? null) : null
+  logger.log('Master reassigned', masterID)
 }
 
 const testConnect = (): void => {
@@ -133,7 +138,7 @@ const handlers: Record<string, (data: any) => void | Promise<void>> = {
 
     if (masterID == null || !connections.has(masterID)) {
       const errorMessage = 'there is no connection with the master client'
-      console.error(errorMessage, requestID, masterID)
+      logger.error(errorMessage, requestID, masterID)
       const connection = connections.get(clientID)
       if (!connection) return
       const message = buildMessage(SyncEvent.RPC_RESPONSE, {
@@ -155,7 +160,7 @@ const handlers: Record<string, (data: any) => void | Promise<void>> = {
     const { clientID, requestID } = response
 
     if (!connections.has(clientID)) {
-      console.error('there is no connection with the slave client', requestID)
+      logger.error('there is no connection with the slave client', requestID)
       return
     }
 
@@ -189,9 +194,10 @@ const onConnect = (event: MessageEvent): void => {
   const now = Date.now()
   port._pong = now
   port._id = newID++
+  logger.log('new connection', port._id)
   connections.set(port._id, port)
 
-  port.addEventListener('message', onMessage(port._id), false)
+  port.addEventListener('message', onMessage(port._id))
   port.start()
 
   const masterConnection = masterID != null ? connections.get(masterID) : null
@@ -200,6 +206,7 @@ const onConnect = (event: MessageEvent): void => {
     masterConnection._pong + PING_PONG_INTERVAL_LIMIT < now
   ) {
     masterID = port._id
+    logger.log('new master assigned on connect', masterID)
   }
 
   port.postMessage(
@@ -213,5 +220,8 @@ const onConnect = (event: MessageEvent): void => {
   sendMasterStatus()
 }
 
-self.addEventListener('connect', onConnect as EventListener, false)
-self.addEventListener('error', (err) => console.error('SyncWorker', err), false)
+self.addEventListener('connect', onConnect as EventListener)
+self.addEventListener('error', (err) => logger.error('uncaught error', err))
+self.addEventListener('unhandledrejection', (err) =>
+  logger.error('unhandled rejection', err),
+)
