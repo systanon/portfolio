@@ -1,4 +1,4 @@
-import { application, wSService } from '@/application'
+import { application, wsService } from '@/application'
 import { useNoteStore } from '@/plugins/store/note'
 import { AppError } from '@/types/app-errors'
 import { AppSuccess, type GetAllParams } from '@/types/app.types'
@@ -8,7 +8,7 @@ import { onUnmounted } from 'vue'
 
 export function useNote() {
   const { addAll, messageHandler } = useNoteStore()
-  const unsubscribe = wSService.subscribe('notes', messageHandler)
+  const unsubscribe = wsService.subscribe('notes', messageHandler)
   const { noteApplication } = application
 
   const getAll = async (params: GetAllParams) => {

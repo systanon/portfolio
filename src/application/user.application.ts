@@ -5,12 +5,14 @@ import type { UserProfile, UserProfileUpdateInfo } from '@/types/auth'
 import { ref, type Ref } from 'vue'
 import type { WSService } from './services/ws.service'
 import type { NotificationModule } from './modules/notification.module'
+import type { SyncModule } from './modules/sync/sync.module'
 
 export class UserApplication {
   private userService: UserService
   private profile: Ref<UserProfile | null> = ref(null)
   private wsService: WSService
   private notificationModule: NotificationModule
+  private syncModule: SyncModule
   resolveProfileLoading: (() => void) | null = null
   profileLoading: Promise<void> = Promise.resolve()
 
@@ -18,10 +20,12 @@ export class UserApplication {
     userService: UserService,
     wsService: WSService,
     notificationModule: NotificationModule,
+    syncModule: SyncModule,
   ) {
     this.userService = userService
     this.wsService = wsService
     this.notificationModule = notificationModule
+    this.syncModule = syncModule
   }
 
   async getProfile(): Promise<
@@ -30,18 +34,20 @@ export class UserApplication {
     this.profileLoading = new Promise<void>(
       (resolve) => (this.resolveProfileLoading = resolve),
     )
-    const profile = await this.userService.getProfile()
-    if (profile instanceof AppSuccess) {
-      this.profile.value = profile.data
+    const response = await this.userService.getProfile()
+    if (response instanceof AppSuccess) {
+      const profile = response.data
+      this.setProfile(profile)
+      this.wsService.onOpen(() => this.wsService.auth(profile.id))
 
-      this.wsService.onOpen(() => this.wsService.auth(profile.data.id))
+      this.syncModule.emit('user: profile', profile)
     } else {
-      if (profile instanceof AppError) {
-        this.notificationModule.notify('error', profile.message)
+      if (response instanceof AppError) {
+        this.notificationModule.notify('error', response.message)
       }
     }
     this.resolveProfileLoading?.()
-    return profile
+    return response
   }
 
   async updateProfile(
@@ -62,8 +68,19 @@ export class UserApplication {
     return this.profile.value !== null
   }
 
+  public setProfile(profile: UserProfile) {
+    this.profile.value = profile
+    this.wsService.onOpen(() => this.wsService.auth(profile.id))
+  }
+
+  public syncClearProfile() {
+    this.profile.value = null
+    this.wsService.unauth()
+  }
+
   public clearProfile() {
     this.profile.value = null
     this.wsService.unauth()
+    this.syncModule.emit('user: logout')
   }
 }
