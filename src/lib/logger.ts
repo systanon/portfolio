@@ -51,11 +51,12 @@ export class LogLevel {
   }
 }
 
-Object.defineProperty(window, 'logLevel', {
-  value: new LogLevel(),
-  writable: false,
-})
-
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'logLevel', {
+    value: new LogLevel(),
+    writable: false,
+  })
+}
 export class Logger {
   private source: string
   constructor(source = 'App') {
