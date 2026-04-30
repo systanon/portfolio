@@ -14,3 +14,9 @@ export const API_URL = {
   todos: 'todos',
   statistic: 'cv/download',
 }
+
+export const URL_EXCLUDE = [
+  API_URL.auth.refresh,
+  API_URL.auth.sign_up,
+  API_URL.auth.sign_in,
+]
