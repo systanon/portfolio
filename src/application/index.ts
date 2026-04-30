@@ -18,8 +18,7 @@ import { StatisticApplication } from './statistic.application'
 import { createAuthRequest, createAuthResponse } from './interceptors'
 import { SyncModule } from './modules/sync/sync.module'
 import type { AppSyncEvents } from '@/types/listeners'
-
-const URL_EXCLUDE = ['/refresh', '/sign-up', '/sign_in']
+import { URL_EXCLUDE } from '@/constants'
 
 export const syncModule = new SyncModule<AppSyncEvents>(
   new SharedWorker(new URL('./modules/sync/sync.worker.ts', import.meta.url), {

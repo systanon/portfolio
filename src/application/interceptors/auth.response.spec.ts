@@ -2,10 +2,10 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { createAuthResponse } from './auth.response'
 import { AppSuccess } from '@/types/app.types'
 import { AppError } from '@/types/app-errors'
+import { URL_EXCLUDE } from '@/constants'
 
 const mockAuthApplication = { refresh: vi.fn() }
 const mockHttpClient = { do: vi.fn() }
-const URL_EXCLUDE = ['/refresh']
 
 describe('createAuthResponse', () => {
   beforeEach(() => vi.clearAllMocks())
@@ -48,7 +48,7 @@ describe('createAuthResponse', () => {
       mockHttpClient as any,
       URL_EXCLUDE,
     )
-    const response = makeResponse(401, '/api/refresh')
+    const response = makeResponse(401, `/${URL_EXCLUDE[0]}`)
     const result = await interceptor(response)
     expect(result).toBe(response)
     expect(mockAuthApplication.refresh).not.toHaveBeenCalled()
