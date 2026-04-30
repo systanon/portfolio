@@ -214,19 +214,20 @@ export class SyncModule<
 
   private async handleRPCRequest(request: RpcRequest) {
     const { clientID, requestID, procedureName, params } = request
-    const res = this.procedures.get(procedureName)?.(params)
-    let state = 'resolve'
+    let state: 'resolve' | 'reject' = 'resolve'
     let result = null
-    if (isPromise(res)) {
-      await res
-        .then((data) => (result = data))
-        .catch((error) => {
-          this.logger.error(`RPC procedure "${procedureName}" failed`, error)
-          result = error
-          state = 'reject'
-        })
-    } else {
-      result = res
+
+    try {
+      const res = this.procedures.get(procedureName)?.(params)
+      if (isPromise(res)) {
+        result = await res
+      } else {
+        result = res
+      }
+    } catch (error) {
+      this.logger.error(`RPC procedure "${procedureName}" failed`, error)
+      result = error
+      state = 'reject'
     }
 
     const data = { clientID, requestID, state, result }
