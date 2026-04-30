@@ -17,16 +17,16 @@ export const useNoteStore = defineStore('note', () => {
   const pages = ref<number>(0)
   let currentPage = 0
 
-  function messageHandler(message: WSMessage) {
+  function messageHandler(message: WSMessage<Note | number>) {
     switch (message.event) {
       case 'create':
-        _create(message.data)
+        _create(message.data as Note)
         break
       case 'update':
-        _update(message.data)
+        _update(message.data as Note)
         break
       case 'delete':
-        _delete(message.data)
+        _delete(message.data as number)
         break
     }
   }
