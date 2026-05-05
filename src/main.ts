@@ -5,6 +5,7 @@ import App from './App.vue'
 import { router } from './plugins/router'
 import { application } from './application'
 import { setupSyncListener } from './application/listeners/sync.listener'
+import { i18n } from './i18n'
 
 import '@/sass/_theme.scss'
 import 'floating-vue/dist/style.css'
@@ -26,6 +27,7 @@ app.use(createPinia())
 app.use(router)
 
 app.use(FloatingVue)
+app.use(i18n)
 
 application.init()
 setupSyncListener()
