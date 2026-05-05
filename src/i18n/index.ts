@@ -1,18 +1,13 @@
 import { createI18n } from 'vue-i18n'
 import en from './locales/en.json'
-import type {
-  MessageSchema,
-  SupportedLocale,
-  PartialMessages,
-} from '@/types/i18n'
+import type { MessageSchema } from '@/types/i18n'
+import { DEFAULT_LOCALE } from '@/constants'
 
-export const i18n = createI18n<[MessageSchema], SupportedLocale>({
+export const i18n = createI18n<[MessageSchema], typeof DEFAULT_LOCALE>({
   legacy: false,
-  locale: 'en',
-  fallbackLocale: 'en',
+  locale: DEFAULT_LOCALE,
+  fallbackLocale: DEFAULT_LOCALE,
   messages: {
     en,
-    pl: {} as MessageSchema,
-    ua: {} as MessageSchema,
-  } as PartialMessages,
+  },
 })
