@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { createI18n } from 'vue-i18n'
 import { withSetup } from '@/tests/utils/withSetup'
-import { SUPPORT_LOCALES, DEFAULT_LOCALE } from '@/types/i18n'
+import { SUPPORT_LOCALES, DEFAULT_LOCALE } from '@/constants'
 
 vi.mock('@/i18n/locales/en.json', () => ({
   default: { header: { title: 'Hello' } },
@@ -36,12 +36,9 @@ describe('getFromUrl', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply, currentLocale } = withSetup(
-      () => useLocale(),
-      [i18n],
-    )
+    const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(currentLocale.value).toBe('pl')
     expect(window.location.search).toBe('')
@@ -52,12 +49,9 @@ describe('getFromUrl', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply, currentLocale } = withSetup(
-      () => useLocale(),
-      [i18n],
-    )
+    const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(currentLocale.value).toBe(DEFAULT_LOCALE)
   })
@@ -67,9 +61,9 @@ describe('getFromUrl', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply } = withSetup(() => useLocale(), [i18n])
+    const { initLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(window.location.search).toBe('?foo=bar')
   })
@@ -83,12 +77,9 @@ describe('getFromStorage', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply, currentLocale } = withSetup(
-      () => useLocale(),
-      [i18n],
-    )
+    const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(currentLocale.value).toBe('ua')
   })
@@ -98,12 +89,9 @@ describe('getFromStorage', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply, currentLocale } = withSetup(
-      () => useLocale(),
-      [i18n],
-    )
+    const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(currentLocale.value).toBe(DEFAULT_LOCALE)
   })
@@ -121,12 +109,9 @@ describe('getFromBrowser', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply, currentLocale } = withSetup(
-      () => useLocale(),
-      [i18n],
-    )
+    const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(currentLocale.value).toBe('pl')
     vi.restoreAllMocks()
@@ -137,12 +122,9 @@ describe('getFromBrowser', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply, currentLocale } = withSetup(
-      () => useLocale(),
-      [i18n],
-    )
+    const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(currentLocale.value).toBe(DEFAULT_LOCALE)
     vi.restoreAllMocks()
@@ -163,12 +145,9 @@ describe('priority: url > storage > browser', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply, currentLocale } = withSetup(
-      () => useLocale(),
-      [i18n],
-    )
+    const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(currentLocale.value).toBe('ua')
   })
@@ -179,12 +158,9 @@ describe('priority: url > storage > browser', () => {
 
     const i18n = createTestI18n()
     const { useLocale } = await import('./useLocale')
-    const { resolveAndApply, currentLocale } = withSetup(
-      () => useLocale(),
-      [i18n],
-    )
+    const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
-    await resolveAndApply()
+    await initLocale()
 
     expect(currentLocale.value).toBe('pl')
   })

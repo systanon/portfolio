@@ -6,11 +6,11 @@ import { useLocale } from '@/composables/useLocale'
 import { ref } from 'vue'
 
 useWindowResize()
-const { resolveAndApply } = useLocale()
+const { initLocale } = useLocale()
 
 const ready = ref(false)
 
-resolveAndApply().then(() => {
+initLocale().then(() => {
   ready.value = true
 })
 </script>

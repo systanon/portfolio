@@ -1,44 +1,14 @@
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { SUPPORT_LOCALES, DEFAULT_LOCALE } from '@/constants'
+import type { SupportedLocale } from '@/types/i18n'
 import {
-  SUPPORT_LOCALES,
-  type SupportedLocale,
-  DEFAULT_LOCALE,
-} from '@/types/i18n'
+  getFromUrl,
+  getFromStorage,
+  getFromBrowser,
+} from '@/i18n/localeDetectors'
 
 const loadedLocales = new Set<SupportedLocale>()
-
-function getFromUrl(): SupportedLocale | null {
-  const params = new URLSearchParams(window.location.search)
-  const lang = params.get('lang')
-
-  if (lang && SUPPORT_LOCALES.includes(lang as SupportedLocale)) {
-    params.delete('lang')
-    const newSearch = params.toString()
-    window.history.replaceState(
-      {},
-      '',
-      newSearch
-        ? `${window.location.pathname}?${newSearch}`
-        : window.location.pathname,
-    )
-    return lang as SupportedLocale
-  }
-  return null
-}
-
-function getFromStorage(): SupportedLocale | null {
-  const saved = localStorage.getItem('locale') as SupportedLocale | null
-  return saved && SUPPORT_LOCALES.includes(saved) ? saved : null
-}
-
-function getFromBrowser(): SupportedLocale | null {
-  for (const lang of navigator.languages) {
-    const short = lang.split('-')[0] as SupportedLocale
-    if (SUPPORT_LOCALES.includes(short)) return short
-  }
-  return null
-}
 
 export function useLocale() {
   const { locale, setLocaleMessage } = useI18n()
@@ -60,7 +30,7 @@ export function useLocale() {
     document.documentElement.setAttribute('lang', lang)
   }
 
-  async function resolveAndApply(): Promise<void> {
+  async function initLocale(): Promise<void> {
     const resolved =
       getFromUrl() ?? getFromStorage() ?? getFromBrowser() ?? DEFAULT_LOCALE
 
@@ -70,7 +40,7 @@ export function useLocale() {
   return {
     currentLocale,
     setLocale,
-    resolveAndApply,
+    initLocale,
     supportedLocales: SUPPORT_LOCALES,
   }
 }
