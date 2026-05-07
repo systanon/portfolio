@@ -51,7 +51,7 @@
   </BaseField>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup generic="T extends string">
 import type { BaseValidation } from '@vuelidate/core'
 import BaseField from '@/components/ui/fields/BaseField.vue'
 import UiIcon from '@/components/ui/icons/UiIcon.vue'
@@ -59,12 +59,16 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { useField } from '@/composables/useField'
 import { onClickOutside } from '@vueuse/core'
 
-export type UiSelectOption = Record<string, unknown>
-export type UiSelectOptions = readonly UiSelectOption[]
+type UiSelectOption<T> = {
+  [key: string]: unknown
+  value?: T
+  label?: string | null
+}
+type UiSelectOptions<T> = readonly UiSelectOption<T>[]
 
 interface Props {
-  modelValue: string
-  options: UiSelectOptions
+  modelValue: T
+  options: UiSelectOptions<T>
   placeholder?: string
   propValue?: string
   propLabel?: string
@@ -81,7 +85,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'list-visible', value: boolean): void
-  (e: 'update:modelValue', value: string): void
+  (e: 'update:modelValue', value: T): void
 }>()
 
 const optionsShown = ref(false)
@@ -92,12 +96,12 @@ const activeIndex = ref(0)
 
 const { modelValueProxy, $v } = useField(props, emit)
 
-function formatOptionLabel(option: UiSelectOption): string {
+function formatOptionLabel(option: UiSelectOption<T>): string {
   const raw = option[props.propLabel]
   return raw == null ? '' : String(raw)
 }
 
-function optionKey(option: UiSelectOption, index: number): string {
+function optionKey(option: UiSelectOption<T>, index: number): string {
   const v = option[props.propValue]
   return v == null ? `i-${index}` : String(v)
 }
@@ -125,17 +129,17 @@ const hide = () => {
   setShowOptions(false)
 }
 
-const updateValue = (value: string) => {
+const updateValue = (value: T) => {
   modelValueProxy.value = value
   hide()
 }
 
-const selectOption = (option: UiSelectOption) => {
+const selectOption = (option: UiSelectOption<T>) => {
   if (props.disabled) return
-  updateValue(String(option[props.propValue] ?? ''))
+  updateValue(option[props.propValue] as T)
 }
 
-const isActive = (item: UiSelectOption) => {
+const isActive = (item: UiSelectOption<T>) => {
   return modelValueProxy.value === item[props.propValue]
 }
 
@@ -145,7 +149,11 @@ const getSelectedIndex = () => {
   )
 }
 
-const setOptionRef = (el: unknown, option: UiSelectOption, index: number) => {
+const setOptionRef = (
+  el: unknown,
+  option: UiSelectOption<T>,
+  index: number,
+) => {
   const key = optionKey(option, index)
   if (el instanceof HTMLElement) {
     optionRefs.value.set(key, el)
@@ -174,7 +182,7 @@ const moveActiveIndex = async (delta: number) => {
   focusActiveOption()
 }
 
-const isHighlighted = (item: UiSelectOption, index: number) => {
+const isHighlighted = (item: UiSelectOption<T>, index: number) => {
   if (optionsShown.value) return index === activeIndex.value
   return isActive(item)
 }
