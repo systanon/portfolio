@@ -24,6 +24,11 @@
       >
         {{ text }}
       </AppLink>
+      <UiSelect
+        :modelValue="currentLocale"
+        :options="LOCALES_OPTIONS"
+        @update:model-value="setLocale"
+      />
     </div>
   </nav>
 </template>
@@ -34,7 +39,11 @@ import { byAuthorized, rightSide, leftSide } from '@/config/main-menu'
 import AppLink from './AppLink.vue'
 import Logo from './Logo.vue'
 import { useProfile } from '@/composables/useProfile'
+import UiSelect from './ui/select/UiSelect.vue'
+import { LOCALES_OPTIONS } from '@/constants'
+import { useLocale } from '@/composables/useLocale'
 
+const { currentLocale, setLocale } = useLocale()
 const { isLogged } = useProfile()
 
 const right = computed(() => {
@@ -65,6 +74,7 @@ const onLinkNavigate = (navigate: () => void) => {
   }
   & ._right {
     justify-content: flex-end;
+    align-items: center;
   }
 }
 </style>

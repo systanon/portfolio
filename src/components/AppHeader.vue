@@ -1,13 +1,3 @@
-<script lang="ts" setup>
-import NavigationMenu from '@/components/NavigationMenu.vue'
-import NavigationMenuMobile from './NavigationMenuMobile.vue'
-import { useInjectWindowResize } from '@/composables/useWindowResize'
-import Logo from '@/components/Logo.vue'
-import AppBreadcrumbs from './breadcrumbs/AppBreadcrumbs.vue'
-
-const { isTablet, isMobile } = useInjectWindowResize()
-</script>
-
 <template>
   <header class="app-header">
     <div class="container">
@@ -22,6 +12,16 @@ const { isTablet, isMobile } = useInjectWindowResize()
     </div>
   </header>
 </template>
+
+<script lang="ts" setup>
+import NavigationMenu from '@/components/NavigationMenu.vue'
+import NavigationMenuMobile from './NavigationMenuMobile.vue'
+import { useInjectWindowResize } from '@/composables/useWindowResize'
+import Logo from '@/components/Logo.vue'
+import AppBreadcrumbs from './breadcrumbs/AppBreadcrumbs.vue'
+
+const { isTablet, isMobile } = useInjectWindowResize()
+</script>
 
 <style scoped lang="scss">
 .app-header {

@@ -13,6 +13,12 @@
       >
         {{ text }}
       </AppLink>
+      <div class="app-navigation__menu-divider"></div>
+      <UiSelect
+        :modelValue="currentLocale"
+        :options="LOCALES_OPTIONS"
+        @update:model-value="changeLanguage"
+      />
     </nav>
   </aside>
 </template>
@@ -26,7 +32,12 @@ import BurgerButton, { type IBurgerButton } from './ui/buttons/BurgerButton.vue'
 import { useEscapeKey } from '@/composables/useEscapeKey'
 import { createNavBar } from '@/animations'
 import { useProfile } from '@/composables/useProfile'
+import UiSelect from './ui/select/UiSelect.vue'
+import { LOCALES_OPTIONS } from '@/constants'
+import { useLocale } from '@/composables/useLocale'
+import type { SupportedLocale } from '@/types/i18n'
 
+const { currentLocale, setLocale } = useLocale()
 const vOnClickOutside: Directive = baseOnClickOutside
 const isNavOpen = ref(false)
 const navRef = ref<HTMLElement | null>(null)
@@ -85,6 +96,11 @@ const initAnimation = () => {
   kill.value = navBar.kill
 }
 
+const changeLanguage = async (lang: SupportedLocale) => {
+  await setLocale(lang)
+  close()
+}
+
 onMounted(async () => {
   initAnimation()
 })
@@ -116,6 +132,11 @@ onMounted(async () => {
     align-items: center;
     gap: rem(30);
     font-size: rem(22);
+    &-divider {
+      width: 100%;
+      background-color: var(--border-color);
+      height: rem(2);
+    }
   }
 }
 </style>
