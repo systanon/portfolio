@@ -13,7 +13,6 @@
   },
   "page_sign_in": {
     "title": "Zaloguj się",
-    "email_label": "Email",
     "placeholder_email": "Wprowadź swój email",
     "password_label": "Hasło",
     "placeholder_password": "Wprowadź swoje hasło",
@@ -21,7 +20,6 @@
   },
   "page_sign_up": {
     "title": "Zarejestruj się",
-    "email_label": "Email",
     "placeholder_email": "Wprowadź swój email",
     "password_label": "Hasło",
     "placeholder_password": "Wprowadź swoje hasło",
@@ -66,7 +64,6 @@
   },
   "page_forgot_password": {
     "title": "Nie pamiętasz hasła",
-    "email_label": "E-mail",
     "email_placeholder": "Wpisz e-mail",
     "resend_verification": "Wysłać ponownie e-mail weryfikacyjny?"
   },
@@ -83,6 +80,22 @@
     "body_instructions": "Kliknij link w e-mailu, aby aktywować konto.",
     "body_spam": "Jeśli nie widzisz wiadomości, sprawdź folder {folder}.",
     "folder": "Spam"
+  },
+  "page_profile": {
+    "title": "Profil",
+    "delete_account": "Usuń konto",
+    "sign_out": "Wyloguj się",
+    "delete_title": "Usunięcie konta",
+    "delete_confirm": "Czy na pewno chcesz usunąć konto?",
+    "delete_button": "Usuń konto",
+    "sign_out_title": "Wylogowanie",
+    "sign_out_confirm": "Czy na pewno chcesz się wylogować?",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "first_name": "Imię",
+    "last_name": "Nazwisko",
+    "phone": "Telefon",
+    "bio": "O mnie"
   },
   "footer": {
     "copyright": "Wszelkie prawa zastrzeżone."
@@ -102,5 +115,6 @@
     "confirm_password_required": "Potwierdzenie hasła jest wymagane",
     "passwords_do_not_match": "Hasła nie są zgodne"
   },
-  "submit": "Wyślij"
+  "submit": "Wyślij",
+  "email_label": "Email"
 }

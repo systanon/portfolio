@@ -4,7 +4,7 @@
       <h2 class="page-sign-up__form-title">{{ t('page_sign_up.title') }}</h2>
       <UiInput
         v-model="email"
-        :label="t('page_sign_up.email_label')"
+        :label="t('email_label')"
         :placeholder="t('page_sign_up.placeholder_email')"
         autocomplete="email"
         :validation="v$.email"

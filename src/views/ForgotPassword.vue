@@ -6,7 +6,7 @@
       </h2>
       <UiInput
         v-model="email"
-        :label="t('page_forgot_password.email_label')"
+        :label="t('email_label')"
         :placeholder="t('page_forgot_password.email_placeholder')"
         :validation="v$.email"
       />

@@ -13,7 +13,6 @@
   },
   "page_sign_in": {
     "title": "Увійти",
-    "email_label": "Електронна пошта",
     "placeholder_email": "Введіть електронну пошту",
     "password_label": "Пароль",
     "placeholder_password": "Введіть ваш пароль",
@@ -21,7 +20,6 @@
   },
   "page_sign_up": {
     "title": "Реєстрація",
-    "email_label": "Електронна пошта",
     "placeholder_email": "Введіть електронну пошту",
     "password_label": "Пароль",
     "placeholder_password": "Введіть пароль",
@@ -66,7 +64,6 @@
   },
   "page_forgot_password": {
     "title": "Забули пароль",
-    "email_label": "Електронна пошта",
     "email_placeholder": "Введіть електронну пошту",
     "resend_verification": "Надіслати лист підтвердження ще раз?"
   },
@@ -83,6 +80,22 @@
     "body_instructions": "Перейдіть за посиланням у листі, щоб активувати ваш акаунт.",
     "body_spam": "Якщо ви не бачите листа, перевірте папку {folder}.",
     "folder": "Спам"
+  },
+  "page_profile": {
+    "title": "Профіль",
+    "delete_account": "Видалити акаунт",
+    "sign_out": "Вийти",
+    "delete_title": "Видалення акаунта",
+    "delete_confirm": "Ви впевнені, що хочете видалити акаунт?",
+    "delete_button": "Видалити акаунт",
+    "sign_out_title": "Вихід",
+    "sign_out_confirm": "Ви дійсно хочете вийти?",
+    "cancel": "Скасувати",
+    "save": "Зберегти",
+    "first_name": "Ім'я",
+    "last_name": "Прізвище",
+    "phone": "Телефон",
+    "bio": "Про себе"
   },
   "footer": {
     "copyright": "Усі права захищені."
@@ -102,5 +115,6 @@
     "confirm_password_required": "Підтвердження пароля є обов’язковим",
     "passwords_do_not_match": "Паролі не збігаються"
   },
-  "submit": "Надіслати"
+  "submit": "Надіслати",
+  "email_label": "Електронна пошта"
 }

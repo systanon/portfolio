@@ -13,7 +13,6 @@
   },
   "page_sign_in": {
     "title": "Sign in",
-    "email_label": "Email",
     "placeholder_email": "Enter your email",
     "password_label": "Password",
     "placeholder_password": "Enter your password",
@@ -21,7 +20,6 @@
   },
   "page_sign_up": {
     "title": "Sign up",
-    "email_label": "Email",
     "placeholder_email": "Enter your email",
     "password_label": "Password",
     "placeholder_password": "Enter your password",
@@ -66,7 +64,6 @@
   },
   "page_forgot_password": {
     "title": "Forgot password",
-    "email_label": "Email",
     "email_placeholder": "Enter email",
     "resend_verification": "Resend verification email?"
   },
@@ -76,6 +73,22 @@
     "body_instructions": "Follow the instructions in the email to reset your password.",
     "body_spam": "If you don't see the email, please check your {folder} folder.",
     "folder": "Spam"
+  },
+  "page_profile": {
+    "title": "Profile",
+    "delete_account": "Delete Account",
+    "sign_out": "Sign Out",
+    "delete_title": "Delete account",
+    "delete_confirm": "Are you sure you want to delete your account?",
+    "delete_button": "Delete account",
+    "sign_out_title": "Sign out",
+    "sign_out_confirm": "Do you really want to sign out?",
+    "cancel": "Cancel",
+    "save": "Save",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "phone": "Phone",
+    "bio": "Bio"
   },
   "registration_success": {
     "title": "Confirm Your Email",
@@ -102,5 +115,6 @@
     "confirm_password_required": "Confirm password is required",
     "passwords_do_not_match": "Passwords do not match"
   },
-  "submit": "Submit"
+  "submit": "Submit",
+  "email_label": "Email"
 }

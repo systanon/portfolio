@@ -1,6 +1,6 @@
 <template>
   <section class="page-profile">
-    <h2 class="page-profile__title title">Profile</h2>
+    <h2 class="page-profile__title title">{{ t('page_profile.title') }}</h2>
     <div class="page-profile__avatar avatar">
       <img :src="avatar" alt="avatar" class="page-profile__avatar-image" />
     </div>
@@ -12,11 +12,11 @@
         class="page-profile__fields-item"
       >
         <div class="page-profile__fields-label">
-          <h3>{{ field.label }}</h3>
+          <h3>{{ t(field.label) }}</h3>
         </div>
         <UiInput
           v-model="field.value.value"
-          :placeholder="field.label"
+          :placeholder="t(field.label)"
           :type="'text'"
           :validation="v$[key]"
           :id="key"
@@ -39,30 +39,41 @@
       </div>
     </div>
     <div class="page-profile__actions actions">
-      <UiButton label="Delete Account" @click="deleteHandler" />
-      <UiButton label="Sign Out" @click="signOutHandler" />
+      <UiButton
+        :label="t('page_profile.delete_account')"
+        @click="deleteHandler"
+      />
+      <UiButton :label="t('page_profile.sign_out')" @click="signOutHandler" />
     </div>
   </section>
-  <UIModal ref="deleteModalRef" title="Delete account" class="profile__modal">
+  <UIModal
+    ref="deleteModalRef"
+    :title="t('page_profile.delete_title')"
+    class="profile__modal"
+  >
     <template #default>
       <div class="profile__modal-form">
-        <h3>Are you sure you want to delete your account?</h3>
+        <h3>{{ t('page_profile.delete_confirm') }}</h3>
       </div>
     </template>
     <template #actions="{ close, confirm }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="confirm" label="Delete account" />
+      <UiButton @click="close" :label="t('page_profile.cancel')" />
+      <UiButton @click="confirm" :label="t('page_profile.delete_button')" />
     </template>
   </UIModal>
-  <UIModal ref="signOutModalRef" title="Sign out" class="profile__modal">
+  <UIModal
+    ref="signOutModalRef"
+    :title="t('page_profile.sign_out_title')"
+    class="profile__modal"
+  >
     <template #default>
       <div class="profile__modal-form">
-        <h3>Do you really want to sign out?</h3>
+        <h3>{{ t('page_profile.sign_out_confirm') }}</h3>
       </div>
     </template>
     <template #actions="{ close, confirm }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="confirm" label="Sign out" />
+      <UiButton @click="close" :label="t('page_profile.cancel')" />
+      <UiButton @click="confirm" :label="t('page_profile.sign_out')" />
     </template>
   </UIModal>
 </template>
@@ -80,6 +91,9 @@ import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import UIModal, { type IModalOpen } from '@/components/ui/modals/UiModal.vue'
 import { useProfile } from '@/composables/useProfile'
 import { useAuth } from '@/composables/useAuth'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 type FieldKey = keyof UserProfileUpdateInfo
 
@@ -98,31 +112,31 @@ const { logout } = useAuth()
 
 const fields = {
   email: {
-    label: 'Email',
+    label: 'email_label',
     value: ref(profile.value?.email ?? ''),
     originalValue: profile.value?.email ?? '',
     isEditing: ref(false),
   },
   first_name: {
-    label: 'First Name',
+    label: 'page_profile.first_name',
     value: ref(profile.value?.first_name ?? ''),
     originalValue: profile.value?.first_name ?? '',
     isEditing: ref(false),
   },
   last_name: {
-    label: 'Last Name',
+    label: 'page_profile.last_name',
     value: ref(profile.value?.last_name ?? ''),
     originalValue: profile.value?.last_name ?? '',
     isEditing: ref(false),
   },
   phone: {
-    label: 'Phone',
+    label: 'page_profile.phone',
     value: ref(profile.value?.phone ?? ''),
     originalValue: profile.value?.phone ?? '',
     isEditing: ref(false),
   },
   bio: {
-    label: 'Bio',
+    label: 'page_profile.bio',
     value: ref(profile.value?.bio ?? ''),
     originalValue: profile.value?.bio ?? '',
     isEditing: ref(false),
