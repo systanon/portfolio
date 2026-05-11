@@ -64,6 +64,12 @@
     "create_title": "Utwórz notatkę",
     "create_button": "Utwórz notatkę"
   },
+  "page_forgot_password": {
+    "title": "Nie pamiętasz hasła",
+    "email_label": "E-mail",
+    "email_placeholder": "Wpisz e-mail",
+    "resend_verification": "Wysłać ponownie e-mail weryfikacyjny?"
+  },
   "footer": {
     "copyright": "Wszelkie prawa zastrzeżone."
   },

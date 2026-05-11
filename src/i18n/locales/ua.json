@@ -64,6 +64,12 @@
     "create_title": "Створити нотатку",
     "create_button": "Створити нотатку"
   },
+  "page_forgot_password": {
+    "title": "Забули пароль",
+    "email_label": "Електронна пошта",
+    "email_placeholder": "Введіть електронну пошту",
+    "resend_verification": "Надіслати лист підтвердження ще раз?"
+  },
   "footer": {
     "copyright": "Усі права захищені."
   },

@@ -64,6 +64,12 @@
     "create_title": "Create Note",
     "create_button": "Create note"
   },
+  "page_forgot_password": {
+    "title": "Forgot password",
+    "email_label": "Email",
+    "email_placeholder": "Enter email",
+    "resend_verification": "Resend verification email?"
+  },
   "footer": {
     "copyright": "All rights reserved."
   },
