@@ -117,5 +117,7 @@
   },
   "submit": "Submit",
   "email_label": "Email",
-  "more_detail": "More detail"
+  "more_detail": "More detail",
+  "created": "Created",
+  "updated": "Updated"
 }
