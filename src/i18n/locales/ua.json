@@ -116,5 +116,6 @@
     "passwords_do_not_match": "Паролі не збігаються"
   },
   "submit": "Надіслати",
-  "email_label": "Електронна пошта"
+  "email_label": "Електронна пошта",
+  "more_detail": "Детальніше"
 }

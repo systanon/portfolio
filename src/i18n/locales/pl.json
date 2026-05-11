@@ -116,5 +116,6 @@
     "passwords_do_not_match": "Hasła nie są zgodne"
   },
   "submit": "Wyślij",
-  "email_label": "Email"
+  "email_label": "Email",
+  "more_detail": "Więcej szczegółów"
 }

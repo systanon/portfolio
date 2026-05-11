@@ -116,5 +116,6 @@
     "passwords_do_not_match": "Passwords do not match"
   },
   "submit": "Submit",
-  "email_label": "Email"
+  "email_label": "Email",
+  "more_detail": "More detail"
 }
