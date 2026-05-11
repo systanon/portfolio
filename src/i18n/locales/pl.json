@@ -77,6 +77,13 @@
     "body_spam": "Jeśli nie widzisz wiadomości, sprawdź folder {folder}.",
     "folder": "Spam"
   },
+  "registration_success": {
+    "title": "Potwierdź swój e-mail",
+    "body_sent": "Wysłaliśmy e-mail z potwierdzeniem do Twojej skrzynki.",
+    "body_instructions": "Kliknij link w e-mailu, aby aktywować konto.",
+    "body_spam": "Jeśli nie widzisz wiadomości, sprawdź folder {folder}.",
+    "folder": "Spam"
+  },
   "footer": {
     "copyright": "Wszelkie prawa zastrzeżone."
   },
