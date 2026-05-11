@@ -51,6 +51,19 @@
     "create_title": "Створити завдання",
     "create_button": "Створити завдання"
   },
+  "page_notes": {
+    "page_title": "Це сторінка нотаток",
+    "create_note": "Створити нотатку",
+    "empty_notes": "Немає нотаток",
+    "delete_title": "Видалити нотатку?",
+    "delete_confirm_text": "Ви впевнені, що хочете видалити нотатку?",
+    "cancel": "Скасувати",
+    "delete_button": "Видалити нотатку",
+    "update_title": "Оновити нотатку",
+    "update_button": "Оновити нотатку",
+    "create_title": "Створити нотатку",
+    "create_button": "Створити нотатку"
+  },
   "footer": {
     "copyright": "Усі права захищені."
   },

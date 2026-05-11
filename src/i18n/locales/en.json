@@ -51,6 +51,19 @@
     "create_title": "Create Todo",
     "create_button": "Create todo"
   },
+  "page_notes": {
+    "page_title": "This is Notes page",
+    "create_note": "Create note",
+    "empty_notes": "Empty notes",
+    "delete_title": "Delete note?",
+    "delete_confirm_text": "Are you sure you want to delete a note?",
+    "cancel": "Cancel",
+    "delete_button": "Delete note",
+    "update_title": "Update note",
+    "update_button": "Update note",
+    "create_title": "Create Note",
+    "create_button": "Create note"
+  },
   "footer": {
     "copyright": "All rights reserved."
   },

@@ -51,6 +51,19 @@
     "create_title": "Utwórz zadanie",
     "create_button": "Utwórz zadanie"
   },
+  "page_notes": {
+    "page_title": "To jest strona notatek",
+    "create_note": "Utwórz notatkę",
+    "empty_notes": "Brak notatek",
+    "delete_title": "Usunąć notatkę?",
+    "delete_confirm_text": "Czy na pewno chcesz usunąć notatkę?",
+    "cancel": "Anuluj",
+    "delete_button": "Usuń notatkę",
+    "update_title": "Edytuj notatkę",
+    "update_button": "Zaktualizuj notatkę",
+    "create_title": "Utwórz notatkę",
+    "create_button": "Utwórz notatkę"
+  },
   "footer": {
     "copyright": "Wszelkie prawa zastrzeżone."
   },
