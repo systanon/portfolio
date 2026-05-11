@@ -1,10 +1,9 @@
 <template>
   <section class="contacts-page">
     <div class="contacts-page__wrapper backdrop">
-      <h2 class="contacts-page__title">My Contacts</h2>
+      <h2 class="contacts-page__title">{{ t('page_contacts.title') }}</h2>
       <p class="contacts-page__subtitle">
-        If you want to discuss a project, collaboration, or have any questions —
-        feel free to contact me.
+        {{ t('page_contacts.subtitle') }}
       </p>
 
       <ul class="contacts-page__list">
@@ -29,6 +28,8 @@
 
 <script setup lang="ts">
 import { socialLinks } from '@/config/social-links'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 </script>
 
 <style scoped lang="scss">

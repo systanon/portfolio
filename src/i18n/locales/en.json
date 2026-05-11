@@ -34,6 +34,10 @@
     "description": "Frontend developer with over 5 years of experience building scalable and high-performance web applications. I specialize in modern frontend development with Vue 3, TypeScript, and Nuxt, while also having strong backend expertise in Go and PostgreSQL. I focus on writing clean, maintainable code and designing well-structured architectures. I apply principles like Domain-Driven Design (DDD), SOLID, and separation of concerns to ensure long-term scalability and testability of applications. My experience includes building real-time systems with WebSockets, implementing secure JWT-based authentication flows, and designing RESTful APIs. On the frontend, I enjoy creating complex, data-driven interfaces such as trading platforms with real-time charts and interactive components. I pay close attention to performance, UX, and code quality, and I actively use unit testing to keep systems reliable. I’m comfortable working across the full stack — from UI architecture to backend services, database design, and DevOps practices like Docker and CI/CD. I value thoughtful engineering decisions, clear communication, and continuous improvement. You can download my CV.",
     "btn_description": "Download CV"
   },
+  "page_contacts": {
+    "title": "My Contacts",
+    "subtitle": "If you want to discuss a project, collaboration, or have any questions — feel free to contact me."
+  },
   "footer": {
     "copyright": "All rights reserved."
   },
