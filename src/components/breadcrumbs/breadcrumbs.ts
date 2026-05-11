@@ -4,6 +4,7 @@ export type BreadcrumbLabel = string | (() => string)
 export type BreadcrumbsItem = {
   id: number
   parentId: number | null
+  i18n_key?: string
   path: string
   name: string
   label: BreadcrumbLabel
@@ -18,6 +19,7 @@ export const breadcrumbsConfig: Breadcrumbs = [
     parentId: null,
     path: '/todos',
     name: 'TodoList',
+    i18n_key: 'nav-menu.todo',
     label: 'Todos',
   },
   {
@@ -32,6 +34,7 @@ export const breadcrumbsConfig: Breadcrumbs = [
     parentId: null,
     path: '/sign-in',
     name: 'SignIn',
+    i18n_key: 'nav-menu.sign_in',
     label: 'Sign In',
   },
   {
@@ -39,6 +42,7 @@ export const breadcrumbsConfig: Breadcrumbs = [
     parentId: 2,
     path: '/forgot-password',
     name: 'ForgotPassword',
+    i18n_key: 'page_forgot_password.title',
     label: 'Forgot Password',
   },
   {
@@ -46,6 +50,7 @@ export const breadcrumbsConfig: Breadcrumbs = [
     parentId: 3,
     path: '/resend-email-verification',
     name: 'ResendEmailVerification',
+    i18n_key: 'resend_verification.title',
     label: 'Resend Email Verification',
   },
 ]

@@ -1,15 +1,13 @@
 {
-  "header": {
-    "nav-menu": {
-      "home": "Home",
-      "todo": "Todo List",
-      "profile": "Profile",
-      "about": "About me",
-      "notations": "Notations",
-      "contacts": "Contacts",
-      "sign_in": "Sign in",
-      "sign_up": "Sign up"
-    }
+  "nav-menu": {
+    "home": "Home",
+    "todo": "Todo List",
+    "profile": "Profile",
+    "about": "About me",
+    "notations": "Notations",
+    "contacts": "Contacts",
+    "sign_in": "Sign in",
+    "sign_up": "Sign up"
   },
   "page_sign_in": {
     "title": "Sign in",

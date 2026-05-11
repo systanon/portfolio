@@ -1,15 +1,13 @@
 {
-  "header": {
-    "nav-menu": {
-      "home": "Головна",
-      "todo": "Список завдань",
-      "profile": "Профіль",
-      "about": "Про мене",
-      "notations": "Нотатки",
-      "contacts": "Контакти",
-      "sign_in": "Увійти",
-      "sign_up": "Зареєструватися"
-    }
+  "nav-menu": {
+    "home": "Головна",
+    "todo": "Список завдань",
+    "profile": "Профіль",
+    "about": "Про мене",
+    "notations": "Нотатки",
+    "contacts": "Контакти",
+    "sign_in": "Увійти",
+    "sign_up": "Зареєструватися"
   },
   "page_sign_in": {
     "title": "Увійти",

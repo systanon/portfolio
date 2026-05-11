@@ -1,15 +1,13 @@
 {
-  "header": {
-    "nav-menu": {
-      "home": "Strona główna",
-      "todo": "Lista zadań",
-      "profile": "Profil",
-      "about": "O mnie",
-      "notations": "Notatki",
-      "contacts": "Kontakty",
-      "sign_in": "Zaloguj się",
-      "sign_up": "Zarejestruj się"
-    }
+  "nav-menu": {
+    "home": "Strona główna",
+    "todo": "Lista zadań",
+    "profile": "Profil",
+    "about": "O mnie",
+    "notations": "Notatki",
+    "contacts": "Kontakty",
+    "sign_in": "Zaloguj się",
+    "sign_up": "Zarejestruj się"
   },
   "page_sign_in": {
     "title": "Zaloguj się",
