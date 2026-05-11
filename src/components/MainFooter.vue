@@ -4,7 +4,8 @@
       <div class="main-footer__info">
         <SocialLinks class="main-footer__info-links" :links="socialLinks" />
         <p class="main-footer__info-copyright">
-          © 2025 Tustanovskyi. All rights reserved.
+          © {{ new Date().getFullYear() }} Tustanovskyi.
+          {{ t('footer.copyright') }}
         </p>
       </div>
     </div>
@@ -14,6 +15,9 @@
 <script setup lang="ts">
 import SocialLinks from './SocialLinks.vue'
 import { socialLinks } from '@/config/social-links'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <style lang="scss" scoped>
