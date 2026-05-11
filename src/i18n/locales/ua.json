@@ -20,11 +20,14 @@
     "forgot_password": "Забули пароль?"
   },
   "page_sign_up": {
-    "title": "Sign up",
-    "name_label": "Name",
-    "email_label": "Email",
-    "password_label": "Password",
-    "confirm_password_label": "Confirm Password"
+    "title": "Реєстрація",
+    "email_label": "Електронна пошта",
+    "placeholder_email": "Введіть електронну пошту",
+    "password_label": "Пароль",
+    "placeholder_password": "Введіть пароль",
+    "confirm_password_label": "Підтвердження пароля",
+    "placeholder_confirm_password": "Підтвердіть пароль",
+    "redirect_to_sign_in": "Вже маєте акаунт?"
   },
   "page_about": {
     "title": "Про мене",

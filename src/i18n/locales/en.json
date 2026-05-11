@@ -21,10 +21,13 @@
   },
   "page_sign_up": {
     "title": "Sign up",
-    "name_label": "Name",
     "email_label": "Email",
+    "placeholder_email": "Enter your email",
     "password_label": "Password",
-    "confirm_password_label": "Confirm Password"
+    "placeholder_password": "Enter your password",
+    "confirm_password_label": "Confirm Password",
+    "placeholder_confirm_password": "Confirm your password",
+    "redirect_to_sign_in": "Already have an account?"
   },
   "page_about": {
     "title": "About me",

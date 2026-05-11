@@ -1,44 +1,44 @@
 <template>
   <section class="page-sign-up">
     <form class="page-sign-up__form" @submit.prevent="submitHandler">
-      <h2 class="page-sign-up__form-title">Sign up</h2>
+      <h2 class="page-sign-up__form-title">{{ t('page_sign_up.title') }}</h2>
       <UiInput
         v-model="email"
-        label="Email"
-        placeholder="Enter email"
+        :label="t('page_sign_up.email_label')"
+        :placeholder="t('page_sign_up.placeholder_email')"
         autocomplete="email"
         :validation="v$.email"
       />
       <UiInput
         v-model="password"
         type="password"
-        label="Password"
-        placeholder="Enter your password"
+        :label="t('page_sign_up.password_label')"
+        :placeholder="t('page_sign_up.placeholder_password')"
         :validation="v$.password"
         autocomplete="new-password"
       />
       <UiInput
         v-model="confirmPassword"
-        label="Confirm password"
+        :label="t('page_sign_up.confirm_password_label')"
         type="password"
-        placeholder="Confirm your password"
+        :placeholder="t('page_sign_up.placeholder_confirm_password')"
         autocomplete="new-password"
         :validation="v$.confirmPassword"
       />
       <div class="page-sign-up__redirect">
-        <span class="page-sign-up__redirect-text"
-          >Already have an account?</span
-        >
+        <span class="page-sign-up__redirect-text">{{
+          t('page_sign_up.redirect_to_sign_in')
+        }}</span>
 
         <AppLink
           :to="{ name: 'SignIn' }"
           inactive-class="link-secondary"
           active-class="link-secondary--active"
           @navigate="(navigate) => navigate()"
-          >Sign In</AppLink
+          >{{ t('page_sign_in.title') }}</AppLink
         >
       </div>
-      <UiButton type="submit" label="Submit" />
+      <UiButton type="submit" :label="t('submit')" />
     </form>
   </section>
 </template>
@@ -51,7 +51,9 @@ import useVuelidate from '@vuelidate/core'
 import AppLink from '@/components/AppLink.vue'
 import { useValidationRules } from '@/composables/useValidationRules'
 import { useAuth } from '@/composables/useAuth'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { signUp } = useAuth()
 
 const email = ref<string>('')

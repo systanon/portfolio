@@ -21,10 +21,13 @@
   },
   "page_sign_up": {
     "title": "Zarejestruj się",
-    "name_label": "Imię",
     "email_label": "Email",
+    "placeholder_email": "Wprowadź swój email",
     "password_label": "Hasło",
-    "confirm_password_label": "Potwierdź hasło"
+    "placeholder_password": "Wprowadź swoje hasło",
+    "confirm_password_label": "Potwierdź hasło",
+    "placeholder_confirm_password": "Potwierdź swoje hasło",
+    "redirect_to_sign_in": "Masz już konto?"
   },
   "page_about": {
     "title": "O mnie",
