@@ -1,19 +1,19 @@
 <template>
   <section class="page-sign-in">
     <form class="page-sign-in__form" @submit.prevent="submit">
-      <h2 class="page-sign-in__form-title">Sign in</h2>
+      <h2 class="page-sign-in__form-title">{{ t('page_sign_in.title') }}</h2>
       <UiInput
         v-model="email"
-        label="Email"
-        placeholder="Enter email"
+        :label="t('page_sign_in.email_label')"
+        :placeholder="t('page_sign_in.placeholder_email')"
         :validation="v$.email"
         autocomplete="email"
       />
       <UiInput
         v-model="password"
-        label="Password"
+        :label="t('page_sign_in.password_label')"
         type="password"
-        placeholder="Enter your password"
+        :placeholder="t('page_sign_in.placeholder_password')"
         :validation="v$.password"
         autocomplete="current-password"
       />
@@ -25,10 +25,10 @@
           :to="{ name: 'ForgotPassword' }"
           @navigate="(navigate) => navigate()"
         >
-          Forgot password?</AppLink
-        >
+          {{ t('page_sign_in.forgot_password') }}
+        </AppLink>
       </div>
-      <UiButton type="submit" label="Submit" />
+      <UiButton type="submit" :label="t('submit')" />
     </form>
   </section>
 </template>
@@ -38,7 +38,9 @@ import UiInput from '@/components/ui/fields/UiInput.vue'
 import UiButton from '@/components/ui/buttons/UiButton.vue'
 import AppLink from '@/components/AppLink.vue'
 import { useSignInForm } from '@/composables/useSignInForm'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { email, password, v$, submit } = useSignInForm()
 </script>
 
