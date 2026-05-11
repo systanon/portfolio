@@ -1,24 +1,15 @@
 <template>
   <section class="about-page">
-    <h2 class="about-page__title">About Me</h2>
+    <h2 class="about-page__title">{{ t('page_about.title') }}</h2>
 
     <div class="about-page__description">
       <p class="about-page__description-text">
-        My name is Serhii Tustanovskyi. I am a Front-End Developer with over 5
-        years of professional experience, specializing in building complex web
-        applications. I have worked on crypto trading platforms, e-commerce
-        systems, and internal frameworks. My primary stack includes Vue.js,
-        TypeScript, and modern frontend tooling. I focus on clean UI/UX,
-        pixel-perfect layouts, reusable components, and maintainable
-        architecture. I apply best practices such as SOLID, DRY, and KISS to
-        build scalable and reliable solutions. I also have hands-on experience
-        with Golang and REST APIs, which helps me collaborate effectively with
-        backend and DevOps teams and understand the full application
-        architecture. For a detailed overview of my experience and technical
-        skills, you can download my CV.
+        {{ t('page_about.description') }}
       </p>
       <UiButtonIcon @click="openForm" iconName="download">
-        <template #prepend> <span>Download CV</span> </template>
+        <template #prepend>
+          <span> {{ t('page_about.btn_description') }}</span>
+        </template>
       </UiButtonIcon>
     </div>
   </section>
@@ -40,11 +31,13 @@ import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
 import CvForm from '@/components/forms/CvForm.vue'
 import { application } from '@/application'
 import { AppSuccess } from '@/types/app.types'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({
   name: 'AboutView',
 })
 
+const { t } = useI18n()
 const cvModalRef = ref<IModalOpen | null>(null)
 const cvFormRef = ref()
 const { statisticApplication } = application
