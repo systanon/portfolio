@@ -70,6 +70,13 @@
     "email_placeholder": "Enter email",
     "resend_verification": "Resend verification email?"
   },
+  "forgot_password_success": {
+    "title": "Check Your Email",
+    "body_sent": "We've sent a password reset link to your email.",
+    "body_instructions": "Follow the instructions in the email to reset your password.",
+    "body_spam": "If you don't see the email, please check your {folder} folder.",
+    "folder": "Spam"
+  },
   "footer": {
     "copyright": "All rights reserved."
   },

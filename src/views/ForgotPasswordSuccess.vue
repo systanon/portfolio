@@ -1,13 +1,18 @@
 <template>
   <section class="forgot-pass-success">
     <EmailNotification>
-      <template #title> Check Your Email </template>
+      <template #title> {{ t('forgot_password_success.title') }} </template>
       <template #body>
-        <p>📧 We’ve sent a password reset link to your email.</p>
-        <p>Follow the instructions in the email to reset your password.</p>
+        <p>📧 {{ t('forgot_password_success.body_sent') }}</p>
+        <p>{{ t('forgot_password_success.body_instructions') }}</p>
         <p>
-          If you don't see the email, please check your
-          <span class="forgot-pass-success__hint">Spam</span> folder.
+          <i18n-t keypath="forgot_password_success.body_spam">
+            <template #folder>
+              <span class="forgot-pass-success__hint">
+                {{ t('forgot_password_success.folder') }}
+              </span>
+            </template>
+          </i18n-t>
         </p>
       </template>
     </EmailNotification>
@@ -16,6 +21,9 @@
 
 <script setup lang="ts">
 import EmailNotification from '@/components/EmailNotification.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <style scoped lang="scss">

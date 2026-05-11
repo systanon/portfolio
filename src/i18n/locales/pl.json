@@ -70,6 +70,13 @@
     "email_placeholder": "Wpisz e-mail",
     "resend_verification": "Wysłać ponownie e-mail weryfikacyjny?"
   },
+  "forgot_password_success": {
+    "title": "Sprawdź swoją pocztę",
+    "body_sent": "Wysłaliśmy link do resetowania hasła na Twój e-mail.",
+    "body_instructions": "Postępuj zgodnie z instrukcjami w e-mailu, aby zresetować hasło.",
+    "body_spam": "Jeśli nie widzisz wiadomości, sprawdź folder {folder}.",
+    "folder": "Spam"
+  },
   "footer": {
     "copyright": "Wszelkie prawa zastrzeżone."
   },
