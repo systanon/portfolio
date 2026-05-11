@@ -5,15 +5,15 @@
       <UiInput
         v-model="email"
         :label="t('email_label')"
-        :placeholder="t('page_sign_in.placeholder_email')"
+        :placeholder="t('email_placeholder')"
         :validation="v$.email"
         autocomplete="email"
       />
       <UiInput
         v-model="password"
-        :label="t('page_sign_in.password_label')"
+        :label="t('password_label')"
         type="password"
-        :placeholder="t('page_sign_in.placeholder_password')"
+        :placeholder="t('password_placeholder')"
         :validation="v$.password"
         autocomplete="current-password"
       />

@@ -13,16 +13,11 @@
   },
   "page_sign_in": {
     "title": "Увійти",
-    "placeholder_email": "Введіть електронну пошту",
-    "password_label": "Пароль",
-    "placeholder_password": "Введіть ваш пароль",
+
     "forgot_password": "Забули пароль?"
   },
   "page_sign_up": {
     "title": "Реєстрація",
-    "placeholder_email": "Введіть електронну пошту",
-    "password_label": "Пароль",
-    "placeholder_password": "Введіть пароль",
     "confirm_password_label": "Підтвердження пароля",
     "placeholder_confirm_password": "Підтвердіть пароль",
     "redirect_to_sign_in": "Вже маєте акаунт?"
@@ -97,6 +92,9 @@
     "phone": "Телефон",
     "bio": "Про себе"
   },
+  "resend_verification": {
+    "title": "Сторінка повторного надсилання листа підтвердження"
+  },
   "footer": {
     "copyright": "Усі права захищені."
   },
@@ -117,6 +115,9 @@
   },
   "submit": "Надіслати",
   "email_label": "Електронна пошта",
+  "email_placeholder": "Введіть електронну пошту",
+  "password_label": "Пароль",
+  "password_placeholder": "Введіть ваш пароль",
   "more_detail": "Детальніше",
   "created": "Створено",
   "updated": "Оновлено"

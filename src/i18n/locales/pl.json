@@ -13,16 +13,10 @@
   },
   "page_sign_in": {
     "title": "Zaloguj się",
-    "placeholder_email": "Wprowadź swój email",
-    "password_label": "Hasło",
-    "placeholder_password": "Wprowadź swoje hasło",
     "forgot_password": "Zapomniałeś hasła?"
   },
   "page_sign_up": {
     "title": "Zarejestruj się",
-    "placeholder_email": "Wprowadź swój email",
-    "password_label": "Hasło",
-    "placeholder_password": "Wprowadź swoje hasło",
     "confirm_password_label": "Potwierdź hasło",
     "placeholder_confirm_password": "Potwierdź swoje hasło",
     "redirect_to_sign_in": "Masz już konto?"
@@ -97,6 +91,9 @@
     "phone": "Telefon",
     "bio": "O mnie"
   },
+  "resend_verification": {
+    "title": "Strona ponownego wysyłania e-maila weryfikacyjnego"
+  },
   "footer": {
     "copyright": "Wszelkie prawa zastrzeżone."
   },
@@ -117,6 +114,9 @@
   },
   "submit": "Wyślij",
   "email_label": "Email",
+  "email_placeholder": "Wprowadź swój email",
+  "password_label": "Hasło",
+  "password_placeholder": "Wprowadź swoje hasło",
   "more_detail": "Więcej szczegółów",
   "created": "Utworzono",
   "updated": "Zaktualizowano"

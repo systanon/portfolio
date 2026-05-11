@@ -13,16 +13,10 @@
   },
   "page_sign_in": {
     "title": "Sign in",
-    "placeholder_email": "Enter your email",
-    "password_label": "Password",
-    "placeholder_password": "Enter your password",
     "forgot_password": "Forgot password?"
   },
   "page_sign_up": {
     "title": "Sign up",
-    "placeholder_email": "Enter your email",
-    "password_label": "Password",
-    "placeholder_password": "Enter your password",
     "confirm_password_label": "Confirm Password",
     "placeholder_confirm_password": "Confirm your password",
     "redirect_to_sign_in": "Already have an account?"
@@ -64,7 +58,6 @@
   },
   "page_forgot_password": {
     "title": "Forgot password",
-    "email_placeholder": "Enter email",
     "resend_verification": "Resend verification email?"
   },
   "forgot_password_success": {
@@ -97,6 +90,9 @@
     "body_spam": "If you don't see the email, please check your {folder} folder.",
     "folder": "Spam"
   },
+  "resend_verification": {
+    "title": "Resend Verification Email"
+  },
   "footer": {
     "copyright": "All rights reserved."
   },
@@ -117,6 +113,9 @@
   },
   "submit": "Submit",
   "email_label": "Email",
+  "email_placeholder": "Enter your email",
+  "password_label": "Password",
+  "password_placeholder": "Enter your password",
   "more_detail": "More detail",
   "created": "Created",
   "updated": "Updated"
