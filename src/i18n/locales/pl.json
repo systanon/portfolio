@@ -1,5 +1,53 @@
 {
   "header": {
-    "title": "polish title"
-  }
+    "nav-menu": {
+      "home": "Strona główna",
+      "todo": "Lista zadań",
+      "profile": "Profil",
+      "about": "O mnie",
+      "notations": "Notatki",
+      "contacts": "Kontakty",
+      "sign_in": "Zaloguj się",
+      "sign_up": "Zarejestruj się"
+    }
+  },
+  "page_sign_in": {
+    "title": "Zaloguj się",
+    "email_label": "Email",
+    "placeholder_email": "Wprowadź swój email",
+    "password_label": "Hasło",
+    "placeholder_password": "Wprowadź swoje hasło",
+    "forgot_password": "Zapomniałeś hasła?"
+  },
+  "page_sign_up": {
+    "title": "Zarejestruj się",
+    "name_label": "Imię",
+    "email_label": "Email",
+    "password_label": "Hasło",
+    "confirm_password_label": "Potwierdź hasło"
+  },
+  "page_about": {
+    "title": "O mnie",
+    "description": "Frontend Developer z ponad 5-letnim doświadczeniem w budowaniu skalowalnych i wysokowydajnych aplikacji webowych. Specjalizuję się w nowoczesnym frontendzie przy użyciu Vue 3, TypeScript i Nuxt, posiadając jednocześnie silne kompetencje backendowe w Go i PostgreSQL. W swojej pracy kładę nacisk na pisanie czystego, łatwego w utrzymaniu kodu oraz projektowanie dobrze ustrukturyzowanych architektur. Stosuję zasady takie jak Domain-Driven Design (DDD), SOLID oraz separation of concerns, aby zapewnić długoterminową skalowalność i testowalność aplikacji. Moje doświadczenie obejmuje budowę systemów czasu rzeczywistego (WebSockets), wdrażanie bezpiecznych przepływów uwierzytelniania opartych na JWT oraz projektowanie API RESTful. W obszarze frontendu pasjonuję się tworzeniem złożonych interfejsów opartych na danych, takich jak platformy transakcyjne z wykresami w czasie rzeczywistym i interaktywnymi komponentami. Przykładam dużą wagę do wydajności, UX oraz jakości kodu, a o niezawodność systemów dbam poprzez aktywne wykorzystanie testów jednostkowych. Swobodnie czuję się pracując w pełnym stosie technologicznym (Fullstack) — od architektury UI, przez usługi backendowe i projektowanie baz danych, aż po praktyki DevOps, takie jak Docker i CI/CD. Cenię przemyślane decyzje inżynierskie, jasną komunikację i ciągły rozwój. Moje CV jest dostępne do pobrania tutaj",
+    "btn_description": "Pobierz CV"
+  },
+  "footer": {
+    "copyright": "Wszelkie prawa zastrzeżone."
+  },
+  "validation": {
+    "email_required": "Adres e-mail jest wymagany",
+    "too_much_characters": "Za dużo znaków",
+    "invalid_email": "Nieprawidłowy adres e-mail",
+    "password_required": "Hasło jest wymagane",
+    "minimum_8_characters": "Minimum 8 znaków",
+    "maximum_50_characters": "Maksymalnie 50 znaków",
+    "company_name_required": "Nazwa firmy jest wymagana",
+    "minimum_3_characters": "Minimum 3 znaki",
+    "contact_name_required": "Nazwa kontaktu jest wymagana",
+    "title_required": "Tytuł jest wymagany",
+    "description_required": "Opis jest wymagany",
+    "confirm_password_required": "Potwierdzenie hasła jest wymagane",
+    "passwords_do_not_match": "Hasła nie są zgodne"
+  },
+  "submit": "Wyślij"
 }

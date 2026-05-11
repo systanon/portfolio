@@ -1,5 +1,53 @@
 {
   "header": {
-    "title": "english title"
-  }
+    "nav-menu": {
+      "home": "Home",
+      "todo": "Todo List",
+      "profile": "Profile",
+      "about": "About me",
+      "notations": "Notations",
+      "contacts": "Contacts",
+      "sign_in": "Sign in",
+      "sign_up": "Sign up"
+    }
+  },
+  "page_sign_in": {
+    "title": "Sign in",
+    "email_label": "Email",
+    "placeholder_email": "Enter your email",
+    "password_label": "Password",
+    "placeholder_password": "Enter your password",
+    "forgot_password": "Forgot password?"
+  },
+  "page_sign_up": {
+    "title": "Sign up",
+    "name_label": "Name",
+    "email_label": "Email",
+    "password_label": "Password",
+    "confirm_password_label": "Confirm Password"
+  },
+  "page_about": {
+    "title": "About me",
+    "description": "Frontend developer with over 5 years of experience building scalable and high-performance web applications. I specialize in modern frontend development with Vue 3, TypeScript, and Nuxt, while also having strong backend expertise in Go and PostgreSQL. I focus on writing clean, maintainable code and designing well-structured architectures. I apply principles like Domain-Driven Design (DDD), SOLID, and separation of concerns to ensure long-term scalability and testability of applications. My experience includes building real-time systems with WebSockets, implementing secure JWT-based authentication flows, and designing RESTful APIs. On the frontend, I enjoy creating complex, data-driven interfaces such as trading platforms with real-time charts and interactive components. I pay close attention to performance, UX, and code quality, and I actively use unit testing to keep systems reliable. I’m comfortable working across the full stack — from UI architecture to backend services, database design, and DevOps practices like Docker and CI/CD. I value thoughtful engineering decisions, clear communication, and continuous improvement. You can download my CV.",
+    "btn_description": "Download CV"
+  },
+  "footer": {
+    "copyright": "All rights reserved."
+  },
+  "validation": {
+    "email_required": "Email is required",
+    "too_much_characters": "Too many characters",
+    "invalid_email": "Invalid email",
+    "password_required": "Password is required",
+    "minimum_8_characters": "Minimum 8 characters",
+    "maximum_50_characters": "Maximum 50 characters",
+    "company_name_required": "Company name is required",
+    "minimum_3_characters": "Minimum 3 characters",
+    "contact_name_required": "Contact name is required",
+    "title_required": "Title is required",
+    "description_required": "Description is required",
+    "confirm_password_required": "Confirm password is required",
+    "passwords_do_not_match": "Passwords do not match"
+  },
+  "submit": "Submit"
 }
