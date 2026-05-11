@@ -2,27 +2,27 @@
   <nav class="navigation-menu">
     <div class="navigation-menu__items _left">
       <AppLink
-        v-for="{ path, text, routeName } in left"
+        v-for="{ path, i18n_key, routeName } in left"
         :key="path"
         :to="{ name: routeName }"
         inactive-class="link"
         exactActiveClass="link--active"
         @navigate="onLinkNavigate"
       >
-        {{ text }}
+        {{ t(i18n_key) }}
       </AppLink>
     </div>
     <Logo />
     <div class="navigation-menu__items _right">
       <AppLink
-        v-for="{ path, text, routeName } in right"
+        v-for="{ path, i18n_key, routeName } in right"
         :key="path"
         :to="{ name: routeName }"
         inactive-class="link"
         exactActiveClass="link--active"
         @navigate="onLinkNavigate"
       >
-        {{ text }}
+        {{ t(i18n_key) }}
       </AppLink>
       <UiSelect
         :modelValue="currentLocale"
@@ -42,6 +42,9 @@ import { useProfile } from '@/composables/useProfile'
 import UiSelect from './ui/select/UiSelect.vue'
 import { LOCALES_OPTIONS } from '@/constants'
 import { useLocale } from '@/composables/useLocale'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const { currentLocale, setLocale } = useLocale()
 const { isLogged } = useProfile()
