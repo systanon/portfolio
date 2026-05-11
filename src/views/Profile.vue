@@ -57,7 +57,7 @@
       </div>
     </template>
     <template #actions="{ close, confirm }">
-      <UiButton @click="close" :label="t('page_profile.cancel')" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
       <UiButton @click="confirm" :label="t('page_profile.delete_button')" />
     </template>
   </UIModal>
@@ -72,7 +72,7 @@
       </div>
     </template>
     <template #actions="{ close, confirm }">
-      <UiButton @click="close" :label="t('page_profile.cancel')" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
       <UiButton @click="confirm" :label="t('page_profile.sign_out')" />
     </template>
   </UIModal>
@@ -112,7 +112,7 @@ const { logout } = useAuth()
 
 const fields = {
   email: {
-    label: 'email_label',
+    label: 'common.labels.email',
     value: ref(profile.value?.email ?? ''),
     originalValue: profile.value?.email ?? '',
     isEditing: ref(false),

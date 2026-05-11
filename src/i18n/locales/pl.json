@@ -32,7 +32,6 @@
     "empty_todos": "Brak zadań",
     "delete_title": "Usunąć zadanie?",
     "delete_confirm_text": "Czy na pewno chcesz usunąć zadanie?",
-    "cancel": "Anuluj",
     "delete_button": "Usuń zadanie",
     "update_title": "Edytuj zadanie",
     "update_button": "Zaktualizuj zadanie",
@@ -45,7 +44,6 @@
     "empty_notes": "Brak notatek",
     "delete_title": "Usunąć notatkę?",
     "delete_confirm_text": "Czy na pewno chcesz usunąć notatkę?",
-    "cancel": "Anuluj",
     "delete_button": "Usuń notatkę",
     "update_title": "Edytuj notatkę",
     "update_button": "Zaktualizuj notatkę",
@@ -54,7 +52,6 @@
   },
   "page_forgot_password": {
     "title": "Nie pamiętasz hasła",
-    "email_placeholder": "Wpisz e-mail",
     "resend_verification": "Wysłać ponownie e-mail weryfikacyjny?"
   },
   "forgot_password_success": {
@@ -80,7 +77,6 @@
     "delete_button": "Usuń konto",
     "sign_out_title": "Wylogowanie",
     "sign_out_confirm": "Czy na pewno chcesz się wylogować?",
-    "cancel": "Anuluj",
     "save": "Zapisz",
     "first_name": "Imię",
     "last_name": "Nazwisko",
@@ -88,7 +84,7 @@
     "bio": "O mnie"
   },
   "resend_verification": {
-    "title": "Strona ponownego wysyłania e-maila weryfikacyjnego"
+    "title": "Ponowne wysłanie e-maila weryfikacyjnego"
   },
   "reset_password": {
     "title": "Resetowanie hasła"
@@ -111,14 +107,23 @@
     "confirm_password_required": "Potwierdzenie hasła jest wymagane",
     "passwords_do_not_match": "Hasła nie są zgodne"
   },
-  "submit": "Wyślij",
-  "email_label": "Email",
-  "email_placeholder": "Wprowadź swój email",
-  "password_label": "Hasło",
-  "password_placeholder": "Wprowadź swoje hasło",
-  "confirm_password_label": "Potwierdź hasło",
-  "confirm_password_placeholder": "Potwierdź swoje hasło",
-  "more_detail": "Więcej szczegółów",
-  "created": "Utworzono",
-  "updated": "Zaktualizowano"
+  "common": {
+    "actions": {
+      "submit": "Wyślij",
+      "more_detail": "Więcej szczegółów",
+      "cancel": "Anuluj"
+    },
+    "labels": {
+      "created": "Utworzono",
+      "updated": "Zaktualizowano",
+      "email": "Email",
+      "password": "Hasło",
+      "confirm_password": "Potwierdź hasło"
+    },
+    "placeholders": {
+      "email": "Wprowadź swój email",
+      "password": "Wprowadź swoje hasło",
+      "confirm_password": "Potwierdź swoje hasło"
+    }
+  }
 }

@@ -3,9 +3,9 @@
     <h3 class="todo-detail__title">{{ todo.title }}</h3>
     <p class="todo-detail__description">{{ todo.description }}</p>
     <div class="todo-detail__meta">
-      <span>{{ t('created') }}:</span>
+      <span>{{ t('common.labels.created') }}:</span>
       <span>{{ formatDateTime(todo.created_at) }}</span>
-      <span>{{ t('updated') }}:</span>
+      <span>{{ t('common.labels.updated') }}:</span>
       <span>{{ formatDateTime(todo.updated_at) }}</span>
     </div>
   </div>

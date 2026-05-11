@@ -4,11 +4,15 @@
       <h2 class="resend-page__title">{{ t('resend_verification.title') }}</h2>
       <UiInput
         v-model="email"
-        :label="t('email_label')"
-        :placeholder="t('email_placeholder')"
+        :label="t('common.labels.email')"
+        :placeholder="t('common.placeholders.email')"
         :validation="v$.email"
       />
-      <UiButton type="submit" :label="t('submit')" :disabled="isBlocked" />
+      <UiButton
+        type="submit"
+        :label="t('common.actions.submit')"
+        :disabled="isBlocked"
+      />
       <ProgressBar
         v-if="showProgressBar"
         ref="progressBarRef"

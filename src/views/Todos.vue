@@ -58,7 +58,7 @@
       </div>
     </template>
     <template #actions="{ close, confirm }">
-      <UiButton @click="close" :label="t('page_todo.cancel')" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
       <UiButton @click="confirm" :label="t('page_todo.delete_button')" />
     </template>
   </UIModal>
@@ -69,7 +69,7 @@
       :description="editingTodo?.description"
     />
     <template #actions="{ close }">
-      <UiButton @click="close" :label="t('page_todo.cancel')" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
       <UiButton @click="updateTodo" :label="t('page_todo.update_button')" />
     </template>
   </UIModal>
@@ -78,7 +78,7 @@
     <ItemForm ref="createFormRef" />
 
     <template #actions="{ close }">
-      <UiButton @click="close" :label="t('page_todo.cancel')" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
       <UiButton @click="createTodo" :label="t('page_todo.create_button')" />
     </template>
   </UIModal>

@@ -4,16 +4,16 @@
       <h2 class="page-sign-in__form-title">{{ t('page_sign_in.title') }}</h2>
       <UiInput
         v-model="email"
-        :label="t('email_label')"
-        :placeholder="t('email_placeholder')"
+        :label="t('common.labels.email')"
+        :placeholder="t('common.placeholders.email')"
         :validation="v$.email"
         autocomplete="email"
       />
       <UiInput
         v-model="password"
-        :label="t('password_label')"
+        :label="t('common.labels.password')"
         type="password"
-        :placeholder="t('password_placeholder')"
+        :placeholder="t('common.placeholders.password')"
         :validation="v$.password"
         autocomplete="current-password"
       />
@@ -28,7 +28,7 @@
           {{ t('page_sign_in.forgot_password') }}
         </AppLink>
       </div>
-      <UiButton type="submit" :label="t('submit')" />
+      <UiButton type="submit" :label="t('common.actions.submit')" />
     </form>
   </section>
 </template>

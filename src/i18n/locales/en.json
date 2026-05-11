@@ -32,7 +32,6 @@
     "empty_todos": "Empty todos",
     "delete_title": "Delete todo?",
     "delete_confirm_text": "Are you sure you want to delete todo?",
-    "cancel": "Cancel",
     "delete_button": "Delete todo",
     "update_title": "Update Todo",
     "update_button": "Update todo",
@@ -45,7 +44,6 @@
     "empty_notes": "Empty notes",
     "delete_title": "Delete note?",
     "delete_confirm_text": "Are you sure you want to delete a note?",
-    "cancel": "Cancel",
     "delete_button": "Delete note",
     "update_title": "Update note",
     "update_button": "Update note",
@@ -72,7 +70,6 @@
     "delete_button": "Delete account",
     "sign_out_title": "Sign out",
     "sign_out_confirm": "Do you really want to sign out?",
-    "cancel": "Cancel",
     "save": "Save",
     "first_name": "First name",
     "last_name": "Last name",
@@ -110,14 +107,23 @@
     "confirm_password_required": "Confirm password is required",
     "passwords_do_not_match": "Passwords do not match"
   },
-  "submit": "Submit",
-  "email_label": "Email",
-  "email_placeholder": "Enter your email",
-  "password_label": "Password",
-  "password_placeholder": "Enter your password",
-  "confirm_password_label": "Confirm Password",
-  "confirm_password_placeholder": "Confirm your password",
-  "more_detail": "More detail",
-  "created": "Created",
-  "updated": "Updated"
+  "common": {
+    "actions": {
+      "submit": "Submit",
+      "more_detail": "More detail",
+      "cancel": "Cancel"
+    },
+    "labels": {
+      "created": "Created",
+      "updated": "Updated",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password"
+    },
+    "placeholders": {
+      "email": "Enter your email",
+      "password": "Enter your password",
+      "confirm_password": "Confirm your password"
+    }
+  }
 }

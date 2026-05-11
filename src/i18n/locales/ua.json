@@ -32,7 +32,6 @@
     "empty_todos": "Немає завдань",
     "delete_title": "Видалити завдання?",
     "delete_confirm_text": "Ви впевнені, що хочете видалити завдання?",
-    "cancel": "Скасувати",
     "delete_button": "Видалити завдання",
     "update_title": "Оновити завдання",
     "update_button": "Оновити завдання",
@@ -45,7 +44,6 @@
     "empty_notes": "Немає нотаток",
     "delete_title": "Видалити нотатку?",
     "delete_confirm_text": "Ви впевнені, що хочете видалити нотатку?",
-    "cancel": "Скасувати",
     "delete_button": "Видалити нотатку",
     "update_title": "Оновити нотатку",
     "update_button": "Оновити нотатку",
@@ -54,7 +52,6 @@
   },
   "page_forgot_password": {
     "title": "Забули пароль",
-    "email_placeholder": "Введіть електронну пошту",
     "resend_verification": "Надіслати лист підтвердження ще раз?"
   },
   "forgot_password_success": {
@@ -80,7 +77,7 @@
     "delete_button": "Видалити акаунт",
     "sign_out_title": "Вихід",
     "sign_out_confirm": "Ви дійсно хочете вийти?",
-    "cancel": "Скасувати",
+
     "save": "Зберегти",
     "first_name": "Ім'я",
     "last_name": "Прізвище",
@@ -88,7 +85,7 @@
     "bio": "Про себе"
   },
   "resend_verification": {
-    "title": "Сторінка повторного надсилання листа підтвердження"
+    "title": "Повторне надсилання листа підтвердження"
   },
   "reset_password": {
     "title": "Скидання пароля"
@@ -111,14 +108,23 @@
     "confirm_password_required": "Підтвердження пароля є обов’язковим",
     "passwords_do_not_match": "Паролі не збігаються"
   },
-  "submit": "Надіслати",
-  "email_label": "Електронна пошта",
-  "email_placeholder": "Введіть електронну пошту",
-  "password_label": "Пароль",
-  "password_placeholder": "Введіть ваш пароль",
-  "confirm_password_label": "Підтвердження пароля",
-  "confirm_password_placeholder": "Підтвердіть пароль",
-  "more_detail": "Детальніше",
-  "created": "Створено",
-  "updated": "Оновлено"
+  "common": {
+    "actions": {
+      "submit": "Надіслати",
+      "more_detail": "Детальніше",
+      "cancel": "Скасувати"
+    },
+    "labels": {
+      "created": "Створено",
+      "updated": "Оновлено",
+      "email": "Електронна пошта",
+      "password": "Пароль",
+      "confirm_password": "Підтвердження пароля"
+    },
+    "placeholders": {
+      "email": "Введіть свою електронну пошту",
+      "password": "Введіть ваш пароль",
+      "confirm_password": "Підтвердіть пароль"
+    }
+  }
 }

@@ -9,7 +9,10 @@
       </h2>
       <p class="todo-item__description">{{ todo.description }}</p>
       <div class="todo-item__actions">
-        <UiButton :label="t('more_detail')" @click="$emit('detail', todo.id)" />
+        <UiButton
+          :label="t('common.actions.more_detail')"
+          @click="$emit('detail', todo.id)"
+        />
       </div>
     </div>
     <div ref="menuRef" class="todo-item__menu">

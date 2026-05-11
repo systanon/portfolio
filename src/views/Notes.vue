@@ -50,7 +50,7 @@
       </div>
     </template>
     <template #actions="{ close, confirm }">
-      <UiButton @click="close" :label="t('page_notes.cancel')" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
       <UiButton @click="confirm" :label="t('page_notes.delete_button')" />
     </template>
   </UIModal>
@@ -65,7 +65,7 @@
       :description="editingNote?.description"
     />
     <template #actions="{ close }">
-      <UiButton @click="close" :label="t('page_notes.cancel')" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
       <UiButton @click="updateNote" :label="t('page_notes.update_button')" />
     </template>
   </UIModal>
@@ -76,7 +76,7 @@
   >
     <ItemForm ref="createFormRef" />
     <template #actions="{ close }">
-      <UiButton @click="close" :label="t('page_notes.cancel')" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
       <UiButton @click="createNote" :label="t('page_notes.create_button')" />
     </template>
   </UIModal>

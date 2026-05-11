@@ -6,8 +6,8 @@
       </h2>
       <UiInput
         v-model="email"
-        :label="t('email_label')"
-        :placeholder="t('page_forgot_password.email_placeholder')"
+        :label="t('common.labels.email')"
+        :placeholder="t('common.placeholders.email')"
         :validation="v$.email"
       />
       <div class="forgot-pass-page__redirect">
@@ -20,7 +20,11 @@
           >{{ t('page_forgot_password.resend_verification') }}</AppLink
         >
       </div>
-      <UiButton type="submit" :label="t('submit')" :disabled="isBlocked" />
+      <UiButton
+        type="submit"
+        :label="t('common.actions.submit')"
+        :disabled="isBlocked"
+      />
       <ProgressBar
         v-if="showProgressBar"
         ref="progressBarRef"

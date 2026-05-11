@@ -4,24 +4,24 @@
       <h2 class="page-sign-up__form-title">{{ t('page_sign_up.title') }}</h2>
       <UiInput
         v-model="email"
-        :label="t('email_label')"
-        :placeholder="t('email_placeholder')"
+        :label="t('common.labels.email')"
+        :placeholder="t('common.placeholders.email')"
         autocomplete="email"
         :validation="v$.email"
       />
       <UiInput
         v-model="password"
         type="password"
-        :label="t('password_label')"
-        :placeholder="t('password_placeholder')"
+        :label="t('common.labels.password')"
+        :placeholder="t('common.placeholders.password')"
         :validation="v$.password"
         autocomplete="new-password"
       />
       <UiInput
         v-model="confirmPassword"
-        :label="t('confirm_password_label')"
+        :label="t('common.labels.confirm_password')"
         type="password"
-        :placeholder="t('confirm_password_placeholder')"
+        :placeholder="t('common.placeholders.confirm_password')"
         autocomplete="new-password"
         :validation="v$.confirmPassword"
       />
@@ -38,7 +38,7 @@
           >{{ t('page_sign_in.title') }}</AppLink
         >
       </div>
-      <UiButton type="submit" :label="t('submit')" />
+      <UiButton type="submit" :label="t('common.actions.submit')" />
     </form>
   </section>
 </template>
