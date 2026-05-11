@@ -17,8 +17,6 @@
   },
   "page_sign_up": {
     "title": "Sign up",
-    "confirm_password_label": "Confirm Password",
-    "placeholder_confirm_password": "Confirm your password",
     "redirect_to_sign_in": "Already have an account?"
   },
   "page_about": {
@@ -93,6 +91,9 @@
   "resend_verification": {
     "title": "Resend Verification Email"
   },
+  "reset_password": {
+    "title": "Reset Password"
+  },
   "footer": {
     "copyright": "All rights reserved."
   },
@@ -116,6 +117,8 @@
   "email_placeholder": "Enter your email",
   "password_label": "Password",
   "password_placeholder": "Enter your password",
+  "confirm_password_label": "Confirm Password",
+  "confirm_password_placeholder": "Confirm your password",
   "more_detail": "More detail",
   "created": "Created",
   "updated": "Updated"

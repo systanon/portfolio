@@ -19,9 +19,9 @@
       />
       <UiInput
         v-model="confirmPassword"
-        :label="t('page_sign_up.confirm_password_label')"
+        :label="t('confirm_password_label')"
         type="password"
-        :placeholder="t('page_sign_up.placeholder_confirm_password')"
+        :placeholder="t('confirm_password_placeholder')"
         autocomplete="new-password"
         :validation="v$.confirmPassword"
       />

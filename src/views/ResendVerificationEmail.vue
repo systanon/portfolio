@@ -5,10 +5,10 @@
       <UiInput
         v-model="email"
         :label="t('email_label')"
-        placeholder="Enter email"
+        :placeholder="t('email_placeholder')"
         :validation="v$.email"
       />
-      <UiButton type="submit" label="Submit" :disabled="isBlocked" />
+      <UiButton type="submit" :label="t('submit')" :disabled="isBlocked" />
       <ProgressBar
         v-if="showProgressBar"
         ref="progressBarRef"

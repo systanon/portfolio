@@ -17,8 +17,6 @@
   },
   "page_sign_up": {
     "title": "Zarejestruj się",
-    "confirm_password_label": "Potwierdź hasło",
-    "placeholder_confirm_password": "Potwierdź swoje hasło",
     "redirect_to_sign_in": "Masz już konto?"
   },
   "page_about": {
@@ -94,6 +92,9 @@
   "resend_verification": {
     "title": "Strona ponownego wysyłania e-maila weryfikacyjnego"
   },
+  "reset_password": {
+    "title": "Resetowanie hasła"
+  },
   "footer": {
     "copyright": "Wszelkie prawa zastrzeżone."
   },
@@ -117,6 +118,8 @@
   "email_placeholder": "Wprowadź swój email",
   "password_label": "Hasło",
   "password_placeholder": "Wprowadź swoje hasło",
+  "confirm_password_label": "Potwierdź hasło",
+  "confirm_password_placeholder": "Potwierdź swoje hasło",
   "more_detail": "Więcej szczegółów",
   "created": "Utworzono",
   "updated": "Zaktualizowano"
