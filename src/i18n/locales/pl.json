@@ -38,6 +38,19 @@
     "title": "Kontakty",
     "subtitle": "Jeśli chcesz omówić projekt, współpracę lub masz jakiekolwiek pytania — skontaktuj się ze mną."
   },
+  "page_todo": {
+    "page_title": "To jest strona z zadaniami",
+    "create_todo": "Utwórz zadanie",
+    "empty_todos": "Brak zadań",
+    "delete_title": "Usunąć zadanie?",
+    "delete_confirm_text": "Czy na pewno chcesz usunąć zadanie?",
+    "cancel": "Anuluj",
+    "delete_button": "Usuń zadanie",
+    "update_title": "Edytuj zadanie",
+    "update_button": "Zaktualizuj zadanie",
+    "create_title": "Utwórz zadanie",
+    "create_button": "Utwórz zadanie"
+  },
   "footer": {
     "copyright": "Wszelkie prawa zastrzeżone."
   },

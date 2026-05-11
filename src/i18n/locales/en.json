@@ -38,6 +38,19 @@
     "title": "My Contacts",
     "subtitle": "If you want to discuss a project, collaboration, or have any questions — feel free to contact me."
   },
+  "page_todo": {
+    "page_title": "This is Todos page",
+    "create_todo": "Create todo",
+    "empty_todos": "Empty todos",
+    "delete_title": "Delete todo?",
+    "delete_confirm_text": "Are you sure you want to delete todo?",
+    "cancel": "Cancel",
+    "delete_button": "Delete todo",
+    "update_title": "Update Todo",
+    "update_button": "Update todo",
+    "create_title": "Create Todo",
+    "create_button": "Create todo"
+  },
   "footer": {
     "copyright": "All rights reserved."
   },
