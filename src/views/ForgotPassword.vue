@@ -43,7 +43,9 @@ import UiButton from '@/components/ui/buttons/UiButton.vue'
 import AppLink from '@/components/AppLink.vue'
 import { useValidationRules } from '@/composables/useValidationRules'
 import useVuelidate from '@vuelidate/core'
-import ProgressBar from '@/components/animation/ProgressBar.vue'
+import ProgressBar, {
+  type IProgressBar,
+} from '@/components/animation/ProgressBar.vue'
 import { AppRateLimitError } from '@/types/app-errors'
 import { useRateLimit } from '@/composables/useRateLimit'
 import { useAuth } from '@/composables/useAuth'
@@ -51,12 +53,13 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const email = ref<string>('')
+const progressBarRef = ref<IProgressBar | null>(null)
 
 const { forgotPassword } = useAuth()
 
 const { emailRules } = useValidationRules()
-const { isBlocked, showProgressBar, time, startRateLimit, progressBarRef } =
-  useRateLimit()
+const { isBlocked, showProgressBar, time, startRateLimit } =
+  useRateLimit(progressBarRef)
 
 const rules = {
   email: emailRules,

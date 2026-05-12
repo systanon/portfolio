@@ -1,11 +1,10 @@
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, type Ref } from 'vue'
 import type { IProgressBar } from '@/components/animation/ProgressBar.vue'
 
-export function useRateLimit() {
+export function useRateLimit(progressBarRef: Ref<IProgressBar | null>) {
   const isBlocked = ref<boolean>(false)
   const showProgressBar = ref<boolean>(false)
   const time = ref('0:00')
-  const progressBarRef = ref<IProgressBar | null>(null)
 
   const formatTime = (sec: number) => {
     const m = Math.floor(sec / 60)
@@ -36,7 +35,6 @@ export function useRateLimit() {
     isBlocked,
     showProgressBar,
     time,
-    progressBarRef,
     startRateLimit,
   }
 }
