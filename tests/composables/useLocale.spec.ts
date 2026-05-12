@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { createI18n } from 'vue-i18n'
-import { withSetup } from '@/tests/utils/withSetup'
+import { withSetup } from '@tests/utils/withSetup'
 import { SUPPORT_LOCALES, DEFAULT_LOCALE } from '@/constants'
 
 vi.mock('@/i18n/locales/en.json', () => ({
@@ -35,7 +35,7 @@ describe('getFromUrl', () => {
     window.history.replaceState({}, '', '/?lang=pl')
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -48,7 +48,7 @@ describe('getFromUrl', () => {
     window.history.replaceState({}, '', '/?lang=de')
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -60,7 +60,7 @@ describe('getFromUrl', () => {
     window.history.replaceState({}, '', '/?lang=pl&foo=bar')
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -76,7 +76,7 @@ describe('getFromStorage', () => {
     localStorage.setItem('locale', 'ua')
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -88,7 +88,7 @@ describe('getFromStorage', () => {
     localStorage.setItem('locale', 'de')
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -108,7 +108,7 @@ describe('getFromBrowser', () => {
     ])
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -121,7 +121,7 @@ describe('getFromBrowser', () => {
     vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['de', 'fr'])
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -144,7 +144,7 @@ describe('priority: url > storage > browser', () => {
     vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['en'])
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -157,7 +157,7 @@ describe('priority: url > storage > browser', () => {
     vi.spyOn(navigator, 'languages', 'get').mockReturnValue(['ua'])
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { initLocale, currentLocale } = withSetup(() => useLocale(), [i18n])
 
     await initLocale()
@@ -171,7 +171,7 @@ describe('setLocale', () => {
 
   it('persists locale to localStorage', async () => {
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { setLocale } = withSetup(() => useLocale(), [i18n])
 
     await setLocale('pl')
@@ -181,7 +181,7 @@ describe('setLocale', () => {
 
   it('sets the lang attribute on the <html> element', async () => {
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { setLocale } = withSetup(() => useLocale(), [i18n])
 
     await setLocale('ua')
@@ -190,10 +190,13 @@ describe('setLocale', () => {
   })
 
   it('does not reload the locale file if already cached', async () => {
-    const importSpy = vi.spyOn(await import('./useLocale'), 'useLocale')
+    const importSpy = vi.spyOn(
+      await import('@/composables/useLocale'),
+      'useLocale',
+    )
 
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { setLocale } = withSetup(() => useLocale(), [i18n])
 
     await setLocale('pl')
@@ -207,7 +210,7 @@ describe('setLocale', () => {
 describe('supportedLocales', () => {
   it('returns a list of all supported locales', async () => {
     const i18n = createTestI18n()
-    const { useLocale } = await import('./useLocale')
+    const { useLocale } = await import('@/composables/useLocale')
     const { supportedLocales } = withSetup(() => useLocale(), [i18n])
 
     expect(supportedLocales).toEqual(SUPPORT_LOCALES)

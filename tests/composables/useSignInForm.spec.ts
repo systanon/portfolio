@@ -41,7 +41,7 @@ vi.mock('@vuelidate/core', () => ({
 }))
 
 import { application } from '@/application'
-import { useSignInForm } from './useSignInForm'
+import { useSignInForm } from '@/composables/useSignInForm'
 
 describe('useSignInForm', () => {
   beforeEach(() => {

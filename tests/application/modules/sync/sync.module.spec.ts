@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { SyncModule } from './sync.module'
+import { SyncModule } from '@/application/modules/sync/sync.module'
 import { SyncEvent } from '@/types/sync'
 
 const createMockPort = () => ({

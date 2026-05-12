@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createAuthResponse } from './auth.response'
+import { createAuthResponse } from '@/application/interceptors/auth.response'
 import { AppSuccess } from '@/types/app.types'
 import { AppError } from '@/types/app-errors'
 import { URL_EXCLUDE } from '@/constants'

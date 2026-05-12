@@ -1,14 +1,14 @@
 import { h } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
-import BaseField from './BaseField.vue'
-import { createValidationMock } from '@/tests/utils/createValidationMock'
+import BaseField from '@/components/ui/fields/BaseField.vue'
+import { createValidationMock } from '@tests/utils/createValidationMock'
 
 describe('BaseField', () => {
   it('renders label when provided', () => {
     const wrapper = mount(BaseField, {
       props: { label: 'Email' },
-      slots: { default: () => '<input />' }
+      slots: { default: () => '<input />' },
     })
 
     expect(wrapper.find('label').exists()).toBe(true)
@@ -17,7 +17,7 @@ describe('BaseField', () => {
 
   it('does not render label when not provided', () => {
     const wrapper = mount(BaseField, {
-      slots: { default: () => '<input />' }
+      slots: { default: () => '<input />' },
     })
 
     expect(wrapper.find('label').exists()).toBe(false)
@@ -27,8 +27,8 @@ describe('BaseField', () => {
     const wrapper = mount(BaseField, {
       props: { label: 'Name' },
       slots: {
-        default: ({ id }) => h('input', { id })
-      }
+        default: ({ id }: { id: string }) => h('input', { id }),
+      },
     })
 
     const input = wrapper.find('input')
@@ -40,7 +40,7 @@ describe('BaseField', () => {
 
   it('does not show error block when no validation provided', () => {
     const wrapper = mount(BaseField, {
-      slots: { default: () => '<input />' }
+      slots: { default: () => '<input />' },
     })
 
     expect(wrapper.find('.base-field__error').isVisible()).toBe(false)
@@ -49,10 +49,9 @@ describe('BaseField', () => {
   it('shows error messages when validation has errors', async () => {
     const { validation, setErrors } = createValidationMock()
 
-
     const wrapper = mount(BaseField, {
       props: { validation },
-      slots: { default: () => '<input />' }
+      slots: { default: () => '<input />' },
     })
 
     setErrors(['Required', 'Invalid format'])
@@ -71,7 +70,7 @@ describe('BaseField', () => {
 
     const wrapper = mount(BaseField, {
       props: { validation },
-      slots: { default: () => '<input />' }
+      slots: { default: () => '<input />' },
     })
 
     expect(wrapper.find('.base-field__error').isVisible()).toBe(false)
