@@ -44,6 +44,7 @@ export default defineConfig(async ({ mode }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
+        '@tests': fileURLToPath(new URL('./tests', import.meta.url)),
       },
     },
     css: {
@@ -59,6 +60,9 @@ export default defineConfig(async ({ mode }) => {
       isolate: true,
       clearMocks: true,
       restoreMocks: true,
+      typecheck: {
+        tsconfig: './tsconfig.vitest.json',
+      },
     },
   }
 })

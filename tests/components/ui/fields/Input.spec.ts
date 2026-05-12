@@ -1,28 +1,26 @@
 import { computed } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, it, expect, vi } from 'vitest'
-import UiInput from './UiInput.vue'
+import UiInput from '@/components/ui/fields/UiInput.vue'
 import BaseField from '@/components/ui/fields/BaseField.vue'
 import UiButtonIcon from '@/components/ui/buttons/UiButtonIcon.vue'
-import { createValidationMock } from '@/tests/utils/createValidationMock'
-
-
+import { createValidationMock } from '@tests/utils/createValidationMock'
 
 vi.mock('@/composables/useField', () => ({
   useField: (props: any, emit: any) => ({
     modelValueProxy: computed({
       get: () => props.modelValue,
-      set: (v: string) => emit('update:modelValue', v)
+      set: (v: string) => emit('update:modelValue', v),
     }),
-    $v: { $error: true }
-  })
+    $v: { $error: true },
+  }),
 }))
 
 describe('UiInput', () => {
   it('renders BaseField with label and validation', () => {
     const { validation } = createValidationMock()
     const wrapper = mount(UiInput, {
-      props: { modelValue: '', label: 'Email', validation }
+      props: { modelValue: '', label: 'Email', validation },
     })
 
     const baseField = wrapper.findComponent(BaseField)
@@ -37,8 +35,8 @@ describe('UiInput', () => {
         modelValue: '',
         placeholder: 'Enter text',
         type: 'email',
-        disabled: true
-      }
+        disabled: true,
+      },
     })
 
     const input = wrapper.find('input')
@@ -49,7 +47,7 @@ describe('UiInput', () => {
 
   it('emits update:modelValue when typing', async () => {
     const wrapper = mount(UiInput, {
-      props: { modelValue: '' }
+      props: { modelValue: '' },
     })
 
     const input = wrapper.find('input')
@@ -61,7 +59,7 @@ describe('UiInput', () => {
 
   it('emits blur event on blur', async () => {
     const wrapper = mount(UiInput, {
-      props: { modelValue: '' }
+      props: { modelValue: '' },
     })
 
     const input = wrapper.find('input')
@@ -72,7 +70,7 @@ describe('UiInput', () => {
 
   it('renders icon button when iconName is provided', () => {
     const wrapper = mount(UiInput, {
-      props: { modelValue: '', iconName: 'search' }
+      props: { modelValue: '', iconName: 'search' },
     })
 
     const icon = wrapper.findComponent(UiButtonIcon)
@@ -82,7 +80,7 @@ describe('UiInput', () => {
 
   it('emits iconClick when icon is clicked', async () => {
     const wrapper = mount(UiInput, {
-      props: { modelValue: '', iconName: 'search' }
+      props: { modelValue: '', iconName: 'search' },
     })
 
     const icon = wrapper.findComponent(UiButtonIcon)
@@ -93,7 +91,7 @@ describe('UiInput', () => {
 
   it('applies error class when validation has error', () => {
     const wrapper = mount(UiInput, {
-      props: { modelValue: '' }
+      props: { modelValue: '' },
     })
 
     const input = wrapper.find('input')

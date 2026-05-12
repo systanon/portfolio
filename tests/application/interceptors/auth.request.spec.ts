@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { createAuthRequest } from './auth.request'
+import { createAuthRequest } from '@/application/interceptors/auth.request'
 
 const mockTokenManager = { getToken: vi.fn() }
 

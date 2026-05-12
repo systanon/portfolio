@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
 import TextArea from '@/components/ui/fields/UiTextarea.vue'
-import { createValidationMock } from '@/tests/utils/createValidationMock'
+import { createValidationMock } from '@tests/utils/createValidationMock'
 
 describe('TextArea.vue', () => {
   it('renders the textarea with the passed value', () => {

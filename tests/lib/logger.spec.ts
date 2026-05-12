@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { LogLevel, LEVELS } from './logger'
+import { LogLevel, LEVELS } from '@/lib/logger'
 
 describe('LogLevel', () => {
   it('all levels are enabled by default.', () => {

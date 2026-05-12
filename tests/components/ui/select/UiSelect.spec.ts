@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import type { BaseValidation } from '@vuelidate/core'
 import { type VueWrapper, mount } from '@vue/test-utils'
 import type { ComponentPublicInstance } from 'vue'
-import UiSelect from './UiSelect.vue'
+import UiSelect from '@/components/ui/select/UiSelect.vue'
 
 const stubs = {
   BaseField: {

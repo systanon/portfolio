@@ -1,8 +1,7 @@
 import { computed } from 'vue'
 import { describe, it, expect, vi } from 'vitest'
-import { useField } from './useField'
-import { createValidationMock } from '@/tests/utils/createValidationMock'
-
+import { useField } from '@/composables/useField'
+import { createValidationMock } from '@tests/utils/createValidationMock'
 
 describe('useField', () => {
   it('returns modelValueProxy with correct getter', () => {
