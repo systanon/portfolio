@@ -9,7 +9,10 @@
       </h2>
       <p class="todo-item__description">{{ todo.description }}</p>
       <div class="todo-item__actions">
-        <UiButton label="More detail" @click="$emit('detail', todo.id)" />
+        <UiButton
+          :label="t('common.actions.more_detail')"
+          @click="$emit('detail', todo.id)"
+        />
       </div>
     </div>
     <div ref="menuRef" class="todo-item__menu">
@@ -49,10 +52,9 @@ import UiButton from '@/components/ui/buttons/UiButton.vue'
 import { ref, type Ref } from 'vue'
 import UiCheckbox from './ui/fields/UiCheckbox.vue'
 import { onClickOutside } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 
-defineOptions({
-  name: 'TodoItem',
-})
+const { t } = useI18n()
 
 const props = defineProps<{
   todo: Todo

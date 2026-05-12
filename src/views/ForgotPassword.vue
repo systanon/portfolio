@@ -1,11 +1,13 @@
 <template>
   <div class="forgot-pass-page">
     <form class="forgot-pass-page__form" @submit.prevent="submitHandler">
-      <h2 class="forgot-pass-page__title">Forgot password</h2>
+      <h2 class="forgot-pass-page__title">
+        {{ t('page_forgot_password.title') }}
+      </h2>
       <UiInput
         v-model="email"
-        label="Email"
-        placeholder="Enter email"
+        :label="t('common.labels.email')"
+        :placeholder="t('common.placeholders.email')"
         :validation="v$.email"
       />
       <div class="forgot-pass-page__redirect">
@@ -15,10 +17,14 @@
           inactive-class="link-secondary"
           active-class="link-secondary--active"
           @navigate="(navigate) => navigate()"
-          >Resend verification email?</AppLink
+          >{{ t('page_forgot_password.resend_verification') }}</AppLink
         >
       </div>
-      <UiButton type="submit" label="Submit" :disabled="isBlocked" />
+      <UiButton
+        type="submit"
+        :label="t('common.actions.submit')"
+        :disabled="isBlocked"
+      />
       <ProgressBar
         v-if="showProgressBar"
         ref="progressBarRef"
@@ -41,7 +47,9 @@ import ProgressBar from '@/components/animation/ProgressBar.vue'
 import { AppRateLimitError } from '@/types/app-errors'
 import { useRateLimit } from '@/composables/useRateLimit'
 import { useAuth } from '@/composables/useAuth'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const email = ref<string>('')
 
 const { forgotPassword } = useAuth()

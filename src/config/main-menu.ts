@@ -13,7 +13,7 @@ export const mainMenu: NavigationMenu = [
   {
     path: '/',
     text: 'Home',
-    i18n_key: 'home',
+    i18n_key: 'nav-menu.home',
     routeName: 'Home',
     icon: '',
     showMode: 'all',
@@ -21,7 +21,7 @@ export const mainMenu: NavigationMenu = [
   {
     path: '/todos',
     text: 'Todo list',
-    i18n_key: 'todos',
+    i18n_key: 'nav-menu.todo',
     routeName: 'TodoList',
     icon: '',
     showMode: 'all',
@@ -29,7 +29,7 @@ export const mainMenu: NavigationMenu = [
   {
     path: '/profile',
     text: 'Profile',
-    i18n_key: 'profile',
+    i18n_key: 'nav-menu.profile',
     routeName: 'Profile',
     icon: '',
     showMode: 'authorized',
@@ -37,7 +37,7 @@ export const mainMenu: NavigationMenu = [
   {
     path: '/about',
     text: 'About Me',
-    i18n_key: 'about',
+    i18n_key: 'nav-menu.about',
     routeName: 'About',
     icon: '',
     showMode: 'all',
@@ -45,7 +45,7 @@ export const mainMenu: NavigationMenu = [
   {
     path: '/notes',
     text: 'Notations',
-    i18n_key: 'notations',
+    i18n_key: 'nav-menu.notations',
     routeName: 'Notes',
     icon: '',
     showMode: 'authorized',
@@ -53,7 +53,7 @@ export const mainMenu: NavigationMenu = [
   {
     path: '/contacts',
     text: 'Contacts',
-    i18n_key: 'contacts',
+    i18n_key: 'nav-menu.contacts',
     routeName: 'Contacts',
     icon: '',
     showMode: 'all',
@@ -61,7 +61,7 @@ export const mainMenu: NavigationMenu = [
   {
     path: '/sign-in',
     text: 'Sign In',
-    i18n_key: 'sign_in',
+    i18n_key: 'nav-menu.sign_in',
     routeName: 'SignIn',
     icon: '',
     showMode: 'unauthorized',
@@ -69,7 +69,7 @@ export const mainMenu: NavigationMenu = [
   {
     path: '/sign-up',
     text: 'Sign Up',
-    i18n_key: 'sign_up',
+    i18n_key: 'nav-menu.sign_up',
     routeName: 'SignUp',
     icon: '',
     showMode: 'unauthorized',
@@ -80,7 +80,7 @@ export const leftSide: NavigationMenu = [
   {
     path: '/',
     text: 'Home',
-    i18n_key: 'home',
+    i18n_key: 'nav-menu.home',
     routeName: 'Home',
     icon: '',
     showMode: 'all',
@@ -88,7 +88,7 @@ export const leftSide: NavigationMenu = [
   {
     path: '/about',
     text: 'About Me',
-    i18n_key: 'about',
+    i18n_key: 'nav-menu.about',
     routeName: 'About',
     icon: '',
     showMode: 'all',
@@ -96,7 +96,7 @@ export const leftSide: NavigationMenu = [
   {
     path: '/contacts',
     text: 'Contacts',
-    i18n_key: 'contacts',
+    i18n_key: 'nav-menu.contacts',
     routeName: 'Contacts',
     icon: '',
     showMode: 'all',
@@ -106,7 +106,7 @@ export const rightSide: NavigationMenu = [
   {
     path: '/todos',
     text: 'Todo list',
-    i18n_key: 'todos',
+    i18n_key: 'nav-menu.todo',
     routeName: 'TodoList',
     icon: '',
     showMode: 'all',
@@ -114,7 +114,7 @@ export const rightSide: NavigationMenu = [
   {
     path: '/notes',
     text: 'Notations',
-    i18n_key: 'notations',
+    i18n_key: 'nav-menu.notations',
     routeName: 'Notes',
     icon: '',
     showMode: 'authorized',
@@ -122,7 +122,7 @@ export const rightSide: NavigationMenu = [
   {
     path: '/profile',
     text: 'Profile',
-    i18n_key: 'profile',
+    i18n_key: 'nav-menu.profile',
     routeName: 'Profile',
     icon: '',
     showMode: 'authorized',
@@ -130,7 +130,7 @@ export const rightSide: NavigationMenu = [
   {
     path: '/sign-in',
     text: 'Sign In',
-    i18n_key: 'sign_in',
+    i18n_key: 'nav-menu.sign_in',
     routeName: 'SignIn',
     icon: '',
     showMode: 'unauthorized',
@@ -138,7 +138,7 @@ export const rightSide: NavigationMenu = [
   {
     path: '/sign-up',
     text: 'Sign Up',
-    i18n_key: 'sign_up',
+    i18n_key: 'nav-menu.sign_up',
     routeName: 'SignUp',
     icon: '',
     showMode: 'unauthorized',

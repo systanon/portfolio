@@ -1,6 +1,6 @@
 <template>
   <section class="page-todo">
-    <h2 class="page-todo__title">This is Todos page</h2>
+    <h2 class="page-todo__title">{{ t('page_todo.page_title') }}</h2>
     <UiButtonIcon
       class="page-todo__create"
       iconName="plus"
@@ -8,7 +8,9 @@
       @click="openCreateForm"
     >
       <template #prepend>
-        <span class="page-todo__create-text"> Create todo </span>
+        <span class="page-todo__create-text">
+          {{ t('page_todo.create_todo') }}
+        </span>
       </template>
     </UiButtonIcon>
     <template v-if="!loading">
@@ -22,7 +24,7 @@
           @toggle="completeHandler"
           @detail="details"
         />
-        <p v-if="!rows.length">Empty todos</p>
+        <p v-if="!rows.length">{{ t('page_todo.empty_todos') }}</p>
       </section>
 
       <UiPaginationMobile
@@ -45,35 +47,39 @@
       />
     </template>
   </section>
-  <UIModal ref="deleteModalRef" title="Delete todo?" class="page-todo__modal">
+  <UIModal
+    ref="deleteModalRef"
+    title="{{ t('page_todo.delete_title') }}"
+    class="page-todo__modal"
+  >
     <template #default>
       <div class="page-todo__modal-form delete-todo-form">
-        <h3>Are you sure you want to delete todo?</h3>
+        <h3>{{ t('page_todo.delete_confirm_text') }}</h3>
       </div>
     </template>
     <template #actions="{ close, confirm }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="confirm" label="Delete todo" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
+      <UiButton @click="confirm" :label="t('page_todo.delete_button')" />
     </template>
   </UIModal>
-  <UIModal ref="editModalRef" title="Update Todo">
+  <UIModal ref="editModalRef" :title="t('page_todo.update_title')">
     <ItemForm
       ref="editFormRef"
       :title="editingTodo?.title"
       :description="editingTodo?.description"
     />
     <template #actions="{ close }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="updateTodo" label="Update todo" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
+      <UiButton @click="updateTodo" :label="t('page_todo.update_button')" />
     </template>
   </UIModal>
 
-  <UIModal ref="createModalRef" title="Create Todo">
+  <UIModal ref="createModalRef" :title="t('page_todo.create_title')">
     <ItemForm ref="createFormRef" />
 
     <template #actions="{ close }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="createTodo" label="Create todo" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
+      <UiButton @click="createTodo" :label="t('page_todo.create_button')" />
     </template>
   </UIModal>
 </template>
@@ -97,11 +103,13 @@ import { useTodo } from '@/composables/useTodo'
 import type { RouteName } from '@/types/router'
 import { useLoading } from '@/composables/useLoading'
 import { usePaginatedRoute } from '@/composables/usePaginatedRoute'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({
   name: 'TodosView',
 })
 
+const { t } = useI18n()
 const createFormRef = ref()
 const editFormRef = ref()
 const editingTodo = ref<Todo | undefined>(undefined)

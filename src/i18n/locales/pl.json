@@ -1,5 +1,129 @@
 {
-  "header": {
-    "title": "polish title"
+  "nav-menu": {
+    "home": "Strona główna",
+    "todo": "Lista zadań",
+    "profile": "Profil",
+    "about": "O mnie",
+    "notations": "Notatki",
+    "contacts": "Kontakty",
+    "sign_in": "Zaloguj się",
+    "sign_up": "Zarejestruj się"
+  },
+  "page_sign_in": {
+    "title": "Zaloguj się",
+    "forgot_password": "Zapomniałeś hasła?"
+  },
+  "page_sign_up": {
+    "title": "Zarejestruj się",
+    "redirect_to_sign_in": "Masz już konto?"
+  },
+  "page_about": {
+    "title": "O mnie",
+    "description": "Frontend Developer z ponad 5-letnim doświadczeniem w budowaniu skalowalnych i wysokowydajnych aplikacji webowych. Specjalizuję się w nowoczesnym frontendzie przy użyciu Vue 3, TypeScript i Nuxt, posiadając jednocześnie silne kompetencje backendowe w Go i PostgreSQL. W swojej pracy kładę nacisk na pisanie czystego, łatwego w utrzymaniu kodu oraz projektowanie dobrze ustrukturyzowanych architektur. Stosuję zasady takie jak Domain-Driven Design (DDD), SOLID oraz separation of concerns, aby zapewnić długoterminową skalowalność i testowalność aplikacji. Moje doświadczenie obejmuje budowę systemów czasu rzeczywistego (WebSockets), wdrażanie bezpiecznych przepływów uwierzytelniania opartych na JWT oraz projektowanie API RESTful. W obszarze frontendu pasjonuję się tworzeniem złożonych interfejsów opartych na danych, takich jak platformy transakcyjne z wykresami w czasie rzeczywistym i interaktywnymi komponentami. Przykładam dużą wagę do wydajności, UX oraz jakości kodu, a o niezawodność systemów dbam poprzez aktywne wykorzystanie testów jednostkowych. Swobodnie czuję się pracując w pełnym stosie technologicznym (Fullstack) — od architektury UI, przez usługi backendowe i projektowanie baz danych, aż po praktyki DevOps, takie jak Docker i CI/CD. Cenię przemyślane decyzje inżynierskie, jasną komunikację i ciągły rozwój. Moje CV jest dostępne do pobrania tutaj",
+    "btn_description": "Pobierz CV"
+  },
+  "page_contacts": {
+    "title": "Kontakty",
+    "subtitle": "Jeśli chcesz omówić projekt, współpracę lub masz jakiekolwiek pytania — skontaktuj się ze mną."
+  },
+  "page_todo": {
+    "page_title": "To jest strona z zadaniami",
+    "create_todo": "Utwórz zadanie",
+    "empty_todos": "Brak zadań",
+    "delete_title": "Usunąć zadanie?",
+    "delete_confirm_text": "Czy na pewno chcesz usunąć zadanie?",
+    "delete_button": "Usuń zadanie",
+    "update_title": "Edytuj zadanie",
+    "update_button": "Zaktualizuj zadanie",
+    "create_title": "Utwórz zadanie",
+    "create_button": "Utwórz zadanie"
+  },
+  "page_notes": {
+    "page_title": "To jest strona notatek",
+    "create_note": "Utwórz notatkę",
+    "empty_notes": "Brak notatek",
+    "delete_title": "Usunąć notatkę?",
+    "delete_confirm_text": "Czy na pewno chcesz usunąć notatkę?",
+    "delete_button": "Usuń notatkę",
+    "update_title": "Edytuj notatkę",
+    "update_button": "Zaktualizuj notatkę",
+    "create_title": "Utwórz notatkę",
+    "create_button": "Utwórz notatkę"
+  },
+  "page_forgot_password": {
+    "title": "Nie pamiętasz hasła",
+    "resend_verification": "Wysłać ponownie e-mail weryfikacyjny?"
+  },
+  "forgot_password_success": {
+    "title": "Sprawdź swoją pocztę",
+    "body_sent": "Wysłaliśmy link do resetowania hasła na Twój e-mail.",
+    "body_instructions": "Postępuj zgodnie z instrukcjami w e-mailu, aby zresetować hasło.",
+    "body_spam": "Jeśli nie widzisz wiadomości, sprawdź folder {folder}.",
+    "folder": "Spam"
+  },
+  "registration_success": {
+    "title": "Potwierdź swój e-mail",
+    "body_sent": "Wysłaliśmy e-mail z potwierdzeniem do Twojej skrzynki.",
+    "body_instructions": "Kliknij link w e-mailu, aby aktywować konto.",
+    "body_spam": "Jeśli nie widzisz wiadomości, sprawdź folder {folder}.",
+    "folder": "Spam"
+  },
+  "page_profile": {
+    "title": "Profil",
+    "delete_account": "Usuń konto",
+    "sign_out": "Wyloguj się",
+    "delete_title": "Usunięcie konta",
+    "delete_confirm": "Czy na pewno chcesz usunąć konto?",
+    "delete_button": "Usuń konto",
+    "sign_out_title": "Wylogowanie",
+    "sign_out_confirm": "Czy na pewno chcesz się wylogować?",
+    "save": "Zapisz",
+    "first_name": "Imię",
+    "last_name": "Nazwisko",
+    "phone": "Telefon",
+    "bio": "O mnie"
+  },
+  "resend_verification": {
+    "title": "Ponowne wysłanie e-maila weryfikacyjnego"
+  },
+  "reset_password": {
+    "title": "Resetowanie hasła"
+  },
+  "footer": {
+    "copyright": "Wszelkie prawa zastrzeżone."
+  },
+  "validation": {
+    "email_required": "Adres e-mail jest wymagany",
+    "too_much_characters": "Za dużo znaków",
+    "invalid_email": "Nieprawidłowy adres e-mail",
+    "password_required": "Hasło jest wymagane",
+    "minimum_8_characters": "Minimum 8 znaków",
+    "maximum_50_characters": "Maksymalnie 50 znaków",
+    "company_name_required": "Nazwa firmy jest wymagana",
+    "minimum_3_characters": "Minimum 3 znaki",
+    "contact_name_required": "Nazwa kontaktu jest wymagana",
+    "title_required": "Tytuł jest wymagany",
+    "description_required": "Opis jest wymagany",
+    "confirm_password_required": "Potwierdzenie hasła jest wymagane",
+    "passwords_do_not_match": "Hasła nie są zgodne"
+  },
+  "common": {
+    "actions": {
+      "submit": "Wyślij",
+      "more_detail": "Więcej szczegółów",
+      "cancel": "Anuluj"
+    },
+    "labels": {
+      "created": "Utworzono",
+      "updated": "Zaktualizowano",
+      "email": "Email",
+      "password": "Hasło",
+      "confirm_password": "Potwierdź hasło"
+    },
+    "placeholders": {
+      "email": "Wprowadź swój email",
+      "password": "Wprowadź swoje hasło",
+      "confirm_password": "Potwierdź swoje hasło"
+    }
   }
 }

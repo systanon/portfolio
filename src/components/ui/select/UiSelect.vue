@@ -313,7 +313,7 @@ watch(
     background-color: transparent;
     display: flex;
     align-items: center;
-    gap: rem(5);
+    gap: rem(15);
     cursor: pointer;
     justify-content: space-between;
     &-text {
@@ -322,7 +322,6 @@ watch(
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      font-size: rem(18);
     }
     &-icon {
       flex: 0 0 auto;

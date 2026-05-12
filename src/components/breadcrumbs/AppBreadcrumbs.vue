@@ -2,7 +2,9 @@
   <ul class="app-breadcrumbs" v-if="breadcrumbs.length > 1">
     <li
       class="app-breadcrumbs__item"
-      v-for="({ disabled, label, id, path, name }, index) in breadcrumbs"
+      v-for="(
+        { disabled, label, i18n_key, id, path, name }, index
+      ) in breadcrumbs"
       :key="id"
     >
       <AppLink
@@ -13,7 +15,7 @@
         exactActiveClass="link--active"
         @navigate="(navigate: () => void) => navigate()"
       >
-        {{ resolveLabel(label) }}
+        {{ i18n_key ? t(i18n_key) : resolveLabel(label) }}
       </AppLink>
       <span
         v-if="index !== breadcrumbs.length - 1"
@@ -36,6 +38,9 @@ import {
   type BreadcrumbLabel,
 } from '@/components/breadcrumbs/breadcrumbs'
 import AppLink from '@/components/AppLink.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const route = useRoute()
 const routes = breadcrumbsConfig

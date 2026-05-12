@@ -1,5 +1,5 @@
 <template>
-  <div class="base-field">
+  <div :class="['base-field', { _validation: validation }]">
     <label v-if="label" :for="id" class="base-field__label">
       {{ label }}
     </label>
@@ -46,7 +46,6 @@ const errorMessages = computed(
   position: relative;
   display: flex;
   flex-direction: column;
-  padding-bottom: rem(20);
 
   &__label {
     margin-bottom: rem(4);
@@ -68,6 +67,9 @@ const errorMessages = computed(
     &-text {
       color: var(--error);
     }
+  }
+  &._validation {
+    padding-bottom: rem(20);
   }
 }
 </style>

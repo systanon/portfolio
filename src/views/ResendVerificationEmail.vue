@@ -1,14 +1,18 @@
 <template>
   <div class="resend-page">
     <form class="resend-page__form" @submit.prevent="submitHandler">
-      <h2 class="resend-page__title">Resend verification email page</h2>
+      <h2 class="resend-page__title">{{ t('resend_verification.title') }}</h2>
       <UiInput
         v-model="email"
-        label="Email"
-        placeholder="Enter email"
+        :label="t('common.labels.email')"
+        :placeholder="t('common.placeholders.email')"
         :validation="v$.email"
       />
-      <UiButton type="submit" label="Submit" :disabled="isBlocked" />
+      <UiButton
+        type="submit"
+        :label="t('common.actions.submit')"
+        :disabled="isBlocked"
+      />
       <ProgressBar
         v-if="showProgressBar"
         ref="progressBarRef"
@@ -30,7 +34,9 @@ import ProgressBar from '@/components/animation/ProgressBar.vue'
 import { AppRateLimitError } from '@/types/app-errors'
 import { useRateLimit } from '@/composables/useRateLimit'
 import { useAuth } from '@/composables/useAuth'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { resendConfirmEmail } = useAuth()
 
 const { isBlocked, showProgressBar, time, startRateLimit, progressBarRef } =

@@ -1,13 +1,18 @@
 <template>
   <section class="registration-success">
     <EmailNotification>
-      <template #title> Confirm Your Email </template>
+      <template #title> {{ t('registration_success.title') }} </template>
       <template #body>
-        <p>📧 We've sent a confirmation email to your inbox.</p>
-        <p>Click the link in the email to activate your account.</p>
+        <p>📧 {{ t('registration_success.body_sent') }}</p>
+        <p>{{ t('registration_success.body_instructions') }}</p>
         <p>
-          If you don't see the email, please check your
-          <span class="registration-success__hint">Spam</span> folder.
+          <i18n-t keypath="registration_success.body_spam">
+            <template #folder>
+              <span class="forgot-pass-success__hint">
+                {{ t('registration_success.folder') }}
+              </span>
+            </template>
+          </i18n-t>
         </p>
       </template>
     </EmailNotification>
@@ -16,6 +21,9 @@
 
 <script setup lang="ts">
 import EmailNotification from '@/components/EmailNotification.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <style scoped lang="scss">

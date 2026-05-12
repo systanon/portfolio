@@ -1,6 +1,6 @@
 <template>
   <section class="page-note">
-    <h2 class="page-note__title">This is Notes page</h2>
+    <h2 class="page-note__title">{{ t('page_notes.page_title') }}</h2>
     <UiButtonIcon
       class="page-note__create"
       iconName="plus"
@@ -16,7 +16,7 @@
           @delete="deleteHandler"
         />
 
-        <p v-if="!rows.length">Empty notes</p>
+        <p v-if="!rows.length">{{ t('page_notes.empty_notes') }}</p>
       </section>
 
       <UiPaginationMobile
@@ -39,33 +39,45 @@
       />
     </template>
   </section>
-  <UIModal ref="deleteModalRef" title="Delete note?" class="page-note__modal">
+  <UIModal
+    ref="deleteModalRef"
+    title="{{ t('page_notes.delete_title') }}"
+    class="page-note__modal"
+  >
     <template #default>
       <div class="page-note__modal-form delete-note-form">
-        <h3>Are you sure you want to delete a note?</h3>
+        <h3>{{ t('page_notes.delete_confirm_text') }}</h3>
       </div>
     </template>
     <template #actions="{ close, confirm }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="confirm" label="Delete note" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
+      <UiButton @click="confirm" :label="t('page_notes.delete_button')" />
     </template>
   </UIModal>
-  <UIModal ref="editModalRef" title="Update note" class="page-note__modal">
+  <UIModal
+    ref="editModalRef"
+    :title="t('page_notes.update_title')"
+    class="page-note__modal"
+  >
     <ItemForm
       ref="editFormRef"
       :title="editingNote?.title"
       :description="editingNote?.description"
     />
     <template #actions="{ close }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="updateNote" label="Update note" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
+      <UiButton @click="updateNote" :label="t('page_notes.update_button')" />
     </template>
   </UIModal>
-  <UIModal ref="createModalRef" title="Create Note" class="page-note__modal">
+  <UIModal
+    ref="createModalRef"
+    :title="t('page_notes.create_title')"
+    class="page-note__modal"
+  >
     <ItemForm ref="createFormRef" />
     <template #actions="{ close }">
-      <UiButton @click="close" label="Cancel" />
-      <UiButton @click="createNote" label="Create note" />
+      <UiButton @click="close" :label="t('common.actions.cancel')" />
+      <UiButton @click="createNote" :label="t('page_notes.create_button')" />
     </template>
   </UIModal>
 </template>
@@ -88,6 +100,9 @@ import { useNote } from '@/composables/useNote'
 import { usePaginatedRoute } from '@/composables/usePaginatedRoute'
 import { AppError } from '@/types/app-errors'
 import { useLoading } from '@/composables/useLoading'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const createFormRef = ref()
 const editFormRef = ref()
