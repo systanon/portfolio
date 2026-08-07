@@ -16,6 +16,7 @@ export class AuthApplication {
   private authService: AuthService
   private tokenManager: TokenManager
   private notificationModule: NotificationModule
+  private refreshPromise: Promise<AppSuccess | AppError> | null = null
 
   constructor(
     authService: AuthService,
@@ -91,6 +92,18 @@ export class AuthApplication {
   }
 
   async refresh(): Promise<AppSuccess | AppError> {
+    if (this.refreshPromise) return this.refreshPromise
+
+    this.refreshPromise = this.doRefresh()
+
+    try {
+      return await this.refreshPromise
+    } finally {
+      this.refreshPromise = null
+    }
+  }
+
+  private async doRefresh(): Promise<AppSuccess | AppError> {
     const response = await this.authService.refresh()
     if (response instanceof AppSuccess) {
       const access_token = response.data.access_token
