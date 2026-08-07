@@ -98,7 +98,7 @@ export function useValidationRules() {
     ),
     maxLength: helpers.withMessage(
       () => t('validation.too_much_characters'),
-      maxLength(100),
+      maxLength(1000),
     ),
     minLength: helpers.withMessage(
       () => t('validation.minimum_3_characters'),
