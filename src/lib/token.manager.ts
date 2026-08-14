@@ -1,13 +1,15 @@
 export class TokenManager {
+  private token: string | null = null
+
   setToken(token: string) {
-    localStorage.setItem('access_token', token)
+    this.token = token
   }
 
   getToken(): string | null {
-    return localStorage.getItem('access_token')
+    return this.token
   }
 
   clearToken() {
-    localStorage.removeItem('access_token')
+    this.token = null
   }
 }
